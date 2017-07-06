@@ -5,10 +5,9 @@
  to all connected clients but the client the message comes from.
  To use, telnet to your device's IP address and type.
  You can see the client's input in the serial monitor as well.
- Using an Arduino Wiznet Ethernet shield.
 
  Circuit:
- * Ethernet shield attached to pins 10, 11, 12, 13
+ * STM32 board with Ethernet support
 
  created 18 Dec 2009
  by David A. Mellis
@@ -16,11 +15,13 @@
  by Tom Igoe
  redesigned to make use of operator== 25 Nov 2013
  by Norbert Truchsess
+ modified 23 Jun 2017
+ by Wi6Labs
 
  */
 
-#include <SPI.h>
-#include <Ethernet.h>
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network.

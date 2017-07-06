@@ -4,12 +4,11 @@
  A simple server that distributes any incoming messages to all
  connected clients.  To use, telnet to your device's IP address and type.
  You can see the client's input in the serial monitor as well.
- Using an Arduino Wiznet Ethernet shield.
 
  THis version attempts to get an IP address using DHCP
 
  Circuit:
- * Ethernet shield attached to pins 10, 11, 12, 13
+ * STM32 board with Ethernet support
 
  created 21 May 2011
  modified 9 Apr 2012
@@ -17,11 +16,13 @@
  modified 02 Sept 2015
  by Arturo Guadalupi
  Based on ChatServer example by David A. Mellis
+ modified 23 Jun 2017
+ by Wi6Labs
 
  */
 
-#include <SPI.h>
-#include <Ethernet.h>
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network.
@@ -89,4 +90,3 @@ void loop() {
     Ethernet.maintain();
   }
 }
-

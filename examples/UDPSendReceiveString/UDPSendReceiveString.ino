@@ -8,13 +8,14 @@
 
  created 21 Aug 2010
  by Michael Margolis
+ modified 23 Jun 2017
+ by Wi6Labs
 
  This code is in the public domain.
  */
 
-
-#include <SPI.h>         // needed for Arduino versions later than 0018
-#include <Ethernet.h>
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 #include <EthernetUdp.h>         // UDP library from: bjoern@cs.stanford.edu 12/30/2008
 
 
@@ -112,5 +113,3 @@ void loop() {
  println();
  }
  */
-
-

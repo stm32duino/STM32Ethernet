@@ -3,21 +3,21 @@
 
   This sketch uses the DHCP extensions to the Ethernet library
   to get an IP address via DHCP and print the address obtained.
-  using an Arduino Wiznet Ethernet shield.
 
   Circuit:
-   Ethernet shield attached to pins 10, 11, 12, 13
+   STM32 board with Ethernet support
 
   created 12 April 2011
   modified 9 Apr 2012
   by Tom Igoe
   modified 02 Sept 2015
   by Arturo Guadalupi
-
+  modified 23 Jun 2017
+  by Wi6Labs
 */
 
-#include <SPI.h>
-#include <Ethernet.h>
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 
 // Enter a MAC address for your controller below.
 // Newer Ethernet shields have a MAC address printed on a sticker on the shield

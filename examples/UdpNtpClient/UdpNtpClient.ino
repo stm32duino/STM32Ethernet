@@ -13,13 +13,15 @@
  by Tom Igoe
  modified 02 Sept 2015
  by Arturo Guadalupi
+ modified 23 Jun 2017
+ by Wi6Labs
 
  This code is in the public domain.
 
  */
 
-#include <SPI.h>
-#include <Ethernet.h>
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 #include <EthernetUdp.h>
 
 // Enter a MAC address for your controller below.
@@ -130,13 +132,3 @@ void sendNTPpacket(char* address) {
   Udp.write(packetBuffer, NTP_PACKET_SIZE);
   Udp.endPacket();
 }
-
-
-
-
-
-
-
-
-
-

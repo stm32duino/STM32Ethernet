@@ -18,9 +18,12 @@
 
  created 31 July 2010
  by Tom Igoe
+ modified 23 Jun 2017
+ by Wi6Labs
  */
 
-#include <Ethernet.h>
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 // the sensor communicates using SPI, so include the library:
 #include <SPI.h>
 

@@ -10,16 +10,18 @@
  http://processing.org/
 
  Circuit:
- * Ethernet shield attached to pins 10, 11, 12, 13
+ * STM32 board with Ethernet support
 
  created 14 Sep 2010
  modified 9 Apr 2012
  by Tom Igoe
+ modified 23 Jun 2017
+ by Wi6Labs
 
  */
 
-#include <SPI.h>
-#include <Ethernet.h>
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 
 // Enter a MAC address and IP address for your controller below.
 // The IP address will be dependent on your local network:
@@ -86,7 +88,3 @@ void loop() {
     while (true);
   }
 }
-
-
-
-

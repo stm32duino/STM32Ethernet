@@ -2,20 +2,21 @@
   Web client
 
  This sketch connects to a website (http://www.google.com)
- using an Arduino Wiznet Ethernet shield.
 
  Circuit:
- * Ethernet shield attached to pins 10, 11, 12, 13
+ * STM32 board with Ethernet support
 
  created 18 Dec 2009
  by David A. Mellis
  modified 9 Apr 2012
  by Tom Igoe, based on work by Adrian McEwen
+ modified 23 Jun 2017
+ by Wi6Labs
 
  */
-
-#include <SPI.h>
-#include <Ethernet.h>
+ 
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 
 // Enter a MAC address for your controller below.
 // Newer Ethernet shields have a MAC address printed on a sticker on the shield
@@ -82,4 +83,3 @@ void loop() {
     while (true);
   }
 }
-
