@@ -5,11 +5,14 @@
 
 class EthernetClient;
 
-class EthernetServer : 
+class EthernetServer :
 public Server {
 private:
   uint16_t _port;
-  void accept();
+  struct tcp_struct _tcp_server;
+  struct tcp_struct *_tcp_client[MAX_CLIENT];
+  
+  void accept(void);
 public:
   EthernetServer(uint16_t);
   EthernetClient available();

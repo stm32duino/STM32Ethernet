@@ -34,8 +34,6 @@ protected:
     uint16_t ProcessResponse(uint16_t aTimeout, IPAddress& aAddress);
 
     IPAddress iDNSServer;
-    uint16_t iRequestId;
-    EthernetUDP iUdp;
 };
 
 #endif
