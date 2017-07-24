@@ -43,7 +43,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
+#include "stm32_def.h"
 #include "lwip/ip_addr.h"
 #include "lwip/dhcp.h"
 #include "lwip/udp.h"
