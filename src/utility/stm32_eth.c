@@ -46,6 +46,15 @@
 #include "lwip/prot/dhcp.h"
 #include "lwip/dns.h"
 
+//Keeps compatibilty with older version of the STM32 core
+#if __has_include("core_callback.h")
+#include "core_callback.h"
+#else
+void registerCoreCallback(void (*func)(void)) {
+  UNUSED(func);
+}
+#endif
+
 
 #ifdef __cplusplus
  extern "C" {
@@ -168,6 +177,9 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
   User_notification(&gnetif);
 
   stm32_eth_scheduler();
+
+  // stm32_eth_scheduler() will be called directly inside the loop of the main() function.
+  registerCoreCallback(stm32_eth_scheduler);
 }
 
 /**
