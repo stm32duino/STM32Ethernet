@@ -21,8 +21,8 @@ It is done automatically by the LwIP stack in a background task.
 An Idle task is required by the LwIP stack to handle timer and data reception.
 This idle task is called inside the main loop in background by the function
 stm32_eth_scheduler(). Be careful to not lock the system inside the function
-loop() where LwIP could never be updated. Call EthernetUDP::parsePacket() or
-EthernetClient::available() performs an update of the LwIP stack.
+loop() where LwIP could never be updated. Call Ethernet::schedule() performs an
+update of the LwIP stack.
 
 ## Wiki
 
