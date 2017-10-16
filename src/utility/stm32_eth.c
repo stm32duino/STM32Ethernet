@@ -36,6 +36,7 @@
   ******************************************************************************
   */
 
+#include "Arduino.h"
 #include "stm32_eth.h"
 #include "lwip/init.h"
 #include "lwip/netif.h"
@@ -45,16 +46,6 @@
 #include "lwip/dhcp.h"
 #include "lwip/prot/dhcp.h"
 #include "lwip/dns.h"
-
-//Keeps compatibilty with older version of the STM32 core
-#if __has_include("core_callback.h")
-#include "core_callback.h"
-#else
-void registerCoreCallback(void (*func)(void)) {
-  UNUSED(func);
-}
-#endif
-
 
 #ifdef __cplusplus
  extern "C" {
@@ -68,6 +59,11 @@ void registerCoreCallback(void (*func)(void)) {
 
 /* Maximum number of retries for DHCP request */
 #define MAX_DHCP_TRIES  4
+
+/* Timer used to call the scheduler */
+#ifndef DEFAULT_ETHERNET_TIMER
+#define DEFAULT_ETHERNET_TIMER  TIM14
+#endif
 
 /* Ethernet configuration: user parameters */
 struct stm32_eth_config {
@@ -94,13 +90,16 @@ static uint8_t DHCP_Started_by_user = 0;
 /* Ethernet link status periodic timer */
 static uint32_t gEhtLinkTickStart = 0;
 
+/* Handler for stimer */
+static stimer_t TimHandle;
+
 /*************************** Function prototype *******************************/
 static void Netif_Config(void);
-static void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp);
 static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err);
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
 static void tcp_err_callback(void *arg, err_t err);
-
+static void scheduler_callback(stimer_t *htim);
+static void TIM_scheduler_Config(void);
 
 /**
 * @brief  Configurates the network interface
@@ -130,6 +129,34 @@ static void Netif_Config(void)
   /* Set the link callback function, this function is called on change of link status */
   netif_set_link_callback(&gnetif, ethernetif_update_config);
 #endif /* LWIP_NETIF_LINK_CALLBACK */
+}
+
+/**
+* @brief  Scheduler callback. Call by a timer interrupt.
+* @param  htim: pointer to stimer_t
+* @retval None
+*/
+static void scheduler_callback(stimer_t *htim)
+{
+  UNUSED(htim);
+  stm32_eth_scheduler();
+}
+
+/**
+* @brief  Enable the timer used to call ethernet scheduler function at regular
+*         interval.
+* @param  None
+* @retval None
+*/
+static void TIM_scheduler_Config(void)
+{
+  /* Set TIMx instance. */
+  TimHandle.timer = DEFAULT_ETHERNET_TIMER;
+
+  /* Timer set to 1ms */
+  TimerHandleInit(&TimHandle, (uint16_t)(1000 - 1), ((uint32_t)(getTimerClkFreq(DEFAULT_ETHERNET_TIMER) / (1000000)) - 1));
+
+  attachIntHandle(&TimHandle, scheduler_callback);
 }
 
 void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, const uint8_t *netmask)
@@ -178,8 +205,8 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
 
   stm32_eth_scheduler();
 
-  // stm32_eth_scheduler() will be called directly inside the loop of the main() function.
-  registerCoreCallback(stm32_eth_scheduler);
+  // stm32_eth_scheduler() will be called every 1ms.
+  TIM_scheduler_Config();
 }
 
 /**
@@ -954,7 +981,7 @@ static void tcp_err_callback(void *arg, err_t err)
   * @param es: pointer on echoclient structure
   * @retval None
   */
-static void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp)
+void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp)
 {
   /* remove callbacks */
   tcp_recv(tpcb, NULL);
