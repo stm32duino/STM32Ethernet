@@ -161,52 +161,60 @@ static void TIM_scheduler_Config(void)
 
 void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, const uint8_t *netmask)
 {
-  /* Initialize the LwIP stack */
-  lwip_init();
+  static uint8_t initDone = 0;
 
-  if(mac != NULL) {
-    ethernetif_set_mac_addr(mac);
-  } // else default value is used: MAC_ADDR0 ... MAC_ADDR5
+  if(!initDone) {
+    /* Initialize the LwIP stack */
+    lwip_init();
 
-  if(ip != NULL) {
-    IP_ADDR4(&(gconfig.ipaddr),ip[0],ip[1],ip[2],ip[3]);
-  } else {
-    #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.ipaddr));
-    #else
-      IP_ADDR4(&(gconfig.ipaddr),IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3);
-    #endif /* LWIP_DHCP */
+    if(mac != NULL) {
+      ethernetif_set_mac_addr(mac);
+    } // else default value is used: MAC_ADDR0 ... MAC_ADDR5
+
+    if(ip != NULL) {
+      IP_ADDR4(&(gconfig.ipaddr),ip[0],ip[1],ip[2],ip[3]);
+    } else {
+      #if LWIP_DHCP
+        ip_addr_set_zero_ip4(&(gconfig.ipaddr));
+      #else
+        IP_ADDR4(&(gconfig.ipaddr),IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3);
+      #endif /* LWIP_DHCP */
+    }
+
+    if(gw != NULL) {
+      IP_ADDR4(&(gconfig.gw),gw[0],gw[1],gw[2],gw[3]);
+    } else {
+      #if LWIP_DHCP
+        ip_addr_set_zero_ip4(&(gconfig.gw));
+      #else
+        IP_ADDR4(&(gconfig.gw),GW_ADDR0,GW_ADDR1,GW_ADDR2,GW_ADDR3);
+      #endif /* LWIP_DHCP */
+    }
+
+    if(netmask != NULL) {
+      IP_ADDR4(&(gconfig.netmask),netmask[0],netmask[1],netmask[2],netmask[3]);
+    } else {
+      #if LWIP_DHCP
+        ip_addr_set_zero_ip4(&(gconfig.netmask));
+      #else
+        IP_ADDR4(&(gconfig.netmask),NETMASK_ADDR0,NETMASK_ADDR1,NETMASK_ADDR2,NETMASK_ADDR3);
+      #endif /* LWIP_DHCP */
+    }
+
+    /* Configure the Network interface */
+    Netif_Config();
+
+    // stm32_eth_scheduler() will be called every 1ms.
+    TIM_scheduler_Config();
+
+    initDone = 1;
   }
 
-  if(gw != NULL) {
-    IP_ADDR4(&(gconfig.gw),gw[0],gw[1],gw[2],gw[3]);
-  } else {
-    #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.gw));
-    #else
-      IP_ADDR4(&(gconfig.gw),GW_ADDR0,GW_ADDR1,GW_ADDR2,GW_ADDR3);
-    #endif /* LWIP_DHCP */
-  }
-
-  if(netmask != NULL) {
-    IP_ADDR4(&(gconfig.netmask),netmask[0],netmask[1],netmask[2],netmask[3]);
-  } else {
-    #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.netmask));
-    #else
-      IP_ADDR4(&(gconfig.netmask),NETMASK_ADDR0,NETMASK_ADDR1,NETMASK_ADDR2,NETMASK_ADDR3);
-    #endif /* LWIP_DHCP */
-  }
-
-  /* Configure the Network interface */
-  Netif_Config();
-
+  /* Reset DHCP if used */
   User_notification(&gnetif);
 
+  /* Update LwIP stack */
   stm32_eth_scheduler();
-
-  // stm32_eth_scheduler() will be called every 1ms.
-  TIM_scheduler_Config();
 }
 
 /**
