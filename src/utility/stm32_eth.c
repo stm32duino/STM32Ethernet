@@ -60,9 +60,15 @@
 /* Maximum number of retries for DHCP request */
 #define MAX_DHCP_TRIES  4
 
-/* Timer used to call the scheduler */
+/*
+ * Defined a default timer used to call ethernet scheduler at regular interval
+ * Could be redefined in the variant
+ * Note: This is planned to extend Timer API's of the Arduino STM32 core
+ *       They could be used for this library when available
+ */
 #ifndef DEFAULT_ETHERNET_TIMER
 #define DEFAULT_ETHERNET_TIMER  TIM14
+#warning "Default timer used to call ethernet scheduler at regular interval: TIM14"
 #endif
 
 /* Ethernet configuration: user parameters */

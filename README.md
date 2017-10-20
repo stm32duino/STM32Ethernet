@@ -5,24 +5,28 @@
 With an STM32 board with Ethernet compatibility, this library allows a STM32
 board (NUCLEO, DISCOVERY, ...) to connect to the internet.  
 
-For more information about this library please visit us at
-http://www.arduino.cc/en/Reference/Ethernet
+This library follows the Ethernet API from Arduino.<br>
+For more information about it please visit: http://www.arduino.cc/en/Reference/Ethernet
 
 ## Note
 
-The library is based on LwIP, a Lightweight TCP/IP stack.  
+The library is based on LwIP, a Lightweight TCP/IP stack, available here:
+
 http://git.savannah.gnu.org/cgit/lwip.git
+
 The LwIP has been ported as Arduino library. The STM32Ethernet library depends
 on it.
 
-EthernetClass::maintain() in no more required to renew IP address from DHCP.  
+`EthernetClass::maintain()` in no more required to renew IP address from DHCP.<br>
 It is done automatically by the LwIP stack in a background task.  
 
-An Idle task is required by the LwIP stack to handle timer and data reception.
-This idle task is called inside the main loop in background by the function
-stm32_eth_scheduler(). Be careful to not lock the system inside the function
-loop() where LwIP could never be updated. Call Ethernet::schedule() performs an
-update of the LwIP stack.
+An Idle task is required by the LwIP stack to handle timer and data reception.<br>
+This idle task is called inside a timer callback each 1 ms by the
+function `stm32_eth_scheduler()`.<br>
+A `DEFAULT_ETHERNET_TIMER` is set in the library to `TIM14`.<br>
+`DEFAULT_ETHERNET_TIMER` can be redefined in the core variant.<br>
+Be careful to not lock the system in a function which disabling IRQ.<br>
+Call `Ethernet::schedule()` performs an update of the LwIP stack.<br>
 
 ## Wiki
 
