@@ -158,15 +158,10 @@ void EthernetClient::stop() {
     return;
   }
 
-  // Close tcp connection. If failed, force to close connection.
-  if(ERR_OK != tcp_close(_tcp_client->pcb)) {
-    tcp_abort(_tcp_client->pcb);
+  // close tcp connection if not closed yet
+  if(status() != TCP_CLOSING) {
+    tcp_connection_close(_tcp_client->pcb, _tcp_client);
   }
-
-  _tcp_client->pcb = NULL;
-
-   mem_free(_tcp_client);
-  _tcp_client = NULL;
 }
 
 uint8_t EthernetClient::connected() {

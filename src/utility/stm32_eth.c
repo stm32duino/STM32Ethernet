@@ -36,6 +36,7 @@
   ******************************************************************************
   */
 
+#include "Arduino.h"
 #include "stm32_eth.h"
 #include "lwip/init.h"
 #include "lwip/netif.h"
@@ -45,16 +46,6 @@
 #include "lwip/dhcp.h"
 #include "lwip/prot/dhcp.h"
 #include "lwip/dns.h"
-
-//Keeps compatibilty with older version of the STM32 core
-#if __has_include("core_callback.h")
-#include "core_callback.h"
-#else
-void registerCoreCallback(void (*func)(void)) {
-  UNUSED(func);
-}
-#endif
-
 
 #ifdef __cplusplus
  extern "C" {
@@ -68,6 +59,11 @@ void registerCoreCallback(void (*func)(void)) {
 
 /* Maximum number of retries for DHCP request */
 #define MAX_DHCP_TRIES  4
+
+/* Timer used to call the scheduler */
+#ifndef DEFAULT_ETHERNET_TIMER
+#define DEFAULT_ETHERNET_TIMER  TIM14
+#endif
 
 /* Ethernet configuration: user parameters */
 struct stm32_eth_config {
@@ -94,13 +90,16 @@ static uint8_t DHCP_Started_by_user = 0;
 /* Ethernet link status periodic timer */
 static uint32_t gEhtLinkTickStart = 0;
 
+/* Handler for stimer */
+static stimer_t TimHandle;
+
 /*************************** Function prototype *******************************/
 static void Netif_Config(void);
-static void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp);
 static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err);
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
 static void tcp_err_callback(void *arg, err_t err);
-
+static void scheduler_callback(stimer_t *htim);
+static void TIM_scheduler_Config(void);
 
 /**
 * @brief  Configurates the network interface
@@ -132,54 +131,90 @@ static void Netif_Config(void)
 #endif /* LWIP_NETIF_LINK_CALLBACK */
 }
 
+/**
+* @brief  Scheduler callback. Call by a timer interrupt.
+* @param  htim: pointer to stimer_t
+* @retval None
+*/
+static void scheduler_callback(stimer_t *htim)
+{
+  UNUSED(htim);
+  stm32_eth_scheduler();
+}
+
+/**
+* @brief  Enable the timer used to call ethernet scheduler function at regular
+*         interval.
+* @param  None
+* @retval None
+*/
+static void TIM_scheduler_Config(void)
+{
+  /* Set TIMx instance. */
+  TimHandle.timer = DEFAULT_ETHERNET_TIMER;
+
+  /* Timer set to 1ms */
+  TimerHandleInit(&TimHandle, (uint16_t)(1000 - 1), ((uint32_t)(getTimerClkFreq(DEFAULT_ETHERNET_TIMER) / (1000000)) - 1));
+
+  attachIntHandle(&TimHandle, scheduler_callback);
+}
+
 void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, const uint8_t *netmask)
 {
-  /* Initialize the LwIP stack */
-  lwip_init();
+  static uint8_t initDone = 0;
 
-  if(mac != NULL) {
-    ethernetif_set_mac_addr(mac);
-  } // else default value is used: MAC_ADDR0 ... MAC_ADDR5
+  if(!initDone) {
+    /* Initialize the LwIP stack */
+    lwip_init();
 
-  if(ip != NULL) {
-    IP_ADDR4(&(gconfig.ipaddr),ip[0],ip[1],ip[2],ip[3]);
-  } else {
-    #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.ipaddr));
-    #else
-      IP_ADDR4(&(gconfig.ipaddr),IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3);
-    #endif /* LWIP_DHCP */
+    if(mac != NULL) {
+      ethernetif_set_mac_addr(mac);
+    } // else default value is used: MAC_ADDR0 ... MAC_ADDR5
+
+    if(ip != NULL) {
+      IP_ADDR4(&(gconfig.ipaddr),ip[0],ip[1],ip[2],ip[3]);
+    } else {
+      #if LWIP_DHCP
+        ip_addr_set_zero_ip4(&(gconfig.ipaddr));
+      #else
+        IP_ADDR4(&(gconfig.ipaddr),IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3);
+      #endif /* LWIP_DHCP */
+    }
+
+    if(gw != NULL) {
+      IP_ADDR4(&(gconfig.gw),gw[0],gw[1],gw[2],gw[3]);
+    } else {
+      #if LWIP_DHCP
+        ip_addr_set_zero_ip4(&(gconfig.gw));
+      #else
+        IP_ADDR4(&(gconfig.gw),GW_ADDR0,GW_ADDR1,GW_ADDR2,GW_ADDR3);
+      #endif /* LWIP_DHCP */
+    }
+
+    if(netmask != NULL) {
+      IP_ADDR4(&(gconfig.netmask),netmask[0],netmask[1],netmask[2],netmask[3]);
+    } else {
+      #if LWIP_DHCP
+        ip_addr_set_zero_ip4(&(gconfig.netmask));
+      #else
+        IP_ADDR4(&(gconfig.netmask),NETMASK_ADDR0,NETMASK_ADDR1,NETMASK_ADDR2,NETMASK_ADDR3);
+      #endif /* LWIP_DHCP */
+    }
+
+    /* Configure the Network interface */
+    Netif_Config();
+
+    // stm32_eth_scheduler() will be called every 1ms.
+    TIM_scheduler_Config();
+
+    initDone = 1;
   }
 
-  if(gw != NULL) {
-    IP_ADDR4(&(gconfig.gw),gw[0],gw[1],gw[2],gw[3]);
-  } else {
-    #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.gw));
-    #else
-      IP_ADDR4(&(gconfig.gw),GW_ADDR0,GW_ADDR1,GW_ADDR2,GW_ADDR3);
-    #endif /* LWIP_DHCP */
-  }
-
-  if(netmask != NULL) {
-    IP_ADDR4(&(gconfig.netmask),netmask[0],netmask[1],netmask[2],netmask[3]);
-  } else {
-    #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.netmask));
-    #else
-      IP_ADDR4(&(gconfig.netmask),NETMASK_ADDR0,NETMASK_ADDR1,NETMASK_ADDR2,NETMASK_ADDR3);
-    #endif /* LWIP_DHCP */
-  }
-
-  /* Configure the Network interface */
-  Netif_Config();
-
+  /* Reset DHCP if used */
   User_notification(&gnetif);
 
+  /* Update LwIP stack */
   stm32_eth_scheduler();
-
-  // stm32_eth_scheduler() will be called directly inside the loop of the main() function.
-  registerCoreCallback(stm32_eth_scheduler);
 }
 
 /**
@@ -954,7 +989,7 @@ static void tcp_err_callback(void *arg, err_t err)
   * @param es: pointer on echoclient structure
   * @retval None
   */
-static void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp)
+void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp)
 {
   /* remove callbacks */
   tcp_recv(tpcb, NULL);
