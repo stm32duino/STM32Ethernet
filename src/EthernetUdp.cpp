@@ -25,16 +25,23 @@
  *
  * bjoern@cs.stanford.edu 12/30/2008
  */
-
 #include "STM32Ethernet.h"
 #include "Udp.h"
 #include "Dns.h"
+
+#include "lwip/igmp.h"
+#include "lwip/ip_addr.h"
 
 /* Constructor */
 EthernetUDP::EthernetUDP() {}
 
 /* Start EthernetUDP socket, listening at local port PORT */
 uint8_t EthernetUDP::begin(uint16_t port) {
+  return begin(Ethernet.localIP(), port);
+}
+
+/* Start EthernetUDP socket, listening at local IP ip and port PORT */
+uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast) {
   // Can create a single udp connection per socket
   if(_udp.pcb != NULL) {
     return 0;
@@ -46,14 +53,25 @@ uint8_t EthernetUDP::begin(uint16_t port) {
     return 0;
   }
 
-  IPAddress ip = Ethernet.localIP();
   ip_addr_t ipaddr;
+  err_t err;
+  u8_to_ip_addr(rawIPAddress(ip), &ipaddr);
+  if (multicast) {
+    err = udp_bind(_udp.pcb, IP_ADDR_ANY, port);
+  } else {
+    err = udp_bind(_udp.pcb, &ipaddr, port);
+  }
 
-  if(ERR_OK != udp_bind(_udp.pcb, u8_to_ip_addr(rawIPAddress(ip), &ipaddr), port)) {
+  if(ERR_OK != err) {
     stop();
     return 0;
   }
 
+#if LWIP_IGMP
+  if ((multicast) && (ERR_OK != igmp_joingroup(IP_ADDR_ANY, &ipaddr))) {
+      return 0;
+  }
+#endif
   udp_recv(_udp.pcb, &udp_receive_callback, &_udp);
 
   _port = port;
@@ -103,8 +121,6 @@ int EthernetUDP::beginPacket(IPAddress ip, uint16_t port)
   if(_udp.pcb == NULL) {
     return 0;
   }
-
-  ip_addr_t ipaddr;
 
   _sendtoIP = ip;
   _sendtoPort = port;
@@ -245,6 +261,11 @@ void EthernetUDP::flush()
 /* Start EthernetUDP socket, listening at local port PORT */
 uint8_t EthernetUDP::beginMulticast(IPAddress ip, uint16_t port)
 {
-  UNUSED(ip);
-  return begin(port);
+  return begin(ip, port, true);
 }
+
+#if LWIP_UDP
+void EthernetUDP::onDataArrival( std::function<void()> onDataArrival_fn){
+  _udp.onDataArrival = onDataArrival_fn;
+}
+#endif

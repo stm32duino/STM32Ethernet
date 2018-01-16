@@ -51,6 +51,7 @@
 #include "ethernetif.h"
 #include <string.h>
 #include "PeripheralPins.h"
+#include "lwip/igmp.h"
 #include "stm32_eth.h"
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01050000)
 #include "variant.h"
@@ -91,6 +92,11 @@ __ALIGN_BEGIN uint8_t Tx_Buff[ETH_TXBUFNB][ETH_TX_BUF_SIZE] __ALIGN_END; /* Ethe
 static ETH_HandleTypeDef EthHandle;
 
 static uint8_t macaddress[6]= { MAC_ADDR0, MAC_ADDR1, MAC_ADDR2, MAC_ADDR3, MAC_ADDR4, MAC_ADDR5 };
+
+#if LWIP_IGMP
+uint32_t ETH_HashTableHigh=0x0;
+uint32_t ETH_HashTableLow=0x0;
+#endif
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -205,7 +211,9 @@ static void low_level_init(struct netif *netif)
 
   /* Enable MAC and DMA transmission and reception */
   HAL_ETH_Start(&EthHandle);
-
+#if LWIP_IGMP
+  netif_set_igmp_mac_filter(netif, igmp_mac_filter);
+#endif
   /**** Configure PHY to generate an interrupt when Eth Link state changes ****/
   /* Read Register Configuration */
   HAL_ETH_ReadPHYRegister(&EthHandle, PHY_IMR, &regvalue);
@@ -214,6 +222,10 @@ static void low_level_init(struct netif *netif)
 
   /* Enable Interrupt on change of link status */
   HAL_ETH_WritePHYRegister(&EthHandle, PHY_IMR, regvalue );
+#if LWIP_IGMP
+  ETH_HashTableHigh=EthHandle.Instance->MACHTHR;
+  ETH_HashTableLow=EthHandle.Instance->MACHTLR;
+#endif
 }
 
 /**
@@ -510,6 +522,13 @@ void ethernetif_set_link(struct netif *netif)
   HAL_ETH_ReadPHYRegister(&EthHandle, PHY_BSR, &regvalue);
 
   if((regvalue & PHY_LINKED_STATUS) != (uint16_t)RESET) {
+#if LWIP_IGMP
+    if (!(netif->flags & NETIF_FLAG_IGMP)) {
+       netif->flags |= NETIF_FLAG_IGMP;
+       igmp_init();
+       igmp_start(netif);
+    }
+#endif
     netif_set_link_up(netif);
   }
 }
@@ -627,6 +646,72 @@ void ethernetif_set_mac_addr(const uint8_t *mac) {
     memcpy(macaddress,mac,6);
   }
 }
+
+#if LWIP_IGMP
+err_t igmp_mac_filter( struct netif *netif, const ip4_addr_t *ip4_addr, netif_mac_filter_action action )
+{
+  uint8_t mac[6];
+  const uint8_t *p = (const uint8_t *)ip4_addr;
+
+  mac[0] = 0x01;
+  mac[1] = 0x00;
+  mac[2] = 0x5E;
+  mac[3] = *(p+1) & 0x7F;
+  mac[4] = *(p+2);
+  mac[5] = *(p+3);
+
+  register_multicast_address(mac);
+
+  return 0;
+}
+
+#ifndef HASH_BITS
+#define HASH_BITS 6 /* #bits in hash */
+#endif
+
+uint32_t ethcrc(const uint8_t *data, size_t length)
+{
+  uint32_t crc = 0xffffffff;
+  size_t i;
+  int j;
+
+  for (i = 0; i < length; i++) {
+    for (j = 0; j < 8; j++) {
+      if (((crc >> 31) ^ (data[i] >> j)) & 0x01) {
+        /* x^26+x^23+x^22+x^16+x^12+x^11+x^10+x^8+x^7+x^5+x^4+x^2+x+1 */
+        crc = (crc << 1) ^ 0x04C11DB7;
+      } else {
+        crc = crc << 1;
+      }
+    } 
+  }
+  return ~crc;
+}
+
+void register_multicast_address(const uint8_t *mac)
+{
+  uint32_t crc;
+  uint8_t hash;
+
+  /* Calculate crc32 value of mac address */
+  crc = ethcrc(mac, HASH_BITS);
+
+  /* 
+   * Only upper HASH_BITS are used
+   * which point to specific bit in the hash registers
+   */
+  hash = (crc >> 26) & 0x3F;
+
+	if (hash > 31) {
+    ETH_HashTableHigh |= 1 << (hash - 32);
+    EthHandle.Instance->MACHTHR = ETH_HashTableHigh;
+  }	else {
+    ETH_HashTableLow |= 1 << hash;
+    EthHandle.Instance->MACHTLR =ETH_HashTableLow;
+  }
+}
+#endif /* LWIP_IGMP */
+
 
 #ifdef ETH_INPUT_USE_IT
 /**

@@ -47,10 +47,6 @@
 #include "lwip/prot/dhcp.h"
 #include "lwip/dns.h"
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-
 /* Check ethernet link status every seconds */
 #define TIME_CHECK_ETH_LINK_STATE 500U
 
@@ -798,6 +794,10 @@ void udp_receive_callback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
 
     ip_addr_copy(udp_arg->ip, *addr);
     udp_arg->port = port;
+
+    if(udp_arg->onDataArrival != NULL){
+      udp_arg->onDataArrival();
+    }
   } else {
     pbuf_free(p);
   }
@@ -1049,7 +1049,3 @@ void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp)
 }
 
 #endif /* LWIP_TCP */
-
-#ifdef __cplusplus
-}
-#endif
