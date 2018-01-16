@@ -38,10 +38,6 @@
 #ifndef __STM32_ETH_H__
 #define __STM32_ETH_H__
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "stm32_def.h"
 #include "lwip/ip_addr.h"
@@ -49,6 +45,7 @@
 #include "lwip/udp.h"
 #include "lwip/tcp.h"
 #include "lwip/opt.h"
+#include <functional>
 
 /* Exported types ------------------------------------------------------------*/
 /* TCP connection state */
@@ -74,6 +71,7 @@ struct udp_struct {
   struct pbuf_data data;
   ip_addr_t ip;       // the remote IP address from which the packet was received
   u16_t port;         // the remote port from which the packet was received
+  std::function<void()> onDataArrival;
 };
 
 /* TCP structure */
@@ -170,10 +168,6 @@ err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err);
 void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp);
 #else
 #error "LWIP_TCP must be enabled in lwipopts.h"
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif /* __STM32_ETH_H__ */

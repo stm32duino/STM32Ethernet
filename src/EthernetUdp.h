@@ -38,10 +38,11 @@
 #define ethernetudp_h
 
 #include <Udp.h>
+#include <functional>
 
-extern "C" {
+// extern "C" {
 #include "utility/stm32_eth.h"
-}
+// }
 
 #define UDP_TX_PACKET_MAX_SIZE 24
 
@@ -102,6 +103,7 @@ public:
   virtual IPAddress remoteIP() { return _remoteIP; };
   // Return the port of the host who sent the current incoming packet
   virtual uint16_t remotePort() { return _remotePort; };
+  virtual void onDataArrival( std::function<void()> onDataArrival_fn);
 };
 
 #endif

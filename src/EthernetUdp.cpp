@@ -25,10 +25,14 @@
  *
  * bjoern@cs.stanford.edu 12/30/2008
  */
-
 #include "STM32Ethernet.h"
 #include "Udp.h"
 #include "Dns.h"
+
+
+#include "lwip/igmp.h"
+#include "lwip/ip_addr.h"
+#include "Arduino.h"
 
 /* Constructor */
 EthernetUDP::EthernetUDP() {}
@@ -250,6 +254,45 @@ void EthernetUDP::flush()
 /* Start EthernetUDP socket, listening at local port PORT */
 uint8_t EthernetUDP::beginMulticast(IPAddress ip, uint16_t port)
 {
-  UNUSED(ip);
-  return begin(port);
+  if(_udp.pcb != NULL) {
+    return 0;
+  }
+
+  ip_addr_t ipaddr;
+  ip_addr_t ipgroup;
+
+  u8_to_ip_addr(rawIPAddress(ip), &ipgroup);
+
+  _udp.pcb = udp_new();
+
+  if(_udp.pcb == NULL) {
+    return 0;
+  }
+
+
+
+  if(ERR_OK != udp_bind(_udp.pcb, IP_ADDR_ANY, port)) {
+    stop();
+    return 0;
+  }
+
+  err_t iret = igmp_joingroup(IP_ADDR_ANY,&ipgroup);
+  if(iret == ERR_OK){
+    udp_recv(_udp.pcb, &udp_receive_callback, &_udp);
+
+    _port = port;
+    _remaining = 0;
+
+    stm32_eth_scheduler();
+
+    return 1;
+  }else{
+    return 0;
+  }
+
+
+}
+
+void EthernetUDP::onDataArrival( std::function<void()> onDataArrival_fn){
+  _udp.onDataArrival = onDataArrival_fn;
 }
