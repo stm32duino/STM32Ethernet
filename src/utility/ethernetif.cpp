@@ -630,7 +630,7 @@ void ethernetif_set_mac_addr(const uint8_t *mac) {
   }
 }
 
-err_t igmp_mac_filter( struct netif *netif, const ip4_addr_t *ip4_addr, u8_t action )
+err_t igmp_mac_filter( struct netif *netif, const ip4_addr_t *ip4_addr, netif_mac_filter_action action )
 {
     uint8_t mac[6];
 	const uint8_t *p = (const uint8_t *)ip4_addr;

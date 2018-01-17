@@ -61,7 +61,7 @@ void ethernetif_notify_conn_changed(struct netif *netif);
 
 void ethernetif_set_mac_addr(const uint8_t *mac);
 
-err_t igmp_mac_filter( struct netif *netif, const ip4_addr_t *ip4_addr, u8_t action );
+err_t igmp_mac_filter( struct netif *netif, const ip4_addr_t *ip4_addr, netif_mac_filter_action action );
 void register_multicast_address(const uint8_t *mac);
 
 #ifdef __cplusplus
