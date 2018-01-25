@@ -1,6 +1,4 @@
-# STM32Ethernet
-
-## Ethernet Library for Arduino
+# STM32 Ethernet Library for Arduino
 
 With an STM32 board with Ethernet compatibility, this library allows a STM32
 board (NUCLEO, DISCOVERY, ...) to connect to the internet.  
@@ -8,14 +6,25 @@ board (NUCLEO, DISCOVERY, ...) to connect to the internet.
 This library follows the Ethernet API from Arduino.<br>
 For more information about it please visit: http://www.arduino.cc/en/Reference/Ethernet
 
-## Note
+## Dependency
 
-The library is based on LwIP, a Lightweight TCP/IP stack, available here:
+This library is based on LwIP, a Lightweight TCP/IP stack, available here:
 
 http://git.savannah.gnu.org/cgit/lwip.git
 
-The LwIP has been ported as Arduino library. The STM32Ethernet library depends
-on it.
+The LwIP has been ported as Arduino library and is available thanks Arduino Library Manager.
+
+Source: https://github.com/stm32duino/LwIP
+
+## Configuration
+
+The LwIP has several user defined options, which is specified from within the `lwipopts.h` file.
+
+This library provides a default user defined options file named `lwipopts_default.h`.
+
+User can provide his own defined options at sketch level by adding his configuration in a file named `STM32lwipopts.h`.
+
+## Note
 
 `EthernetClass::maintain()` in no more required to renew IP address from DHCP.<br>
 It is done automatically by the LwIP stack in a background task.  
