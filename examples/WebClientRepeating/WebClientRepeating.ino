@@ -28,7 +28,8 @@
 // fill in an available IP address on your network here,
 // for manual configuration:
 IPAddress ip(192, 168, 1, 177);
-
+IPAddress gateway(192, 168, 1, 1);
+IPAddress subnet(255, 255, 0, 0);
 // fill in your Domain Name Server address here:
 IPAddress myDns(1, 1, 1, 1);
 
@@ -52,7 +53,7 @@ void setup() {
   // give the ethernet module time to boot up:
   delay(1000);
   // start the Ethernet connection using a fixed IP address and DNS server:
-  Ethernet.begin(ip, myDns);
+  Ethernet.begin(ip, subnet, gateway, myDns);
   // print the Ethernet board/shield's IP address:
   Serial.print("My IP address: ");
   Serial.println(Ethernet.localIP());
