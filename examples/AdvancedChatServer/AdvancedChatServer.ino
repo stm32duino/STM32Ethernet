@@ -42,7 +42,7 @@ EthernetClient clients[4];
 
 void setup() {
   // initialize the Ethernet device
-  Ethernet.begin(ip, myDns, gateway, subnet);
+  Ethernet.begin(ip, subnet, gateway, myDns);
   // start listening for clients
   server.begin();
   // Open serial communications and wait for port to open:
