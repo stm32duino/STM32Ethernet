@@ -51,7 +51,7 @@ void setup() {
   if (Ethernet.begin() == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
     // initialize the Ethernet device not using DHCP:
-    Ethernet.begin(ip, myDns, gateway, subnet);
+    Ethernet.begin(ip, subnet, gateway, myDns);
   }
   // print your local IP address:
   Serial.print("My IP address: ");
