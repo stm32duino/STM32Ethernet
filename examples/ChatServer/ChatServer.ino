@@ -37,7 +37,7 @@ boolean alreadyConnected = false; // whether or not the client was connected pre
 
 void setup() {
   // initialize the ethernet device
-  Ethernet.begin(ip, myDns, gateway, subnet);
+  Ethernet.begin(ip, subnet, gateway, myDns);
   // start listening for clients
   server.begin();
   // Open serial communications and wait for port to open:
