@@ -15,17 +15,15 @@
  by Arturo Guadalupi
  modified 23 Jun 2017
  by Wi6Labs
-
+ modified 1 Jun 2018
+ by sstaub
  */
 
 #include <LwIP.h>
 #include <STM32Ethernet.h>
 
-// Enter a MAC address and IP address for your controller below.
+// Enter an IP address for your controller below.
 // The IP address will be dependent on your local network:
-byte mac[] = {
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
-};
 IPAddress ip(192, 168, 1, 177);
 
 // Initialize the Ethernet server library
@@ -42,7 +40,7 @@ void setup() {
 
 
   // start the Ethernet connection and the server:
-  Ethernet.begin(mac, ip);
+  Ethernet.begin(ip);
   server.begin();
   Serial.print("server is at ");
   Serial.println(Ethernet.localIP());

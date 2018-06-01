@@ -24,6 +24,15 @@ This library provides a default user defined options file named `lwipopts_defaul
 
 User can provide his own defined options at sketch level by adding his configuration in a file named `STM32lwipopts.h`.
 
+
+## New init procedure **!!!**
+
+The init of the Ethernetinterface changed, the ordner is now:
+
+	Ethernet.begin(ip, subnet, gateway, dns);
+
+This is more logical. A MAC address is no more needed!
+
 ## Note
 
 `EthernetClass::maintain()` in no more required to renew IP address from DHCP.<br>

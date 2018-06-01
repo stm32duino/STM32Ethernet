@@ -20,6 +20,8 @@
  by Tom Igoe
  modified 23 Jun 2017
  by Wi6Labs
+ modified 1 Jun 2018
+ by sstaub
  */
 
 #include <LwIP.h>
@@ -28,11 +30,6 @@
 #include <SPI.h>
 
 
-// assign a MAC address for the Ethernet controller.
-// fill in your address here:
-byte mac[] = {
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
-};
 // assign an IP address for the controller:
 IPAddress ip(192, 168, 1, 20);
 
@@ -62,7 +59,7 @@ void setup() {
   SPI.begin();
 
   // start the Ethernet connection and the server:
-  Ethernet.begin(mac, ip);
+  Ethernet.begin(ip);
   server.begin();
 
   // initalize the  data ready and chip select pins:

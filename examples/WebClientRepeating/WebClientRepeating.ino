@@ -15,7 +15,8 @@
  by Federico Vanzati
  modified 23 Jun 2017
  by Wi6Labs
-
+ modified 1 Jun 2018
+ by sstaub
  http://www.arduino.cc/en/Tutorial/WebClientRepeating
  This code is in the public domain.
 
@@ -24,11 +25,6 @@
 #include <LwIP.h>
 #include <STM32Ethernet.h>
 
-// assign a MAC address for the ethernet controller.
-// fill in your address here:
-byte mac[] = {
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
-};
 // fill in an available IP address on your network here,
 // for manual configuration:
 IPAddress ip(192, 168, 1, 177);
@@ -56,7 +52,7 @@ void setup() {
   // give the ethernet module time to boot up:
   delay(1000);
   // start the Ethernet connection using a fixed IP address and DNS server:
-  Ethernet.begin(mac, ip, myDns);
+  Ethernet.begin(ip, myDns);
   // print the Ethernet board/shield's IP address:
   Serial.print("My IP address: ");
   Serial.println(Ethernet.localIP());

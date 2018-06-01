@@ -1,11 +1,12 @@
 #include "STM32Ethernet.h"
 #include "Dhcp.h"
 
-int EthernetClass::begin(uint8_t *mac_address, unsigned long timeout, unsigned long responseTimeout)
+int EthernetClass::begin(unsigned long timeout, unsigned long responseTimeout)
 {
   static DhcpClass s_dhcp;
   _dhcp = &s_dhcp;
-
+  uint8_t mac_address[6];
+  macAddress(mac_address);
   stm32_eth_init(mac_address, NULL, NULL, NULL);
 
   // Now try to get our config info from a DHCP server
@@ -18,33 +19,35 @@ int EthernetClass::begin(uint8_t *mac_address, unsigned long timeout, unsigned l
   return ret;
 }
 
-void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip)
+void EthernetClass::begin(IPAddress local_ip)
 {
-  // Assume the DNS server will be the machine on the same network as the local IP
-  // but with last octet being '1'
-  IPAddress dns_server = local_ip;
-  dns_server[3] = 1;
-  begin(mac_address, local_ip, dns_server);
+  IPAddress subnet(255, 255, 255, 0);
+  begin(local_ip, subnet);
 }
 
-void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server)
+void EthernetClass::begin(IPAddress local_ip, IPAddress subnet)
 {
   // Assume the gateway will be the machine on the same network as the local IP
   // but with last octet being '1'
   IPAddress gateway = local_ip;
   gateway[3] = 1;
-  begin(mac_address, local_ip, dns_server, gateway);
+  begin(local_ip, subnet, gateway);
 }
 
-void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway)
+void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gateway)
 {
-  IPAddress subnet(255, 255, 255, 0);
-  begin(mac_address, local_ip, dns_server, gateway, subnet);
+  // Assume the DNS server will be the machine on the same network as the local IP
+  // but with last octet being '1'
+  IPAddress dns_server = local_ip;
+  dns_server[3] = 1;
+  begin(local_ip, subnet, gateway, dns_server);
 }
 
-void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet)
+void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gateway, IPAddress dns_server)
 {
-  stm32_eth_init(mac, local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
+  uint8_t mac_address[6];
+  macAddress(mac_address);
+  stm32_eth_init(mac_address, local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
   /* If there is a local DHCP informs it of our manual IP configuration to
   prevent IP conflict */
   stm32_DHCP_manual_config();
@@ -80,6 +83,27 @@ int EthernetClass::maintain(){
 void EthernetClass::schedule(void)
 {
   stm32_eth_scheduler();
+}
+
+void EthernetClass::macAddress(uint8_t *mac)
+{
+  // Read unique id
+  #if defined (STM32F2)
+    uint32_t baseUID = *(uint32_t *)0x1FFF7A10;
+  #elif defined (STM32F4)
+    uint32_t baseUID = *(uint32_t *)0x1FFF7A10;
+  #elif defined (STM32F7)
+    uint32_t baseUID = *(uint32_t *)0x1FF0F420;
+  #else
+    #error MAC address can not be derived from target unique Id
+  #endif
+    
+  mac[0] = 0x00;
+  mac[1] = 0x80;
+  mac[2] = 0xE1;
+  mac[3] = (baseUID & 0x00FF0000) >> 16;
+  mac[4] = (baseUID & 0x0000FF00) >> 8;
+  mac[5] = (baseUID & 0x000000FF);
 }
 
 IPAddress EthernetClass::localIP()
