@@ -25,13 +25,29 @@ This library provides a default user defined options file named `lwipopts_defaul
 User can provide his own defined options at sketch level by adding his configuration in a file named `STM32lwipopts.h`.
 
 
-## New init procedure **!!!**
+## New alternative init procedure **!!!**
 
-The init of the Ethernetinterface changed, the ordner is now:
+There are alternative inits of the Ethernetinterface with following orders:
 
+	Ethernet.begin();
+	Ethernet.begin(ip);
+	Ethernet.begin(ip, subnet);
+	Ethernet.begin(ip, subnet, gateway);
 	Ethernet.begin(ip, subnet, gateway, dns);
 
-This is more logical. A MAC address is no more needed!
+This is more logical. A MAC address is no more needed and will retrieved internally by the mbed MAC address!
+
+You can get the MAC address with following function, this must done after Ethernet.Begin()
+	
+	uint8_t *mac;
+	Ethernet.begin();
+	mac = Ethernet.macAddress();
+
+You can also set a new user based MAC address, this must done before Ethernet.begin()
+
+	uint8_t newMAC[] = {0x00, 0x80, 0xE1, 0x01, 0x01, 0x01};
+	Ethernet.macAddress(newMAC);
+	Ethernet.begin();
 
 ## Note
 
