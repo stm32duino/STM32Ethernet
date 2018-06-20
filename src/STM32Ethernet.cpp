@@ -69,7 +69,7 @@ int EthernetClass::begin(uint8_t *mac_address, unsigned long timeout, unsigned l
   {
     _dnsServerAddress = _dhcp->getDnsServerIp();
   }
-
+  macAddress(mac_address);
   return ret;
 }
 
@@ -104,6 +104,7 @@ void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server
   prevent IP conflict */
   stm32_DHCP_manual_config();
   _dnsServerAddress = dns_server;
+  macAddress(mac);
 }
 
 int EthernetClass::maintain(){
@@ -139,7 +140,7 @@ void EthernetClass::schedule(void)
 
 uint8_t * EthernetClass::macAddressDefault(void)
 {
-  if ((mac_address[0] == 0) && (mac_address[1] == 0) && (mac_address[2] == 0) && (mac_address[3] == 0) && (mac_address[4] == 0) && (mac_address[5] == 0)) {
+  if ((mac_address[0] + mac_address[1] + mac_address[2] + mac_address[3] + mac_address[4] + mac_address[5]) == 0) {
     uint32_t baseUID = *(uint32_t *)UID_BASE;
     mac_address[0] = 0x00;
     mac_address[1] = 0x80;
