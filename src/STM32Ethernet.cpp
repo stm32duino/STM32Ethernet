@@ -5,9 +5,6 @@ int EthernetClass::begin(unsigned long timeout, unsigned long responseTimeout)
 {
   static DhcpClass s_dhcp;
   _dhcp = &s_dhcp;
-  //uint8_t mac_address[6];
-  //macAddressDefault(mac_address);
-  //stm32_eth_init(mac_address, NULL, NULL, NULL);
   stm32_eth_init(macAddressDefault(), NULL, NULL, NULL);
 
   // Now try to get our config info from a DHCP server
@@ -46,9 +43,6 @@ void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gatewa
 
 void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gateway, IPAddress dns_server)
 {
-  //uint8_t mac_address[6];
-  //macAddressDefault(mac_address);
-  //stm32_eth_init(mac_address, local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
   stm32_eth_init(macAddressDefault(), local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
   /* If there is a local DHCP informs it of our manual IP configuration to
   prevent IP conflict */
