@@ -12,14 +12,13 @@
  by Tom Igoe, based on work by Adrian McEwen
  modified 23 Jun 2017
  by Wi6Labs
-
+ modified 1 Jun 2018
+ by sstaub
  */
 
 #include <LwIP.h>
 #include <STM32Ethernet.h>
 
-// Enter a MAC address for your controller below.
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
 //IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
@@ -41,10 +40,10 @@ void setup() {
   }
 
   // start the Ethernet connection:
-  if (Ethernet.begin(mac) == 0) {
+  if (Ethernet.begin() == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
     // try to congifure using IP address instead of DHCP:
-    Ethernet.begin(mac, ip);
+    Ethernet.begin(ip);
   }
   // give the Ethernet shield a second to initialize:
   delay(1000);

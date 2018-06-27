@@ -14,15 +14,13 @@
   by Arturo Guadalupi
   modified 23 Jun 2017
   by Wi6Labs
+  modified 1 Jun 2018
+  by sstaub
 */
 
 #include <LwIP.h>
 #include <STM32Ethernet.h>
 
-// Enter a MAC address for your controller below.
-byte mac[] = {
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
-};
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server
@@ -38,7 +36,7 @@ void setup() {
   }
 
   // start the Ethernet connection:
-  if (Ethernet.begin(mac) == 0) {
+  if (Ethernet.begin() == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
     // no point in carrying on, so do nothing forevermore:
     for (;;)

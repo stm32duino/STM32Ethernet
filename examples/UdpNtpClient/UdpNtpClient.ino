@@ -15,7 +15,8 @@
  by Arturo Guadalupi
  modified 23 Jun 2017
  by Wi6Labs
-
+ modified 1 Jun 2018
+ by sstaub
  This code is in the public domain.
 
  */
@@ -23,11 +24,6 @@
 #include <LwIP.h>
 #include <STM32Ethernet.h>
 #include <EthernetUdp.h>
-
-// Enter a MAC address for your controller below.
-byte mac[] = {
-  0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
-};
 
 unsigned int localPort = 8888;       // local port to listen for UDP packets
 
@@ -49,7 +45,7 @@ void setup() {
 
 
   // start Ethernet and UDP
-  if (Ethernet.begin(mac) == 0) {
+  if (Ethernet.begin() == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
     // no point in carrying on, so do nothing forevermore:
     for (;;)
