@@ -128,7 +128,7 @@ void listenForEthernetClients() {
   if (client) {
     Serial.println("Got a client");
     // an http request ends with a blank line
-    boolean currentLineIsBlank = true;
+    bool currentLineIsBlank = true;
     while (client.connected()) {
       if (client.available()) {
         char c = client.read();

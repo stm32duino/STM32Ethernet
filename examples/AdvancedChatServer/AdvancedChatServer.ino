@@ -63,7 +63,7 @@ void loop() {
   // when the client sends the first byte, say hello:
   if (client) {
 
-    boolean newClient = true;
+    bool newClient = true;
     for (byte i = 0; i < 4; i++) {
       //check whether this client refers to the same socket as one of the existing instances:
       if (clients[i] == client) {
