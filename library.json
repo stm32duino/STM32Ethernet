@@ -1,0 +1,13 @@
+{
+  "name": "STM32Ethernet",
+  "keywords": "Ethernet",
+  "description": "Arduino library to support Ethernet for STM32 based board.",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/stm32duino/STM32Ethernet"
+  },
+  "version": "1.0.4",
+  "frameworks": "arduino",
+  "platforms": "ststm32"
+}
