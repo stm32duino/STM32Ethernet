@@ -14,7 +14,7 @@ private:
   
   void accept(void);
 public:
-  EthernetServer(uint16_t);
+  EthernetServer(uint16_t port = 80);
   EthernetClient available();
   virtual void begin();
   virtual size_t write(uint8_t);

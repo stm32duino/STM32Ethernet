@@ -9,6 +9,8 @@ extern "C" {
 EthernetServer::EthernetServer(uint16_t port)
 {
   _port = port;
+  _tcp_client[MAX_CLIENT] = {};
+  _tcp_server = {};
 }
 
 void EthernetServer::begin()
