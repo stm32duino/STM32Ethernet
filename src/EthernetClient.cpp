@@ -9,12 +9,14 @@ extern "C" {
 #include "EthernetServer.h"
 #include "Dns.h"
 
-EthernetClient::EthernetClient() {
+EthernetClient::EthernetClient()
+  :_tcp_client(NULL) {
 }
 
 /* Deprecated constructor. Keeps compatibility with W5100 architecture
 sketches but sock is ignored. */
-EthernetClient::EthernetClient(uint8_t sock) {
+EthernetClient::EthernetClient(uint8_t sock)
+  :_tcp_client(NULL) {
   UNUSED(sock);
 }
 
@@ -181,7 +183,7 @@ uint8_t EthernetClient::status() {
 // EthernetServer::available() as the condition in an if-statement.
 
 EthernetClient::operator bool() {
-  return _tcp_client != NULL;
+  return (_tcp_client && (_tcp_client->state != TCP_CLOSING));
 }
 
 bool EthernetClient::operator==(const EthernetClient& rhs) {
