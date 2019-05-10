@@ -7,7 +7,10 @@
     "type": "git",
     "url": "https://github.com/stm32duino/STM32Ethernet"
   },
-  "version": "1.0.4",
+  "version": "1.0.5",
   "frameworks": "arduino",
-  "platforms": "ststm32"
+  "platforms": "ststm32",
+  "build": {
+    "libArchive": false
+  }
 }
