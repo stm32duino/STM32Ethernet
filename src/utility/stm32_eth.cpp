@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32_eth.c
+  * @file    stm32_eth.cpp
   * @author  WI6LABS
   * @version V1.0.0
   * @date    24-May-2017
@@ -96,15 +96,12 @@ static uint8_t DHCP_Started_by_user = 0;
 /* Ethernet link status periodic timer */
 static uint32_t gEhtLinkTickStart = 0;
 
-/* Handler for stimer */
-static stimer_t TimHandle;
-
 /*************************** Function prototype *******************************/
 static void Netif_Config(void);
 static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err);
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
 static void tcp_err_callback(void *arg, err_t err);
-static void scheduler_callback(stimer_t *htim);
+static void scheduler_callback(HardwareTimer *HT);
 static void TIM_scheduler_Config(void);
 
 /**
@@ -139,12 +136,12 @@ static void Netif_Config(void)
 
 /**
 * @brief  Scheduler callback. Call by a timer interrupt.
-* @param  htim: pointer to stimer_t
+* @param  htim: pointer to HardwareTimer
 * @retval None
 */
-static void scheduler_callback(stimer_t *htim)
+static void scheduler_callback(HardwareTimer *HT)
 {
-  UNUSED(htim);
+  UNUSED(HT);
   stm32_eth_scheduler();
 }
 
@@ -156,13 +153,14 @@ static void scheduler_callback(stimer_t *htim)
 */
 static void TIM_scheduler_Config(void)
 {
-  /* Set TIMx instance. */
-  TimHandle.timer = DEFAULT_ETHERNET_TIMER;
+  /* Configure HardwareTimer */
+  HardwareTimer *EthTim = new HardwareTimer(DEFAULT_ETHERNET_TIMER);
+  EthTim->setMode(1, TIMER_OUTPUT_COMPARE);
 
   /* Timer set to 1ms */
-  TimerHandleInit(&TimHandle, (uint16_t)(1000 - 1), ((uint32_t)(getTimerClkFreq(DEFAULT_ETHERNET_TIMER) / (1000000)) - 1));
-
-  attachIntHandle(&TimHandle, scheduler_callback);
+  EthTim->setOverflow(1000, MICROSEC_FORMAT);
+  EthTim->attachInterrupt(scheduler_callback);
+  EthTim->resume();
 }
 
 void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, const uint8_t *netmask)
