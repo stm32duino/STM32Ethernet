@@ -96,12 +96,16 @@ static uint8_t DHCP_Started_by_user = 0;
 /* Ethernet link status periodic timer */
 static uint32_t gEhtLinkTickStart = 0;
 
+#if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
+/* Handler for stimer */
+static stimer_t TimHandle;
+#endif
+
 /*************************** Function prototype *******************************/
 static void Netif_Config(void);
 static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err);
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
 static void tcp_err_callback(void *arg, err_t err);
-static void scheduler_callback(HardwareTimer *HT);
 static void TIM_scheduler_Config(void);
 
 /**
@@ -136,15 +140,35 @@ static void Netif_Config(void)
 
 /**
 * @brief  Scheduler callback. Call by a timer interrupt.
-* @param  htim: pointer to HardwareTimer
+* @param  htim: pointer to stimer_t or Hardware Timer
 * @retval None
 */
-static void scheduler_callback(HardwareTimer *HT)
+#if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
+static void scheduler_callback(stimer_t *htim)
+#else
+static void scheduler_callback(HardwareTimer *htim)
+#endif
 {
-  UNUSED(HT);
+  UNUSED(htim);
   stm32_eth_scheduler();
 }
 
+#if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
+/**
+* @brief  Enable the timer used to call ethernet scheduler function at regular
+*         interval.
+* @param  None
+* @retval None
+*/
+static void TIM_scheduler_Config(void)
+{
+  /* Set TIMx instance. */
+  TimHandle.timer = DEFAULT_ETHERNET_TIMER;
+  /* Timer set to 1ms */
+  TimerHandleInit(&TimHandle, (uint16_t)(1000 - 1), ((uint32_t)(getTimerClkFreq(DEFAULT_ETHERNET_TIMER) / (1000000)) - 1));
+  attachIntHandle(&TimHandle, scheduler_callback);
+}
+#else
 /**
 * @brief  Enable the timer used to call ethernet scheduler function at regular
 *         interval.
@@ -162,6 +186,7 @@ static void TIM_scheduler_Config(void)
   EthTim->attachInterrupt(scheduler_callback);
   EthTim->resume();
 }
+#endif
 
 void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, const uint8_t *netmask)
 {
