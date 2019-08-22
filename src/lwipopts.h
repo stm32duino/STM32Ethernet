@@ -11,6 +11,9 @@
 #if __has_include("STM32lwipopts.h")
 #include "STM32lwipopts.h"
 #else
+#if __has_include("lwipopts_extra.h")
+#include "lwipopts_extra.h"
+#endif
 #include "lwipopts_default.h"
 #endif
 

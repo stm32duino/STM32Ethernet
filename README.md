@@ -22,7 +22,9 @@ The LwIP has several user defined options, which is specified from within the `l
 
 This library provides a default user defined options file named `lwipopts_default.h`.
 
-User can provide his own defined options at sketch level by adding his configuration in a file named `STM32lwipopts.h`.
+User can provide his own defined options at sketch level by adding his configuration in a file named `STM32lwipopts.h` or
+extend the default one by adding some extra configuration in a file named `lwipopts_extra.h`.
+
 
 
 ## New alternative init procedure **!!!**
