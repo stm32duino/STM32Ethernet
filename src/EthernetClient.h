@@ -31,6 +31,9 @@ public:
   virtual bool operator==(const EthernetClient&);
   virtual bool operator!=(const EthernetClient& rhs) { return !this->operator==(rhs); };
   uint8_t getSocketNumber();
+  virtual uint16_t localPort() { return (_tcp_client->pcb->local_port); };
+  virtual IPAddress remoteIP() { return (IPAddress(_tcp_client->pcb->remote_ip.addr)); };
+  virtual uint16_t remotePort() { return (_tcp_client->pcb->remote_port); };
 
   friend class EthernetServer;
 
