@@ -40,16 +40,13 @@ int EthernetClient::connect(const char* host, uint16_t port) {
 }
 
 int EthernetClient::connect(IPAddress ip, uint16_t port) {
-  /* Can't create twice the same client */
-  if(_tcp_client != NULL) {
-    return 0;
-  }
-
-  /* Allocates memory for client */
-  _tcp_client = (struct tcp_struct *)mem_malloc(sizeof(struct tcp_struct));
-
   if(_tcp_client == NULL) {
-    return 0;
+    /* Allocates memory for client */
+    _tcp_client = (struct tcp_struct *)mem_malloc(sizeof(struct tcp_struct));
+
+    if(_tcp_client == NULL) {
+        return 0;
+    }
   }
 
   /* Creates a new TCP protocol control block */
