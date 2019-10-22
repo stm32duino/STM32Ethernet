@@ -101,6 +101,11 @@ void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server
   macAddress(mac);
 }
 
+EthernetLinkStatus EthernetClass::linkStatus()
+{
+  return (stm32_eth_link_up() ? LinkON : LinkOFF);
+}
+
 int EthernetClass::maintain(){
   int rc = DHCP_CHECK_NONE;
 

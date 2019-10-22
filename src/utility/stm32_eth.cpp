@@ -247,6 +247,15 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
 }
 
 /**
+  * @brief Return Ethernet link status
+  * @param  None
+  * @retval 1 for link up, 0 for link down
+  */
+uint8_t stm32_eth_link_up(void) {
+  return netif_is_link_up(&gnetif);
+}
+
+/**
   * @brief  This function must be called in main loop in standalone mode.
   * @param  None
   * @retval None
@@ -479,8 +488,6 @@ void ethernetif_notify_conn_changed(struct netif *netif)
 {
   if(netif_is_link_up(netif))
   {
-    printf("Link up\n");
-
     /* Update DHCP state machine if DHCP used */
     if(DHCP_Started_by_user == 1) {
       DHCP_state = DHCP_START;
@@ -498,8 +505,6 @@ void ethernetif_notify_conn_changed(struct netif *netif)
 
     /*  When the netif link is down this function must be called.*/
     netif_set_down(netif);
-
-    printf("Link down\n");
   }
 }
 
