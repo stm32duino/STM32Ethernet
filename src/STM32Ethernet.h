@@ -7,6 +7,12 @@
 #include "EthernetServer.h"
 #include "Dhcp.h"
 
+enum EthernetLinkStatus {
+  Unknown,
+  LinkON,
+  LinkOFF
+};
+
 class EthernetClass {
 private:
   IPAddress _dnsServerAddress;
@@ -19,6 +25,7 @@ public:
   // configuration through DHCP.
   // Returns 0 if the DHCP configuration failed, and 1 if it succeeded
   int begin(unsigned long timeout = 60000, unsigned long responseTimeout = 4000);
+  EthernetLinkStatus linkStatus();
   void begin(IPAddress local_ip);
   void begin(IPAddress local_ip, IPAddress subnet);
   void begin(IPAddress local_ip, IPAddress subnet, IPAddress gateway);
