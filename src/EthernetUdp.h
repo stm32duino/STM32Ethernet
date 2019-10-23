@@ -50,6 +50,8 @@ private:
   uint16_t _port; // local port to listen on
   IPAddress _remoteIP; // remote IP address for the incoming packet whilst it's being processed
   uint16_t _remotePort; // remote port for the incoming packet whilst it's being processed
+  IPAddress _sendtoIP;  // the remote IP address set by beginPacket
+  uint16_t _sendtoPort; // the remote port set by beginPacket
 
   struct pbuf *_data;     //pbuf for data to send
   struct udp_struct _udp; //udp settings
