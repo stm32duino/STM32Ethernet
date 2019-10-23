@@ -106,9 +106,8 @@ int EthernetUDP::beginPacket(IPAddress ip, uint16_t port)
 
   ip_addr_t ipaddr;
 
-  if(ERR_OK != udp_connect( _udp.pcb, u8_to_ip_addr(rawIPAddress(ip), &ipaddr), port)) {
-    return 0;
-  }
+  _sendtoIP = ip;
+  _sendtoPort = port;
 
   udp_recv(_udp.pcb, &udp_receive_callback, &_udp);
   stm32_eth_scheduler();
@@ -122,12 +121,8 @@ int EthernetUDP::endPacket()
     return 0;
   }
 
-  // A remote IP & port must be connected to udp pcb. Call ::beginPacket before.
-  if((udp_flags(_udp.pcb) & UDP_FLAGS_CONNECTED) != UDP_FLAGS_CONNECTED) {
-    return 0;
-  }
-
-  if(ERR_OK != udp_send(_udp.pcb, _data)) {
+  ip_addr_t ipaddr;
+  if(ERR_OK != udp_sendto(_udp.pcb, _data, u8_to_ip_addr(rawIPAddress(_sendtoIP), &ipaddr), _sendtoPort)) {
     _data = stm32_free_data(_data);
     return 0;
   }
