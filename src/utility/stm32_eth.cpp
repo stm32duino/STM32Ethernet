@@ -247,6 +247,15 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
 }
 
 /**
+  * @brief Return Ethernet init status
+  * @param  None
+  * @retval 1 for initialized, 0 for not initialized
+  */
+uint8_t stm32_eth_is_init(void) {
+  return ethernetif_is_init();
+}
+
+/**
   * @brief Return Ethernet link status
   * @param  None
   * @retval 1 for link up, 0 for link down

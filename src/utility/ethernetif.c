@@ -432,6 +432,17 @@ void ethernetif_input(struct netif *netif)
 }
 
 /**
+  * @brief Returns the current state
+  *
+  * @param None
+  * @return 0 not initialized else 1
+  */
+uint8_t ethernetif_is_init(void)
+{
+  return (EthHandle.State != HAL_ETH_STATE_RESET);
+}
+
+/**
   * @brief Should be called at the beginning of the program to set up the
   * network interface. It calls the function low_level_init() to do the
   * actual setup of the hardware.

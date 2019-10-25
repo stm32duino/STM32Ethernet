@@ -103,7 +103,7 @@ void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server
 
 EthernetLinkStatus EthernetClass::linkStatus()
 {
-  return (stm32_eth_link_up() ? LinkON : LinkOFF);
+  return (!stm32_eth_is_init()) ? Unknown : (stm32_eth_link_up() ? LinkON : LinkOFF);
 }
 
 int EthernetClass::maintain(){

@@ -56,6 +56,7 @@
 #endif
 
 /* Exported types ------------------------------------------------------------*/
+uint8_t ethernetif_is_init(void);
 err_t ethernetif_init(struct netif *netif);
 void ethernetif_input(struct netif *netif);
 void ethernetif_set_link(struct netif *netif);
