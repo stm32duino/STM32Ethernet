@@ -43,12 +43,12 @@ You can get the MAC address with following function, this must done after Ethern
 	
 	uint8_t *mac;
 	Ethernet.begin();
-	mac = Ethernet.macAddress();
+	mac = Ethernet.MACAddress();
 
 You can also set a new user based MAC address, this must done before Ethernet.begin()
 
 	uint8_t newMAC[] = {0x00, 0x80, 0xE1, 0x01, 0x01, 0x01};
-	Ethernet.macAddress(newMAC);
+	Ethernet.MACAddress(newMAC);
 	Ethernet.begin();
 
 ## Note

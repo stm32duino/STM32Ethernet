@@ -18,7 +18,7 @@ private:
   IPAddress _dnsServerAddress;
   DhcpClass* _dhcp;
   uint8_t mac_address[6];
-  uint8_t *  macAddressDefault(void);
+  uint8_t *  MACAddressDefault(void);
   
 public:
   // Initialise the Ethernet with the internal provided MAC address and gain the rest of the
@@ -43,8 +43,8 @@ public:
   int maintain();
   void schedule(void);
   
-  void macAddress(uint8_t *mac);
-  uint8_t * macAddress(void);
+  void MACAddress(uint8_t *mac);
+  uint8_t * MACAddress(void);
   IPAddress localIP();
   IPAddress subnetMask();
   IPAddress gatewayIP();

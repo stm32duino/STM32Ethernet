@@ -5,7 +5,7 @@ int EthernetClass::begin(unsigned long timeout, unsigned long responseTimeout)
 {
   static DhcpClass s_dhcp;
   _dhcp = &s_dhcp;
-  stm32_eth_init(macAddressDefault(), NULL, NULL, NULL);
+  stm32_eth_init(MACAddressDefault(), NULL, NULL, NULL);
 
   // Now try to get our config info from a DHCP server
   int ret = _dhcp->beginWithDHCP(mac_address, timeout, responseTimeout);
@@ -43,7 +43,7 @@ void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gatewa
 
 void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gateway, IPAddress dns_server)
 {
-  stm32_eth_init(macAddressDefault(), local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
+  stm32_eth_init(MACAddressDefault(), local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
   /* If there is a local DHCP informs it of our manual IP configuration to
   prevent IP conflict */
   stm32_DHCP_manual_config();
@@ -63,7 +63,7 @@ int EthernetClass::begin(uint8_t *mac_address, unsigned long timeout, unsigned l
   {
     _dnsServerAddress = _dhcp->getDnsServerIp();
   }
-  macAddress(mac_address);
+  MACAddress(mac_address);
   return ret;
 }
 
@@ -98,7 +98,7 @@ void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server
   prevent IP conflict */
   stm32_DHCP_manual_config();
   _dnsServerAddress = dns_server;
-  macAddress(mac);
+  MACAddress(mac);
 }
 
 EthernetLinkStatus EthernetClass::linkStatus()
@@ -137,7 +137,7 @@ void EthernetClass::schedule(void)
   stm32_eth_scheduler();
 }
 
-uint8_t * EthernetClass::macAddressDefault(void)
+uint8_t * EthernetClass::MACAddressDefault(void)
 {
   if ((mac_address[0] + mac_address[1] + mac_address[2] + mac_address[3] + mac_address[4] + mac_address[5]) == 0) {
     uint32_t baseUID = *(uint32_t *)UID_BASE;
@@ -151,7 +151,7 @@ uint8_t * EthernetClass::macAddressDefault(void)
   return mac_address;
 }
 
-void EthernetClass::macAddress(uint8_t *mac) {
+void EthernetClass::MACAddress(uint8_t *mac) {
   mac_address[0] = mac[0];
   mac_address[1] = mac[1];
   mac_address[2] = mac[2];
@@ -160,7 +160,7 @@ void EthernetClass::macAddress(uint8_t *mac) {
   mac_address[5] = mac[5];
 }
 
-uint8_t * EthernetClass::macAddress(void) {
+uint8_t * EthernetClass::MACAddress(void) {
   return mac_address;
 }
 
