@@ -96,17 +96,34 @@ size_t EthernetClient::write(const uint8_t *buf, size_t size) {
     return 0;
   }
 
-  if(ERR_OK != tcp_write(_tcp_client->pcb, buf, size, TCP_WRITE_FLAG_COPY)) {
-    return 0;
+  size_t max_send_size, bytes_to_send;
+  size_t bytes_sent = 0;
+  size_t bytes_left = size;
+  err_t res;
+
+  while(bytes_sent != size){
+    max_send_size = tcp_sndbuf(_tcp_client->pcb);
+    bytes_to_send = bytes_left > max_send_size ? max_send_size : bytes_left;
+
+    if(bytes_to_send > 0){
+      res = tcp_write(_tcp_client->pcb, &buf[bytes_sent], bytes_to_send,  TCP_WRITE_FLAG_COPY);
+
+      if(res == ERR_OK){
+        bytes_sent += bytes_to_send;
+        bytes_left = size - bytes_sent;
+      }
+      else if(res != ERR_MEM){
+        // other error, cannot contiune
+        return 0;
+      }
+    }
+
+    //Force to send data right now!
+    if(ERR_OK != tcp_output(_tcp_client->pcb)) {
+      return 0;
+    }
+    stm32_eth_scheduler();
   }
-
-  //Force to send data right now!
-  if(ERR_OK != tcp_output(_tcp_client->pcb)) {
-    return 0;
-  }
-
-  stm32_eth_scheduler();
-
   return size;
 }
 
