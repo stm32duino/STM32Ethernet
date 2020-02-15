@@ -113,7 +113,7 @@ size_t EthernetClient::write(const uint8_t *buf, size_t size) {
         bytes_left = size - bytes_sent;
       }
       else if(res != ERR_MEM){
-        // other error, cannot contiune
+        // other error, cannot continue
         return 0;
       }
     }
