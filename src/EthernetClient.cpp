@@ -101,7 +101,7 @@ size_t EthernetClient::write(const uint8_t *buf, size_t size) {
   size_t bytes_left = size;
   err_t res;
 
-  while(bytes_sent != size){
+  do{
     max_send_size = tcp_sndbuf(_tcp_client->pcb);
     bytes_to_send = bytes_left > max_send_size ? max_send_size : bytes_left;
 
@@ -123,7 +123,9 @@ size_t EthernetClient::write(const uint8_t *buf, size_t size) {
       return 0;
     }
     stm32_eth_scheduler();
-  }
+
+  } while(bytes_sent != size);
+
   return size;
 }
 
