@@ -9,8 +9,7 @@ int EthernetClass::begin(unsigned long timeout, unsigned long responseTimeout)
 
   // Now try to get our config info from a DHCP server
   int ret = _dhcp->beginWithDHCP(mac_address, timeout, responseTimeout);
-  if(ret == 1)
-  {
+  if (ret == 1) {
     _dnsServerAddress = _dhcp->getDnsServerIp();
   }
 
@@ -59,8 +58,7 @@ int EthernetClass::begin(uint8_t *mac_address, unsigned long timeout, unsigned l
 
   // Now try to get our config info from a DHCP server
   int ret = _dhcp->beginWithDHCP(mac_address, timeout, responseTimeout);
-  if(ret == 1)
-  {
+  if (ret == 1) {
     _dnsServerAddress = _dhcp->getDnsServerIp();
   }
   MACAddress(mac_address);
@@ -106,13 +104,14 @@ EthernetLinkStatus EthernetClass::linkStatus()
   return (!stm32_eth_is_init()) ? Unknown : (stm32_eth_link_up() ? LinkON : LinkOFF);
 }
 
-int EthernetClass::maintain(){
+int EthernetClass::maintain()
+{
   int rc = DHCP_CHECK_NONE;
 
-  if(_dhcp != NULL){
+  if (_dhcp != NULL) {
     //we have a pointer to dhcp, use it
     rc = _dhcp->checkLease();
-    switch ( rc ){
+    switch (rc) {
       case DHCP_CHECK_NONE:
         //nothing done
         break;
@@ -137,7 +136,7 @@ void EthernetClass::schedule(void)
   stm32_eth_scheduler();
 }
 
-uint8_t * EthernetClass::MACAddressDefault(void)
+uint8_t *EthernetClass::MACAddressDefault(void)
 {
   if ((mac_address[0] + mac_address[1] + mac_address[2] + mac_address[3] + mac_address[4] + mac_address[5]) == 0) {
     uint32_t baseUID = *(uint32_t *)UID_BASE;
@@ -151,7 +150,8 @@ uint8_t * EthernetClass::MACAddressDefault(void)
   return mac_address;
 }
 
-void EthernetClass::MACAddress(uint8_t *mac) {
+void EthernetClass::MACAddress(uint8_t *mac)
+{
   mac_address[0] = mac[0];
   mac_address[1] = mac[1];
   mac_address[2] = mac[2];
@@ -160,7 +160,8 @@ void EthernetClass::MACAddress(uint8_t *mac) {
   mac_address[5] = mac[5];
 }
 
-uint8_t * EthernetClass::MACAddress(void) {
+uint8_t *EthernetClass::MACAddress(void)
+{
   return mac_address;
 }
 

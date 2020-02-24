@@ -86,7 +86,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_QUEUE_OOSEQ         0
 
 /* TCP Maximum segment size. */
-#define TCP_MSS                 (1500 - 40)	  /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size) */
+#define TCP_MSS                 (1500 - 40)   /* TCP_MSS = (Ethernet MTU - IP header size - TCP header size) */
 
 /* TCP sender buffer space (bytes). */
 #define TCP_SND_BUF             (4*TCP_MSS)
@@ -151,35 +151,35 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
 
 
 #ifdef CHECKSUM_BY_HARDWARE
-  /* CHECKSUM_GEN_IP==0: Generate checksums by hardware for outgoing IP packets.*/
-  #define CHECKSUM_GEN_IP                 0
-  /* CHECKSUM_GEN_UDP==0: Generate checksums by hardware for outgoing UDP packets.*/
-  #define CHECKSUM_GEN_UDP                0
-  /* CHECKSUM_GEN_TCP==0: Generate checksums by hardware for outgoing TCP packets.*/
-  #define CHECKSUM_GEN_TCP                0
-  /* CHECKSUM_CHECK_IP==0: Check checksums by hardware for incoming IP packets.*/
-  #define CHECKSUM_CHECK_IP               0
-  /* CHECKSUM_CHECK_UDP==0: Check checksums by hardware for incoming UDP packets.*/
-  #define CHECKSUM_CHECK_UDP              0
-  /* CHECKSUM_CHECK_TCP==0: Check checksums by hardware for incoming TCP packets.*/
-  #define CHECKSUM_CHECK_TCP              0
-  /* CHECKSUM_CHECK_ICMP==0: Check checksums by hardware for incoming ICMP packets.*/
-  #define CHECKSUM_GEN_ICMP               0
+/* CHECKSUM_GEN_IP==0: Generate checksums by hardware for outgoing IP packets.*/
+#define CHECKSUM_GEN_IP                 0
+/* CHECKSUM_GEN_UDP==0: Generate checksums by hardware for outgoing UDP packets.*/
+#define CHECKSUM_GEN_UDP                0
+/* CHECKSUM_GEN_TCP==0: Generate checksums by hardware for outgoing TCP packets.*/
+#define CHECKSUM_GEN_TCP                0
+/* CHECKSUM_CHECK_IP==0: Check checksums by hardware for incoming IP packets.*/
+#define CHECKSUM_CHECK_IP               0
+/* CHECKSUM_CHECK_UDP==0: Check checksums by hardware for incoming UDP packets.*/
+#define CHECKSUM_CHECK_UDP              0
+/* CHECKSUM_CHECK_TCP==0: Check checksums by hardware for incoming TCP packets.*/
+#define CHECKSUM_CHECK_TCP              0
+/* CHECKSUM_CHECK_ICMP==0: Check checksums by hardware for incoming ICMP packets.*/
+#define CHECKSUM_GEN_ICMP               0
 #else
-  /* CHECKSUM_GEN_IP==1: Generate checksums in software for outgoing IP packets.*/
-  #define CHECKSUM_GEN_IP                 1
-  /* CHECKSUM_GEN_UDP==1: Generate checksums in software for outgoing UDP packets.*/
-  #define CHECKSUM_GEN_UDP                1
-  /* CHECKSUM_GEN_TCP==1: Generate checksums in software for outgoing TCP packets.*/
-  #define CHECKSUM_GEN_TCP                1
-  /* CHECKSUM_CHECK_IP==1: Check checksums in software for incoming IP packets.*/
-  #define CHECKSUM_CHECK_IP               1
-  /* CHECKSUM_CHECK_UDP==1: Check checksums in software for incoming UDP packets.*/
-  #define CHECKSUM_CHECK_UDP              1
-  /* CHECKSUM_CHECK_TCP==1: Check checksums in software for incoming TCP packets.*/
-  #define CHECKSUM_CHECK_TCP              1
-  /* CHECKSUM_CHECK_ICMP==1: Check checksums by hardware for incoming ICMP packets.*/
-  #define CHECKSUM_GEN_ICMP               1
+/* CHECKSUM_GEN_IP==1: Generate checksums in software for outgoing IP packets.*/
+#define CHECKSUM_GEN_IP                 1
+/* CHECKSUM_GEN_UDP==1: Generate checksums in software for outgoing UDP packets.*/
+#define CHECKSUM_GEN_UDP                1
+/* CHECKSUM_GEN_TCP==1: Generate checksums in software for outgoing TCP packets.*/
+#define CHECKSUM_GEN_TCP                1
+/* CHECKSUM_CHECK_IP==1: Check checksums in software for incoming IP packets.*/
+#define CHECKSUM_CHECK_IP               1
+/* CHECKSUM_CHECK_UDP==1: Check checksums in software for incoming UDP packets.*/
+#define CHECKSUM_CHECK_UDP              1
+/* CHECKSUM_CHECK_TCP==1: Check checksums in software for incoming TCP packets.*/
+#define CHECKSUM_CHECK_TCP              1
+/* CHECKSUM_CHECK_ICMP==1: Check checksums by hardware for incoming ICMP packets.*/
+#define CHECKSUM_GEN_ICMP               1
 #endif
 
 

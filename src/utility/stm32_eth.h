@@ -49,15 +49,14 @@
 
 /* Exported types ------------------------------------------------------------*/
 /* TCP connection state */
-typedef enum
-{
+typedef enum {
   TCP_NONE = 0,
   TCP_CONNECTED,
   TCP_RECEIVED,
   TCP_SENT,
   TCP_ACCEPTED,
   TCP_CLOSING,
-}tcp_client_states;
+} tcp_client_states;
 
 /* Struct to store received data */
 struct pbuf_data {

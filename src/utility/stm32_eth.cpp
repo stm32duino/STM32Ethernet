@@ -117,13 +117,10 @@ static void Netif_Config(void)
   /* Registers the default network interface */
   netif_set_default(&gnetif);
 
-  if (netif_is_link_up(&gnetif))
-  {
+  if (netif_is_link_up(&gnetif)) {
     /* When the netif is fully configured this function must be called */
     netif_set_up(&gnetif);
-  }
-  else
-  {
+  } else {
     /* When the netif link is down this function must be called */
     netif_set_down(&gnetif);
   }
@@ -188,42 +185,42 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
 {
   static uint8_t initDone = 0;
 
-  if(!initDone) {
+  if (!initDone) {
     /* Initialize the LwIP stack */
     lwip_init();
 
-    if(mac != NULL) {
+    if (mac != NULL) {
       ethernetif_set_mac_addr(mac);
     } // else default value is used: MAC_ADDR0 ... MAC_ADDR5
 
-    if(ip != NULL) {
-      IP_ADDR4(&(gconfig.ipaddr),ip[0],ip[1],ip[2],ip[3]);
+    if (ip != NULL) {
+      IP_ADDR4(&(gconfig.ipaddr), ip[0], ip[1], ip[2], ip[3]);
     } else {
-      #if LWIP_DHCP
-        ip_addr_set_zero_ip4(&(gconfig.ipaddr));
-      #else
-        IP_ADDR4(&(gconfig.ipaddr),IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3);
-      #endif /* LWIP_DHCP */
+#if LWIP_DHCP
+      ip_addr_set_zero_ip4(&(gconfig.ipaddr));
+#else
+      IP_ADDR4(&(gconfig.ipaddr), IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
+#endif /* LWIP_DHCP */
     }
 
-    if(gw != NULL) {
-      IP_ADDR4(&(gconfig.gw),gw[0],gw[1],gw[2],gw[3]);
+    if (gw != NULL) {
+      IP_ADDR4(&(gconfig.gw), gw[0], gw[1], gw[2], gw[3]);
     } else {
-      #if LWIP_DHCP
-        ip_addr_set_zero_ip4(&(gconfig.gw));
-      #else
-        IP_ADDR4(&(gconfig.gw),GW_ADDR0,GW_ADDR1,GW_ADDR2,GW_ADDR3);
-      #endif /* LWIP_DHCP */
+#if LWIP_DHCP
+      ip_addr_set_zero_ip4(&(gconfig.gw));
+#else
+      IP_ADDR4(&(gconfig.gw), GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
+#endif /* LWIP_DHCP */
     }
 
-    if(netmask != NULL) {
-      IP_ADDR4(&(gconfig.netmask),netmask[0],netmask[1],netmask[2],netmask[3]);
+    if (netmask != NULL) {
+      IP_ADDR4(&(gconfig.netmask), netmask[0], netmask[1], netmask[2], netmask[3]);
     } else {
-      #if LWIP_DHCP
-        ip_addr_set_zero_ip4(&(gconfig.netmask));
-      #else
-        IP_ADDR4(&(gconfig.netmask),NETMASK_ADDR0,NETMASK_ADDR1,NETMASK_ADDR2,NETMASK_ADDR3);
-      #endif /* LWIP_DHCP */
+#if LWIP_DHCP
+      ip_addr_set_zero_ip4(&(gconfig.netmask));
+#else
+      IP_ADDR4(&(gconfig.netmask), NETMASK_ADDR0, NETMASK_ADDR1, NETMASK_ADDR2, NETMASK_ADDR3);
+#endif /* LWIP_DHCP */
     }
 
     /* Configure the Network interface */
@@ -247,7 +244,8 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
   * @param  None
   * @retval 1 for initialized, 0 for not initialized
   */
-uint8_t stm32_eth_is_init(void) {
+uint8_t stm32_eth_is_init(void)
+{
   return ethernetif_is_init();
 }
 
@@ -256,7 +254,8 @@ uint8_t stm32_eth_is_init(void) {
   * @param  None
   * @retval 1 for link up, 0 for link down
   */
-uint8_t stm32_eth_link_up(void) {
+uint8_t stm32_eth_link_up(void)
+{
   return netif_is_link_up(&gnetif);
 }
 
@@ -265,7 +264,8 @@ uint8_t stm32_eth_link_up(void) {
   * @param  None
   * @retval None
   */
-void stm32_eth_scheduler(void) {
+void stm32_eth_scheduler(void)
+{
   /* Read a received packet from the Ethernet buffers and send it
   to the lwIP for handling */
 #ifndef ETH_INPUT_USE_IT
@@ -273,7 +273,7 @@ void stm32_eth_scheduler(void) {
 #endif /* ETH_INPUT_USE_IT */
 
   /* Check ethernet link status */
-  if((HAL_GetTick() - gEhtLinkTickStart) >= TIME_CHECK_ETH_LINK_STATE) {
+  if ((HAL_GetTick() - gEhtLinkTickStart) >= TIME_CHECK_ETH_LINK_STATE) {
     ethernetif_set_link(&gnetif);
     gEhtLinkTickStart = HAL_GetTick();
   }
@@ -293,7 +293,8 @@ void stm32_eth_scheduler(void) {
   * @param  None
   * @retval true if DHCP enabled or false if not used
   */
-uint8_t stm32_dhcp_started(void) {
+uint8_t stm32_dhcp_started(void)
+{
   return DHCP_Started_by_user;
 }
 
@@ -302,63 +303,55 @@ uint8_t stm32_dhcp_started(void) {
   * @param  netif pointer to generic data structure used for all lwIP network interfaces
   * @retval None
   */
-void stm32_DHCP_process(struct netif *netif) {
+void stm32_DHCP_process(struct netif *netif)
+{
   struct dhcp *dhcp;
 
-  if(netif_is_link_up(netif)){
-    switch (DHCP_state)
-    {
-    case DHCP_START:
-      {
-        ip_addr_set_zero_ip4(&netif->ip_addr);
-        ip_addr_set_zero_ip4(&netif->netmask);
-        ip_addr_set_zero_ip4(&netif->gw);
-        DHCP_state = DHCP_WAIT_ADDRESS;
-        dhcp_start(netif);
-        DHCP_Started_by_user = 1;
-      }
-      break;
-
-    case DHCP_WAIT_ADDRESS:
-      {
-        if (dhcp_supplied_address(netif))
-        {
-          DHCP_state = DHCP_ADDRESS_ASSIGNED;
+  if (netif_is_link_up(netif)) {
+    switch (DHCP_state) {
+      case DHCP_START: {
+          ip_addr_set_zero_ip4(&netif->ip_addr);
+          ip_addr_set_zero_ip4(&netif->netmask);
+          ip_addr_set_zero_ip4(&netif->gw);
+          DHCP_state = DHCP_WAIT_ADDRESS;
+          dhcp_start(netif);
+          DHCP_Started_by_user = 1;
         }
-        else
-        {
-          dhcp = (struct dhcp *)netif_get_client_data(netif, LWIP_NETIF_CLIENT_DATA_INDEX_DHCP);
+        break;
 
-          /* DHCP timeout */
-          if (dhcp->tries > MAX_DHCP_TRIES)
-          {
-            DHCP_state = DHCP_TIMEOUT;
+      case DHCP_WAIT_ADDRESS: {
+          if (dhcp_supplied_address(netif)) {
+            DHCP_state = DHCP_ADDRESS_ASSIGNED;
+          } else {
+            dhcp = (struct dhcp *)netif_get_client_data(netif, LWIP_NETIF_CLIENT_DATA_INDEX_DHCP);
 
-            // If DHCP address not bind, keep DHCP stopped
-            DHCP_Started_by_user = 0;
+            /* DHCP timeout */
+            if (dhcp->tries > MAX_DHCP_TRIES) {
+              DHCP_state = DHCP_TIMEOUT;
 
-            /* Stop DHCP */
-            dhcp_stop(netif);
+              // If DHCP address not bind, keep DHCP stopped
+              DHCP_Started_by_user = 0;
+
+              /* Stop DHCP */
+              dhcp_stop(netif);
+            }
           }
         }
-      }
-      break;
-    case DHCP_ASK_RELEASE:
-      {
-        /* Force release */
-        dhcp_release(netif);
-        dhcp_stop(netif);
-        DHCP_state = DHCP_OFF;
-      }
-      break;
-    case DHCP_LINK_DOWN:
-      {
-        /* Stop DHCP */
-        dhcp_stop(netif);
-        DHCP_state = DHCP_OFF;
-      }
-      break;
-    default: break;
+        break;
+      case DHCP_ASK_RELEASE: {
+          /* Force release */
+          dhcp_release(netif);
+          dhcp_stop(netif);
+          DHCP_state = DHCP_OFF;
+        }
+        break;
+      case DHCP_LINK_DOWN: {
+          /* Stop DHCP */
+          dhcp_stop(netif);
+          DHCP_state = DHCP_OFF;
+        }
+        break;
+      default: break;
     }
   } else {
     DHCP_state = DHCP_OFF;
@@ -373,8 +366,7 @@ void stm32_DHCP_process(struct netif *netif) {
 void stm32_DHCP_Periodic_Handle(struct netif *netif)
 {
   /* Fine DHCP periodic process every 500ms */
-  if (HAL_GetTick() - DHCPfineTimer >= DHCP_FINE_TIMER_MSECS)
-  {
+  if (HAL_GetTick() - DHCPfineTimer >= DHCP_FINE_TIMER_MSECS) {
     DHCPfineTimer =  HAL_GetTick();
     /* process DHCP state machine */
     stm32_DHCP_process(netif);
@@ -386,7 +378,8 @@ void stm32_DHCP_Periodic_Handle(struct netif *netif)
   * @param  None
   * @retval None
   */
-void stm32_DHCP_manual_config(void) {
+void stm32_DHCP_manual_config(void)
+{
   dhcp_inform(&gnetif);
 }
 
@@ -395,13 +388,14 @@ void stm32_DHCP_manual_config(void) {
   * @param  None
   * @retval Renew or rebind. Adapted from Arduino Ethernet library.
   */
-uint8_t stm32_get_DHCP_lease_state(void) {
+uint8_t stm32_get_DHCP_lease_state(void)
+{
   uint8_t res = 0;
-  struct dhcp* dhcp = (struct dhcp *)netif_get_client_data(&gnetif, LWIP_NETIF_CLIENT_DATA_INDEX_DHCP);
+  struct dhcp *dhcp = (struct dhcp *)netif_get_client_data(&gnetif, LWIP_NETIF_CLIENT_DATA_INDEX_DHCP);
 
-  if(dhcp->state == DHCP_STATE_RENEWING) {
+  if (dhcp->state == DHCP_STATE_RENEWING) {
     res = 2;
-  } else if(dhcp->state == DHCP_STATE_REBINDING) {
+  } else if (dhcp->state == DHCP_STATE_REBINDING) {
     res = 4;
   }
 
@@ -413,7 +407,8 @@ uint8_t stm32_get_DHCP_lease_state(void) {
   * @param  state: DHCP_START, DHCP_ASK_RELEASE or DHCP_STOP. Others should not be used.
   * @retval None
   */
-void stm32_set_DHCP_state(uint8_t state) {
+void stm32_set_DHCP_state(uint8_t state)
+{
   DHCP_state = state;
 }
 
@@ -429,7 +424,8 @@ void stm32_set_DHCP_state(uint8_t state) {
               DHCP_LINK_DOWN
               DHCP_ASK_RELEASE
   */
-uint8_t stm32_get_DHCP_state(void) {
+uint8_t stm32_get_DHCP_state(void)
+{
   return DHCP_state;
 }
 
@@ -440,7 +436,8 @@ uint8_t stm32_get_DHCP_state(void) {
   * @param  None
   * @retval address in uint32_t format
   */
-uint32_t stm32_eth_get_ipaddr(void) {
+uint32_t stm32_eth_get_ipaddr(void)
+{
   return ip4_addr_get_u32(&(gnetif.ip_addr));
 }
 
@@ -449,7 +446,8 @@ uint32_t stm32_eth_get_ipaddr(void) {
   * @param  None
   * @retval address in uint32_t format
   */
-uint32_t stm32_eth_get_gwaddr(void) {
+uint32_t stm32_eth_get_gwaddr(void)
+{
   return ip4_addr_get_u32(&(gnetif.gw));
 }
 
@@ -458,7 +456,8 @@ uint32_t stm32_eth_get_gwaddr(void) {
   * @param  None
   * @retval address in uint32_t format
   */
-uint32_t stm32_eth_get_netmaskaddr(void) {
+uint32_t stm32_eth_get_netmaskaddr(void)
+{
   return ip4_addr_get_u32(&(gnetif.netmask));
 }
 
@@ -467,7 +466,8 @@ uint32_t stm32_eth_get_netmaskaddr(void) {
   * @param  None
   * @retval address in uint32_t format
   */
-uint32_t stm32_eth_get_dnsaddr(void) {
+uint32_t stm32_eth_get_dnsaddr(void)
+{
   const ip_addr_t *tmp = dns_getserver(0);
   return ip4_addr_get_u32(tmp);
 }
@@ -477,7 +477,8 @@ uint32_t stm32_eth_get_dnsaddr(void) {
   * @param  None
   * @retval address in uint32_t format
   */
-uint32_t stm32_eth_get_dhcpaddr(void) {
+uint32_t stm32_eth_get_dhcpaddr(void)
+{
   struct dhcp *dhcp = (struct dhcp *)netif_get_client_data(&gnetif, LWIP_NETIF_CLIENT_DATA_INDEX_DHCP);
   return ip4_addr_get_u32(&(dhcp->server_ip_addr));
 }
@@ -491,20 +492,17 @@ uint32_t stm32_eth_get_dhcpaddr(void) {
   */
 void ethernetif_notify_conn_changed(struct netif *netif)
 {
-  if(netif_is_link_up(netif))
-  {
+  if (netif_is_link_up(netif)) {
     /* Update DHCP state machine if DHCP used */
-    if(DHCP_Started_by_user == 1) {
+    if (DHCP_Started_by_user == 1) {
       DHCP_state = DHCP_START;
     }
 
     /* When the netif is fully configured this function must be called.*/
     netif_set_up(netif);
-  }
-  else
-  {
+  } else {
     /* Update DHCP state machine if DHCP used */
-    if(DHCP_Started_by_user == 1) {
+    if (DHCP_Started_by_user == 1) {
       DHCP_state = DHCP_LINK_DOWN;
     }
 
@@ -522,14 +520,11 @@ void ethernetif_notify_conn_changed(struct netif *netif)
   */
 void User_notification(struct netif *netif)
 {
-  if (netif_is_up(netif))
-  {
+  if (netif_is_up(netif)) {
     //Link up
-  }
-  else
-  {
+  } else {
     /* Update DHCP state machine */
-    if(DHCP_Started_by_user == 1) {
+    if (DHCP_Started_by_user == 1) {
       DHCP_state = DHCP_LINK_DOWN;
     }
   }
@@ -547,9 +542,9 @@ void stm32_dns_init(const uint8_t *dnsaddr)
   ip_addr_t ip;
 
   /* DNS initialized by DHCP when call dhcp_start() */
-  if(!stm32_dhcp_started()) {
+  if (!stm32_dhcp_started()) {
     dns_init();
-    IP_ADDR4(&ip,dnsaddr[0],dnsaddr[1],dnsaddr[2],dnsaddr[3]);
+    IP_ADDR4(&ip, dnsaddr[0], dnsaddr[1], dnsaddr[2], dnsaddr[3]);
     dns_setserver(0, &ip);
   }
 }
@@ -565,7 +560,7 @@ void dns_callback(const char *name, const ip_addr_t *ipaddr, void *callback_arg)
 {
   UNUSED(name);
 
-  if(ipaddr != NULL) {
+  if (ipaddr != NULL) {
     *((uint32_t *)callback_arg) = ip4_addr_get_u32(ipaddr);
   } else {
     *((uint32_t *)callback_arg) = 0;
@@ -589,38 +584,38 @@ int8_t stm32_dns_gethostbyname(const char *hostname, uint32_t *ipaddr)
   *ipaddr = 0;
   err = dns_gethostbyname(hostname, &iphost, &dns_callback, ipaddr);
 
-  switch(err) {
+  switch (err) {
     case ERR_OK:
       *ipaddr = ip4_addr_get_u32(&iphost);
       ret = 1;
-    break;
+      break;
 
     case ERR_INPROGRESS:
       tickstart = HAL_GetTick();
-      while(*ipaddr == 0) {
+      while (*ipaddr == 0) {
         stm32_eth_scheduler();
-        if((HAL_GetTick() - tickstart) >= TIMEOUT_DNS_REQUEST) {
+        if ((HAL_GetTick() - tickstart) >= TIMEOUT_DNS_REQUEST) {
           ret = -1;
           break;
         }
       }
 
-      if(ret == 0) {
-        if(*ipaddr == 0) {
+      if (ret == 0) {
+        if (*ipaddr == 0) {
           ret = -2;
         } else {
           ret = 1;
         }
       }
-    break;
+      break;
 
     case ERR_ARG:
       ret = -4;
-    break;
+      break;
 
     default:
       ret = -4;
-    break;
+      break;
   }
 
   return ret;
@@ -636,7 +631,7 @@ int8_t stm32_dns_gethostbyname(const char *hostname, uint32_t *ipaddr)
   */
 ip_addr_t *u8_to_ip_addr(uint8_t *ipu8, ip_addr_t *ipaddr)
 {
-  IP_ADDR4(ipaddr,ipu8[0],ipu8[1],ipu8[2],ipu8[3]);
+  IP_ADDR4(ipaddr, ipu8[0], ipu8[1], ipu8[2], ipu8[3]);
   return ipaddr;
 }
 
@@ -660,12 +655,12 @@ uint32_t ip_addr_to_u32(ip_addr_t *ipaddr)
 struct pbuf *stm32_new_data(struct pbuf *p, const uint8_t *buffer, size_t size)
 {
   // Allocate memory if pbuf doesn't exit yet.
-  if(p == NULL) {
+  if (p == NULL) {
     p = pbuf_alloc(PBUF_TRANSPORT, size, PBUF_RAM);
 
-    if(p != NULL) {
+    if (p != NULL) {
       // Copy data inside pbuf
-      if(ERR_OK == pbuf_take(p, (uint8_t *)buffer, size)) {
+      if (ERR_OK == pbuf_take(p, (uint8_t *)buffer, size)) {
         return p;
       } else {
         pbuf_free(p);
@@ -677,9 +672,9 @@ struct pbuf *stm32_new_data(struct pbuf *p, const uint8_t *buffer, size_t size)
   else {
     struct pbuf *q = pbuf_alloc(PBUF_TRANSPORT, size + p->tot_len, PBUF_RAM);
 
-    if(q != NULL) {
-      if(ERR_OK == pbuf_copy(q, p)) {
-        if(ERR_OK == pbuf_take_at(q, (uint8_t *)buffer, size, p->tot_len)) {
+    if (q != NULL) {
+      if (ERR_OK == pbuf_copy(q, p)) {
+        if (ERR_OK == pbuf_take_at(q, (uint8_t *)buffer, size, p->tot_len)) {
           pbuf_free(p);
           p = q;
           return p;
@@ -702,10 +697,10 @@ struct pbuf *stm32_free_data(struct pbuf *p)
 {
   uint16_t n;
 
-  if(p != NULL) {
+  if (p != NULL) {
     do {
       n = pbuf_free(p);
-    } while(n == 0);
+    } while (n == 0);
   }
 
   return NULL;
@@ -724,31 +719,31 @@ uint16_t stm32_get_data(struct pbuf_data *data, uint8_t *buffer, size_t size)
   uint16_t i;
   uint16_t offset;
   uint16_t nb;
-  struct pbuf * ptr;
+  struct pbuf *ptr;
 
-  if((data->p == NULL) || (buffer == NULL) || (size == 0) ||
+  if ((data->p == NULL) || (buffer == NULL) || (size == 0) ||
       (data->available == 0) || (data->available > data->p->tot_len)) {
     return 0;
   }
 
   nb = 0;
 
-  while((nb < size) && (data->p != NULL) && (data->available > 0)) {
+  while ((nb < size) && (data->p != NULL) && (data->available > 0)) {
     ptr = data->p;
     offset = ptr->tot_len - data->available;
 
     /* Get data from p */
-    for(i = 0; (nb < size) && ((offset + i) < ptr->len) && (data->available > 0); i++) {
+    for (i = 0; (nb < size) && ((offset + i) < ptr->len) && (data->available > 0); i++) {
       buffer[nb] = pbuf_get_at(ptr, offset + i);
       nb++;
       data->available--;
     }
 
-    if(nb < size) {
+    if (nb < size) {
       /* continue with next pbuf in chain (if any) */
       data->p = ptr->next;
 
-      if(data->p != NULL) {
+      if (data->p != NULL) {
         /* increment reference count for p */
         pbuf_ref(data->p);
       }
@@ -758,7 +753,7 @@ uint16_t stm32_get_data(struct pbuf_data *data, uint8_t *buffer, size_t size)
     }
   }
 
-  if(data->available == 0) {
+  if (data->available == 0) {
     data->p = stm32_free_data(data->p);
   }
 
@@ -783,9 +778,9 @@ void udp_receive_callback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
   struct udp_struct *udp_arg = (struct udp_struct *)arg;
 
   /* Send data to the application layer */
-  if((udp_arg != NULL) && (udp_arg->pcb == pcb)) {
+  if ((udp_arg != NULL) && (udp_arg->pcb == pcb)) {
     // Free the old p buffer if not read
-    if(udp_arg->data.p != NULL) {
+    if (udp_arg->data.p != NULL) {
       pbuf_free(udp_arg->data.p);
     }
 
@@ -795,7 +790,7 @@ void udp_receive_callback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
     ip_addr_copy(udp_arg->ip, *addr);
     udp_arg->port = port;
 
-    if(udp_arg->onDataArrival != NULL){
+    if (udp_arg->onDataArrival != NULL) {
       udp_arg->onDataArrival();
     }
   } else {
@@ -818,10 +813,8 @@ err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err)
 {
   struct tcp_struct *tcp_arg = (struct tcp_struct *)arg;
 
-  if (err == ERR_OK)
-  {
-    if ((tcp_arg != NULL) && (tcp_arg->pcb == tpcb))
-    {
+  if (err == ERR_OK) {
+    if ((tcp_arg != NULL) && (tcp_arg->pcb == tpcb)) {
       tcp_arg->state = TCP_CONNECTED;
 
       /* initialize LwIP tcp_recv callback function */
@@ -834,17 +827,13 @@ err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err)
       tcp_err(tpcb, tcp_err_callback);
 
       return ERR_OK;
-    }
-    else
-    {
+    } else {
       /* close connection */
       tcp_connection_close(tpcb, tcp_arg);
 
       return ERR_ARG;
     }
-  }
-  else
-  {
+  } else {
     /* close connection */
     tcp_connection_close(tpcb, tcp_arg);
   }
@@ -867,26 +856,25 @@ err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
   /* set priority for the newly accepted tcp connection newpcb */
   tcp_setprio(newpcb, TCP_PRIO_MIN);
 
-  if((tcpClient != NULL) && (ERR_OK == err)) {
+  if ((tcpClient != NULL) && (ERR_OK == err)) {
     struct tcp_struct *client = (struct tcp_struct *)mem_malloc(sizeof(struct tcp_struct));
 
-    if (client != NULL)
-    {
+    if (client != NULL) {
       client->state = TCP_ACCEPTED;
       client->pcb = newpcb;
       client->data.p = NULL;
       client->data.available = 0;
 
       /* Looking for an empty soket */
-      for(uint16_t i = 0; i < MAX_CLIENT; i++) {
-        if(tcpClient[i] == NULL) {
+      for (uint16_t i = 0; i < MAX_CLIENT; i++) {
+        if (tcpClient[i] == NULL) {
           tcpClient[i] = client;
           accepted = 1;
           break;
         }
       }
 
-      if(accepted) {
+      if (accepted) {
         /* pass newly allocated client structure as argument to newpcb */
         tcp_arg(newpcb, client);
 
@@ -908,9 +896,7 @@ err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
         /* return memory error */
         ret_err = ERR_MEM;
       }
-    }
-    else
-    {
+    } else {
       /*  close tcp connection */
       tcp_connection_close(newpcb, client);
       mem_free(client);
@@ -938,31 +924,25 @@ static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, 
   err_t ret_err;
 
   /* if we receive an empty tcp frame from server => close connection */
-  if (p == NULL)
-  {
+  if (p == NULL) {
     /* we're done sending, close connection */
     tcp_connection_close(tpcb, tcp_arg);
     ret_err = ERR_OK;
   }
   /* else : a non empty frame was received from echo server but for some reason err != ERR_OK */
-  else if(err != ERR_OK)
-  {
+  else if (err != ERR_OK) {
     /* free received pbuf*/
-    if (p != NULL)
-    {
+    if (p != NULL) {
       pbuf_free(p);
     }
     ret_err = err;
-  }
-  else if((tcp_arg->state == TCP_CONNECTED) || (tcp_arg->state == TCP_ACCEPTED))
-  {
+  } else if ((tcp_arg->state == TCP_CONNECTED) || (tcp_arg->state == TCP_ACCEPTED)) {
     /* Acknowledge data reception */
     tcp_recved(tpcb, p->tot_len);
 
-    if(tcp_arg->data.p == NULL) {
+    if (tcp_arg->data.p == NULL) {
       tcp_arg->data.p = p;
-    }
-    else {
+    } else {
       pbuf_chain(tcp_arg->data.p, p);
     }
 
@@ -970,8 +950,7 @@ static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, 
     ret_err = ERR_OK;
   }
   /* data received when connection already closed */
-  else
-  {
+  else {
     /* Acknowledge data reception */
     tcp_recved(tpcb, p->tot_len);
 
@@ -996,8 +975,7 @@ static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len)
 
   LWIP_UNUSED_ARG(len);
 
-  if((tcp_arg != NULL) && (tcp_arg->pcb == tpcb))
-  {
+  if ((tcp_arg != NULL) && (tcp_arg->pcb == tpcb)) {
     return ERR_OK;
   }
 
@@ -1018,8 +996,8 @@ static void tcp_err_callback(void *arg, err_t err)
 {
   struct tcp_struct *tcp_arg = (struct tcp_struct *)arg;
 
-  if(tcp_arg != NULL) {
-    if(ERR_OK != err) {
+  if (tcp_arg != NULL) {
+    if (ERR_OK != err) {
       tcp_arg->pcb = NULL;
       tcp_arg->state = TCP_CLOSING;
     }
@@ -1037,7 +1015,7 @@ void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp)
   /* remove callbacks */
   tcp_recv(tpcb, NULL);
   tcp_sent(tpcb, NULL);
-  tcp_poll(tpcb, NULL,0);
+  tcp_poll(tpcb, NULL, 0);
   tcp_err(tpcb, NULL);
   tcp_accept(tpcb, NULL);
 
