@@ -42,7 +42,7 @@ void setup() {
   // start the Ethernet connection:
   if (Ethernet.begin() == 0) {
     Serial.println("Failed to configure Ethernet using DHCP");
-    // try to congifure using IP address instead of DHCP:
+    // try to configure using IP address instead of DHCP:
     Ethernet.begin(ip);
   }
   // give the Ethernet shield a second to initialize:
