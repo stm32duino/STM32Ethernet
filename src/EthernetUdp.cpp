@@ -36,20 +36,22 @@
 EthernetUDP::EthernetUDP() {}
 
 /* Start EthernetUDP socket, listening at local port PORT */
-uint8_t EthernetUDP::begin(uint16_t port) {
+uint8_t EthernetUDP::begin(uint16_t port)
+{
   return begin(Ethernet.localIP(), port);
 }
 
 /* Start EthernetUDP socket, listening at local IP ip and port PORT */
-uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast) {
+uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast)
+{
   // Can create a single udp connection per socket
-  if(_udp.pcb != NULL) {
+  if (_udp.pcb != NULL) {
     return 0;
   }
 
   _udp.pcb = udp_new();
 
-  if(_udp.pcb == NULL) {
+  if (_udp.pcb == NULL) {
     return 0;
   }
 
@@ -62,14 +64,14 @@ uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast) {
     err = udp_bind(_udp.pcb, &ipaddr, port);
   }
 
-  if(ERR_OK != err) {
+  if (ERR_OK != err) {
     stop();
     return 0;
   }
 
 #if LWIP_IGMP
   if ((multicast) && (ERR_OK != igmp_joingroup(IP_ADDR_ANY, &ipaddr))) {
-      return 0;
+    return 0;
   }
 #endif
   udp_recv(_udp.pcb, &udp_receive_callback, &_udp);
@@ -84,14 +86,15 @@ uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast) {
 
 /* return number of bytes available in the current packet,
    will return zero if parsePacket hasn't been called yet */
-int EthernetUDP::available() {
+int EthernetUDP::available()
+{
   return _remaining;
 }
 
 /* Release any resources being used by this EthernetUDP instance */
 void EthernetUDP::stop()
 {
-  if(_udp.pcb != NULL) {
+  if (_udp.pcb != NULL) {
     udp_disconnect(_udp.pcb);
     udp_remove(_udp.pcb);
     _udp.pcb = NULL;
@@ -118,7 +121,7 @@ int EthernetUDP::beginPacket(const char *host, uint16_t port)
 
 int EthernetUDP::beginPacket(IPAddress ip, uint16_t port)
 {
-  if(_udp.pcb == NULL) {
+  if (_udp.pcb == NULL) {
     return 0;
   }
 
@@ -133,12 +136,12 @@ int EthernetUDP::beginPacket(IPAddress ip, uint16_t port)
 
 int EthernetUDP::endPacket()
 {
-  if((_udp.pcb == NULL) || (_data == NULL)) {
+  if ((_udp.pcb == NULL) || (_data == NULL)) {
     return 0;
   }
 
   ip_addr_t ipaddr;
-  if(ERR_OK != udp_sendto(_udp.pcb, _data, u8_to_ip_addr(rawIPAddress(_sendtoIP), &ipaddr), _sendtoPort)) {
+  if (ERR_OK != udp_sendto(_udp.pcb, _data, u8_to_ip_addr(rawIPAddress(_sendtoIP), &ipaddr), _sendtoPort)) {
     _data = stm32_free_data(_data);
     return 0;
   }
@@ -157,7 +160,7 @@ size_t EthernetUDP::write(uint8_t byte)
 size_t EthernetUDP::write(const uint8_t *buffer, size_t size)
 {
   _data = stm32_new_data(_data, buffer, size);
-  if(_data == NULL) {
+  if (_data == NULL) {
     return 0;
   }
 
@@ -176,8 +179,7 @@ int EthernetUDP::parsePacket()
 
   stm32_eth_scheduler();
 
-  if (_udp.data.available > 0)
-  {
+  if (_udp.data.available > 0) {
     _remoteIP = IPAddress(ip_addr_to_u32(&(_udp.ip)));
     _remotePort = _udp.port;
     _remaining = _udp.data.available;
@@ -192,44 +194,39 @@ int EthernetUDP::read()
 {
   uint8_t byte;
 
-  if(_udp.data.p == NULL) {
+  if (_udp.data.p == NULL) {
     return -1;
   }
 
-  if (_remaining > 0)
-  {
-    if(read(&byte, 1) > 0)
+  if (_remaining > 0) {
+    if (read(&byte, 1) > 0) {
       return byte;
+    }
   }
 
   // If we get here, there's no data available
   return -1;
 }
 
-int EthernetUDP::read(unsigned char* buffer, size_t len)
+int EthernetUDP::read(unsigned char *buffer, size_t len)
 {
-  if(_udp.data.p == NULL) {
+  if (_udp.data.p == NULL) {
     return -1;
   }
 
-  if (_remaining > 0)
-  {
+  if (_remaining > 0) {
     int got;
 
-    if (_remaining <= len)
-    {
+    if (_remaining <= len) {
       // data should fit in the buffer
       got = (int)stm32_get_data(&(_udp.data), (uint8_t *)buffer, _remaining);
-    }
-    else
-    {
+    } else {
       // too much data for the buffer,
       // grab as much as will fit
       got = (int)stm32_get_data(&(_udp.data), (uint8_t *)buffer, len);
     }
 
-    if (got > 0)
-    {
+    if (got > 0) {
       _remaining -= got;
       return got;
     }
@@ -247,8 +244,9 @@ int EthernetUDP::peek()
   // Unlike recv, peek doesn't check to see if there's any data available, so we must.
   // If the user hasn't called parsePacket yet then return nothing otherwise they
   // may get the UDP header
-  if (!_remaining)
+  if (!_remaining) {
     return -1;
+  }
   b = pbuf_get_at(_udp.data.p, 0);
   return b;
 }
@@ -265,7 +263,8 @@ uint8_t EthernetUDP::beginMulticast(IPAddress ip, uint16_t port)
 }
 
 #if LWIP_UDP
-void EthernetUDP::onDataArrival( std::function<void()> onDataArrival_fn){
+void EthernetUDP::onDataArrival(std::function<void()> onDataArrival_fn)
+{
   _udp.onDataArrival = onDataArrival_fn;
 }
 #endif
