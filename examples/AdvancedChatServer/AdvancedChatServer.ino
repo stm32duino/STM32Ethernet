@@ -103,7 +103,7 @@ void loop() {
   }
   for (byte i = 0; i < 4; i++) {
     if (!(clients[i].connected())) {
-      // client.stop() invalidates the internal socket-descriptor, so next use of == will allways return false;
+      // client.stop() invalidates the internal socket-descriptor, so next use of == will always return false;
       clients[i].stop();
     }
   }

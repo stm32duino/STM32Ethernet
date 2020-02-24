@@ -514,7 +514,7 @@ void ethernetif_notify_conn_changed(struct netif *netif)
 #endif /* LWIP_NETIF_LINK_CALLBACK */
 
 /**
-  * @brief  Notify the User about the nework interface config status
+  * @brief  Notify the User about the network interface config status
   * @param  netif: the network interface
   * @retval None
   */
@@ -805,7 +805,7 @@ void udp_receive_callback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
 /**
   * @brief Function called when TCP connection established
   * @param arg: user supplied argument
-  * @param tpcb: pointer on the connection contol block
+  * @param tpcb: pointer on the connection control block
   * @param err: when connection correctly established err should be ERR_OK
   * @retval err_t: returned error
   */
@@ -865,7 +865,7 @@ err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
       client->data.p = NULL;
       client->data.available = 0;
 
-      /* Looking for an empty soket */
+      /* Looking for an empty socket */
       for (uint16_t i = 0; i < MAX_CLIENT; i++) {
         if (tcpClient[i] == NULL) {
           tcpClient[i] = client;
@@ -916,7 +916,7 @@ err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
   * @param arg: argument to be passed to receive callback
   * @param tpcb: tcp connection control block
   * @param err: receive error code
-  * @retval err_t: retuned error
+  * @retval err_t: returned error
   */
 static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err)
 {
