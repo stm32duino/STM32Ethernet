@@ -138,11 +138,15 @@ static void Netif_Config(void)
 */
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
 static void scheduler_callback(stimer_t *htim)
-#else
+#elif (STM32_CORE_VERSION  <= 0x01080000)
 static void scheduler_callback(HardwareTimer *htim)
+#else
+static void scheduler_callback(void)
 #endif
 {
+#if (STM32_CORE_VERSION  <= 0x01080000)
   UNUSED(htim);
+#endif
   stm32_eth_scheduler();
 }
 
