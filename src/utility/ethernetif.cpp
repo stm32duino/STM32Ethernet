@@ -67,6 +67,11 @@ extern "C" {
 #define IFNAME0 's'
 #define IFNAME1 't'
 
+/* Definition of PHY SPECIAL CONTROL/STATUS REGISTER bitfield Auto-negotiation done indication */
+/* Placed in STM32Ethernet library instead of HAL conf to avoid compatibility dependence with Arduino_Core_STM32 */
+/* Could be moved from this file once Generic PHY is implemented */
+#define PHY_SR_AUTODONE ((uint16_t)0x1000)
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 #if defined ( __ICCARM__ ) /*!< IAR Compiler */
@@ -530,32 +535,17 @@ void ethernetif_set_link(struct netif *netif)
   */
 void ethernetif_update_config(struct netif *netif)
 {
-  __IO uint32_t tickstart = 0;
   uint32_t regvalue = 0;
 
   if (netif_is_link_up(netif)) {
     /* Restart the auto-negotiation */
     if (EthHandle.Init.AutoNegotiation != ETH_AUTONEGOTIATION_DISABLE) {
-      /* Enable Auto-Negotiation */
-      HAL_ETH_WritePHYRegister(&EthHandle, PHY_BCR, PHY_AUTONEGOTIATION);
 
-      /* Get tick */
-      tickstart = HAL_GetTick();
-
-      /* Wait until the auto-negotiation will be completed */
-      do {
-        HAL_ETH_ReadPHYRegister(&EthHandle, PHY_BSR, &regvalue);
-
-        /* Check for the Timeout ( 1s ) */
-        if ((HAL_GetTick() - tickstart) > 1000) {
-          /* In case of timeout */
-          goto error;
-        }
-
-      } while (((regvalue & PHY_AUTONEGO_COMPLETE) != PHY_AUTONEGO_COMPLETE));
-
-      /* Read the result of the auto-negotiation */
+      /* Check Auto negotiation */
       HAL_ETH_ReadPHYRegister(&EthHandle, PHY_SR, &regvalue);
+      if ((regvalue & PHY_SR_AUTODONE) != PHY_SR_AUTODONE) {
+        goto error;
+      }
 
       /* Configure the MAC with the Duplex Mode fixed by the auto-negotiation process */
       if ((regvalue & PHY_DUPLEX_STATUS) != (uint32_t)RESET) {
