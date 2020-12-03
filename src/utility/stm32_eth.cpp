@@ -63,8 +63,8 @@
  *       They could be used for this library when available
  */
 #ifndef DEFAULT_ETHERNET_TIMER
-  #define DEFAULT_ETHERNET_TIMER  TIM14
-  #warning "Default timer used to call ethernet scheduler at regular interval: TIM14"
+#define DEFAULT_ETHERNET_TIMER  TIM14
+#warning "Default timer used to call ethernet scheduler at regular interval: TIM14"
 #endif
 
 /* Ethernet configuration: user parameters */
@@ -93,8 +93,8 @@ static uint8_t DHCP_Started_by_user = 0;
 static uint32_t gEhtLinkTickStart = 0;
 
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
-  /* Handler for stimer */
-  static stimer_t TimHandle;
+/* Handler for stimer */
+static stimer_t TimHandle;
 #endif
 
 /*************************** Function prototype *******************************/
@@ -111,6 +111,7 @@ static void TIM_scheduler_Config(void);
 */
 static void Netif_Config(void)
 {
+  netif_remove(&gnetif);
   /* Add the network interface */
   netif_add(&gnetif, &(gconfig.ipaddr), &(gconfig.netmask), &(gconfig.gw), NULL, &ethernetif_init, &ethernet_input);
 
@@ -137,11 +138,11 @@ static void Netif_Config(void)
 * @retval None
 */
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
-  static void scheduler_callback(stimer_t *htim)
+static void scheduler_callback(stimer_t *htim)
 #elif (STM32_CORE_VERSION  <= 0x01080000)
-  static void scheduler_callback(HardwareTimer *htim)
+static void scheduler_callback(HardwareTimer *htim)
 #else
-  static void scheduler_callback(void)
+static void scheduler_callback(void)
 #endif
 {
 #if (STM32_CORE_VERSION  <= 0x01080000)
@@ -176,6 +177,7 @@ static void TIM_scheduler_Config(void)
 {
   /* Configure HardwareTimer */
   HardwareTimer *EthTim = new HardwareTimer(DEFAULT_ETHERNET_TIMER);
+  EthTim->setMode(1, TIMER_OUTPUT_COMPARE);
 
   /* Timer set to 1ms */
   EthTim->setOverflow(1000, MICROSEC_FORMAT);
@@ -191,47 +193,48 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
   if (!initDone) {
     /* Initialize the LwIP stack */
     lwip_init();
+  }
 
-    if (mac != NULL) {
-      ethernetif_set_mac_addr(mac);
-    } // else default value is used: MAC_ADDR0 ... MAC_ADDR5
+  if (mac != NULL) {
+    ethernetif_set_mac_addr(mac);
+  } // else default value is used: MAC_ADDR0 ... MAC_ADDR5
 
-    if (ip != NULL) {
-      IP_ADDR4(&(gconfig.ipaddr), ip[0], ip[1], ip[2], ip[3]);
-    } else {
+  if (ip != NULL) {
+    IP_ADDR4(&(gconfig.ipaddr), ip[0], ip[1], ip[2], ip[3]);
+  } else {
 #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.ipaddr));
+    ip_addr_set_zero_ip4(&(gconfig.ipaddr));
 #else
-      IP_ADDR4(&(gconfig.ipaddr), IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
+    IP_ADDR4(&(gconfig.ipaddr), IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
 #endif /* LWIP_DHCP */
-    }
+  }
 
-    if (gw != NULL) {
-      IP_ADDR4(&(gconfig.gw), gw[0], gw[1], gw[2], gw[3]);
-    } else {
+  if (gw != NULL) {
+    IP_ADDR4(&(gconfig.gw), gw[0], gw[1], gw[2], gw[3]);
+  } else {
 #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.gw));
+    ip_addr_set_zero_ip4(&(gconfig.gw));
 #else
-      IP_ADDR4(&(gconfig.gw), GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
+    IP_ADDR4(&(gconfig.gw), GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
 #endif /* LWIP_DHCP */
-    }
+  }
 
-    if (netmask != NULL) {
-      IP_ADDR4(&(gconfig.netmask), netmask[0], netmask[1], netmask[2], netmask[3]);
-    } else {
+  if (netmask != NULL) {
+    IP_ADDR4(&(gconfig.netmask), netmask[0], netmask[1], netmask[2], netmask[3]);
+  } else {
 #if LWIP_DHCP
-      ip_addr_set_zero_ip4(&(gconfig.netmask));
+    ip_addr_set_zero_ip4(&(gconfig.netmask));
 #else
-      IP_ADDR4(&(gconfig.netmask), NETMASK_ADDR0, NETMASK_ADDR1, NETMASK_ADDR2, NETMASK_ADDR3);
+    IP_ADDR4(&(gconfig.netmask), NETMASK_ADDR0, NETMASK_ADDR1, NETMASK_ADDR2, NETMASK_ADDR3);
 #endif /* LWIP_DHCP */
-    }
+  }
 
-    /* Configure the Network interface */
-    Netif_Config();
+  /* Configure the Network interface */
+  Netif_Config();
 
+  if (!initDone) {
     // stm32_eth_scheduler() will be called every 1ms.
     TIM_scheduler_Config();
-
     initDone = 1;
   }
 
