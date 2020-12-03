@@ -54,7 +54,7 @@
 #include "lwip/igmp.h"
 #include "stm32_eth.h"
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01050000)
-#include "variant.h"
+  #include "variant.h"
 #endif
 
 #ifdef __cplusplus

@@ -63,8 +63,8 @@
  *       They could be used for this library when available
  */
 #ifndef DEFAULT_ETHERNET_TIMER
-#define DEFAULT_ETHERNET_TIMER  TIM14
-#warning "Default timer used to call ethernet scheduler at regular interval: TIM14"
+  #define DEFAULT_ETHERNET_TIMER  TIM14
+  #warning "Default timer used to call ethernet scheduler at regular interval: TIM14"
 #endif
 
 /* Ethernet configuration: user parameters */
@@ -93,8 +93,8 @@ static uint8_t DHCP_Started_by_user = 0;
 static uint32_t gEhtLinkTickStart = 0;
 
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
-/* Handler for stimer */
-static stimer_t TimHandle;
+  /* Handler for stimer */
+  static stimer_t TimHandle;
 #endif
 
 /*************************** Function prototype *******************************/
@@ -137,11 +137,11 @@ static void Netif_Config(void)
 * @retval None
 */
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
-static void scheduler_callback(stimer_t *htim)
+  static void scheduler_callback(stimer_t *htim)
 #elif (STM32_CORE_VERSION  <= 0x01080000)
-static void scheduler_callback(HardwareTimer *htim)
+  static void scheduler_callback(HardwareTimer *htim)
 #else
-static void scheduler_callback(void)
+  static void scheduler_callback(void)
 #endif
 {
 #if (STM32_CORE_VERSION  <= 0x01080000)
@@ -176,7 +176,6 @@ static void TIM_scheduler_Config(void)
 {
   /* Configure HardwareTimer */
   HardwareTimer *EthTim = new HardwareTimer(DEFAULT_ETHERNET_TIMER);
-  EthTim->setMode(1, TIMER_OUTPUT_COMPARE);
 
   /* Timer set to 1ms */
   EthTim->setOverflow(1000, MICROSEC_FORMAT);
