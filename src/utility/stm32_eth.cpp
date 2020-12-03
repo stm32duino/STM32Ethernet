@@ -176,7 +176,6 @@ static void TIM_scheduler_Config(void)
 {
   /* Configure HardwareTimer */
   HardwareTimer *EthTim = new HardwareTimer(DEFAULT_ETHERNET_TIMER);
-  EthTim->setMode(1, TIMER_OUTPUT_COMPARE);
 
   /* Timer set to 1ms */
   EthTim->setOverflow(1000, MICROSEC_FORMAT);
