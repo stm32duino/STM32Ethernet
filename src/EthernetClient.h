@@ -52,7 +52,8 @@ class EthernetClient : public Client {
     {
       return (_tcp_client->pcb->remote_port);
     };
-    void setTimeout(uint16_t timeout){
+    void setTimeout(uint16_t timeout)
+    {
       _timeout = timeout;
     }
 
