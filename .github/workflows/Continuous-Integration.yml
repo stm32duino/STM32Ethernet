@@ -52,7 +52,7 @@ jobs:
       uses: stm32duino/actions/compile-examples@main
       with:
         board-pattern: "DISCO_F746NG|NUCLEO_F429ZI|NUCLEO_F767ZI"
-        libraries: "STM32duino LwIP"
+        libraries: "STM32duino LwIP, STM32duino FreeRTOS"
 
     # Use the output from the `Compile` step
     - name: Compilation Errors
