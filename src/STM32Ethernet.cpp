@@ -33,11 +33,8 @@ void EthernetClass::begin(IPAddress local_ip, IPAddress subnet)
 
 void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gateway)
 {
-  // Assume the DNS server will be the machine on the same network as the local IP
-  // but with last octet being '1'
-  IPAddress dns_server = local_ip;
-  dns_server[3] = 1;
-  begin(local_ip, subnet, gateway, dns_server);
+  // Assume the DNS server will be the same machine than gateway
+  begin(local_ip, subnet, gateway, gateway);
 }
 
 void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gateway, IPAddress dns_server)
