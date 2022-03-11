@@ -68,8 +68,7 @@ int EthernetClient::connect(IPAddress ip, uint16_t port)
   uint32_t startTime = millis();
   ip_addr_t ipaddr;
   tcp_arg(_tcp_client->pcb, _tcp_client);
-  if (ERR_OK != tcp_connect(_tcp_client->pcb, u8_to_ip_addr(rawIPAddress(ip), &ipaddr), port, &tcp_connected_callback)
-      || ((millis() - startTime) >= _timeout)) {
+if (ERR_OK != tcp_connect(_tcp_client->pcb, u8_to_ip_addr(rawIPAddress(ip), &ipaddr), port, &tcp_connected_callback)) {
     stop();
     return 0;
   }
