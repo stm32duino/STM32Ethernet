@@ -65,6 +65,7 @@ int EthernetClient::connect(IPAddress ip, uint16_t port)
   _tcp_client->data.available = 0;
   _tcp_client->state = TCP_NONE;
 
+  uint32_t startTime = millis();
   ip_addr_t ipaddr;
   tcp_arg(_tcp_client->pcb, _tcp_client);
   if (ERR_OK != tcp_connect(_tcp_client->pcb, u8_to_ip_addr(rawIPAddress(ip), &ipaddr), port, &tcp_connected_callback)) {
@@ -72,10 +73,10 @@ int EthernetClient::connect(IPAddress ip, uint16_t port)
     return 0;
   }
 
-  uint32_t startTime = millis();
+  startTime = millis();
   while (_tcp_client->state == TCP_NONE) {
     stm32_eth_scheduler();
-    if ((_tcp_client->state == TCP_CLOSING) || ((millis() - startTime) >= 10000)) {
+    if ((_tcp_client->state == TCP_CLOSING) || ((millis() - startTime) >= _timeout)) {
       stop();
       return 0;
     }
