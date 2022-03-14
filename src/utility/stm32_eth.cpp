@@ -95,6 +95,8 @@ static uint32_t gEhtLinkTickStart = 0;
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
   /* Handler for stimer */
   static stimer_t TimHandle;
+#else
+  HardwareTimer *EthTim = NULL;
 #endif
 
 /*************************** Function prototype *******************************/
@@ -103,6 +105,9 @@ static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, 
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
 static void tcp_err_callback(void *arg, err_t err);
 static void TIM_scheduler_Config(void);
+#if defined(STM32_CORE_VERSION) && (STM32_CORE_VERSION  > 0x01060100)
+  void _stm32_eth_scheduler(void);
+#endif
 
 /**
 * @brief  Configurates the network interface
@@ -148,7 +153,7 @@ static void Netif_Config(void)
 #if (STM32_CORE_VERSION  <= 0x01080000)
   UNUSED(htim);
 #endif
-  stm32_eth_scheduler();
+  _stm32_eth_scheduler();
 }
 
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
@@ -176,7 +181,7 @@ static void TIM_scheduler_Config(void)
 static void TIM_scheduler_Config(void)
 {
   /* Configure HardwareTimer */
-  HardwareTimer *EthTim = new HardwareTimer(DEFAULT_ETHERNET_TIMER);
+  EthTim = new HardwareTimer(DEFAULT_ETHERNET_TIMER);
   EthTim->setMode(1, TIMER_OUTPUT_COMPARE);
 
   /* Timer set to 1ms */
@@ -265,12 +270,33 @@ uint8_t stm32_eth_link_up(void)
   return netif_is_link_up(&gnetif);
 }
 
+#if defined(STM32_CORE_VERSION) && (STM32_CORE_VERSION  > 0x01060100)
 /**
-  * @brief  This function must be called in main loop in standalone mode.
+  * @brief  This function generates Timer Update event to force call to _stm32_eth_scheduler().
   * @param  None
   * @retval None
   */
 void stm32_eth_scheduler(void)
+{
+  if (EthTim != NULL) {
+    EthTim->refresh();
+  }
+}
+
+/**
+  * @brief  This function is called solely by Timer callback to avoid race condition.
+  * @param  None
+  * @retval None
+  */
+void _stm32_eth_scheduler(void)
+#else
+/**
+  * @brief  This function is called solely by Timer callback to avoid race condition.
+  * @param  None
+  * @retval None
+  */
+void stm32_eth_scheduler(void)
+#endif
 {
   /* Read a received packet from the Ethernet buffers and send it
   to the lwIP for handling */
