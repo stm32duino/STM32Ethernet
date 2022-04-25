@@ -40,6 +40,12 @@ void EthernetServer::begin()
   tcp_accept(_tcp_server.pcb, tcp_accept_callback);
 }
 
+void EthernetServer::begin(uint16_t port)
+{
+  _port = port;
+  begin();
+}
+
 void EthernetServer::accept()
 {
   /* Free client if disconnected */
