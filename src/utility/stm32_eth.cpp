@@ -67,6 +67,13 @@
   #warning "Default timer used to call ethernet scheduler at regular interval: TIM14"
 #endif
 
+/* Interrupt priority */
+#ifndef ETH_TIM_IRQ_PRIO
+  #define ETH_TIM_IRQ_PRIO       15 // Warning: it should be lower prio (higher value) than Systick
+#endif
+#ifndef ETH_TIM_IRQ_SUBPRIO
+  #define ETH_TIM_IRQ_SUBPRIO    0
+#endif
 /* Ethernet configuration: user parameters */
 struct stm32_eth_config {
   ip_addr_t ipaddr;
@@ -182,6 +189,7 @@ static void TIM_scheduler_Config(void)
 {
   /* Configure HardwareTimer */
   EthTim = new HardwareTimer(DEFAULT_ETHERNET_TIMER);
+  EthTim->setInterruptPriority(ETH_TIM_IRQ_PRIO, ETH_TIM_IRQ_SUBPRIO);
   EthTim->setMode(1, TIMER_OUTPUT_COMPARE);
 
   /* Timer set to 1ms */
