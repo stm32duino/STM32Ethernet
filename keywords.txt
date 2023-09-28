@@ -34,6 +34,7 @@ getSocketNumber	KEYWORD2
 localIP	KEYWORD2
 MACAddress	KEYWORD2
 maintain	KEYWORD2
+setConnectionTimeout	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
