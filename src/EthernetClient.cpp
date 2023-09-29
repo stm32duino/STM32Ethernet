@@ -76,7 +76,7 @@ int EthernetClient::connect(IPAddress ip, uint16_t port)
   startTime = millis();
   while (_tcp_client->state == TCP_NONE) {
     stm32_eth_scheduler();
-    if ((_tcp_client->state == TCP_CLOSING) || ((millis() - startTime) >= _timeout)) {
+    if ((_tcp_client->state == TCP_CLOSING) || ((millis() - startTime) >= _connectionTimeout)) {
       stop();
       return 0;
     }
