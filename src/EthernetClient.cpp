@@ -194,6 +194,7 @@ void EthernetClient::stop()
   if (status() != TCP_CLOSING) {
     tcp_connection_close(_tcp_client->pcb, _tcp_client);
   }
+  mem_free(_tcp_client);
 }
 
 uint8_t EthernetClient::connected()
