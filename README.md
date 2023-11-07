@@ -66,4 +66,4 @@ Call `Ethernet::schedule()` performs an update of the LwIP stack.<br>
 
 ## Wiki
 
-You can find information at https://github.com/stm32duino/wiki/wiki/STM32Ethernet
+You can find information at https://github.com/stm32duino/Arduino_Core_STM32/wiki/STM32Ethernet
