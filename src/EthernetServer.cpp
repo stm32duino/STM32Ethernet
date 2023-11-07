@@ -107,3 +107,9 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
 
   return n;
 }
+
+EthernetServer::operator bool()
+{
+  // server is listening for incoming clients
+  return ((_tcp_server.pcb != NULL) && (_tcp_server.pcb->state == LISTEN));
+}
