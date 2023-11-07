@@ -93,10 +93,10 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
 
   accept();
 
-  for (int n = 0; n < MAX_CLIENT; n++) {
-    if (_tcp_client[n] != NULL) {
-      if (_tcp_client[n]->pcb != NULL) {
-        EthernetClient client(_tcp_client[n]);
+  for (int i = 0; i < MAX_CLIENT; i++) {
+    if (_tcp_client[i] != NULL) {
+      if (_tcp_client[i]->pcb != NULL) {
+        EthernetClient client(_tcp_client[i]);
         uint8_t s = client.status();
         if (s == TCP_ACCEPTED) {
           n += client.write(buffer, size);
