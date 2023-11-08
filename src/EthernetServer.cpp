@@ -46,6 +46,22 @@ void EthernetServer::begin(uint16_t port)
   begin();
 }
 
+void EthernetServer::end(void)
+{
+  /* Free client */
+  for (int n = 0; n < MAX_CLIENT; n++) {
+    if (_tcp_client[n] != NULL) {
+      EthernetClient client(_tcp_client[n]);
+      client.stop();
+      _tcp_client[n] = NULL;
+    }
+  }
+  if (_tcp_server.pcb != NULL) {
+    tcp_close(_tcp_server.pcb);
+    _tcp_server.pcb = NULL;
+  }
+}
+
 void EthernetServer::accept()
 {
   /* Free client if disconnected */
