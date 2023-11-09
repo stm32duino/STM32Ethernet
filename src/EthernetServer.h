@@ -18,8 +18,10 @@ class EthernetServer :
     EthernetClient available();
     virtual void begin();
     virtual void begin(uint16_t port);
+    void end(void);
     virtual size_t write(uint8_t);
     virtual size_t write(const uint8_t *buf, size_t size);
+    virtual operator bool();
     using Print::write;
 };
 

@@ -46,6 +46,22 @@ void EthernetServer::begin(uint16_t port)
   begin();
 }
 
+void EthernetServer::end(void)
+{
+  /* Free client */
+  for (int n = 0; n < MAX_CLIENT; n++) {
+    if (_tcp_client[n] != NULL) {
+      EthernetClient client(_tcp_client[n]);
+      client.stop();
+      _tcp_client[n] = NULL;
+    }
+  }
+  if (_tcp_server.pcb != NULL) {
+    tcp_close(_tcp_server.pcb);
+    _tcp_server.pcb = NULL;
+  }
+}
+
 void EthernetServer::accept()
 {
   /* Free client if disconnected */
@@ -93,10 +109,10 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
 
   accept();
 
-  for (int n = 0; n < MAX_CLIENT; n++) {
-    if (_tcp_client[n] != NULL) {
-      if (_tcp_client[n]->pcb != NULL) {
-        EthernetClient client(_tcp_client[n]);
+  for (int i = 0; i < MAX_CLIENT; i++) {
+    if (_tcp_client[i] != NULL) {
+      if (_tcp_client[i]->pcb != NULL) {
+        EthernetClient client(_tcp_client[i]);
         uint8_t s = client.status();
         if (s == TCP_ACCEPTED) {
           n += client.write(buffer, size);
@@ -106,4 +122,10 @@ size_t EthernetServer::write(const uint8_t *buffer, size_t size)
   }
 
   return n;
+}
+
+EthernetServer::operator bool()
+{
+  // server is listening for incoming clients
+  return ((_tcp_server.pcb != NULL) && (_tcp_server.pcb->state == LISTEN));
 }
