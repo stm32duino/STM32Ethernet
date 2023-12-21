@@ -50,6 +50,8 @@ class EthernetClass {
     IPAddress gatewayIP();
     IPAddress dnsServerIP();
 
+    void setDnsServerIP(const IPAddress dns_server);
+
     friend class EthernetClient;
     friend class EthernetServer;
 };
