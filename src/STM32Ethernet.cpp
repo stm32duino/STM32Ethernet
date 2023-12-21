@@ -182,4 +182,9 @@ IPAddress EthernetClass::dnsServerIP()
   return _dnsServerAddress;
 }
 
+void EthernetClass::setDnsServerIP(const IPAddress dns_server)
+{
+  _dnsServerAddress = dns_server;
+}
+
 EthernetClass Ethernet;
