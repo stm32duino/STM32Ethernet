@@ -39,7 +39,7 @@ int EthernetClient::connect(const char *host, uint16_t port)
   if (ret == 1) {
     return connect(remote_addr, port);
   } else {
-    return ret;
+    return 0;
   }
 }
 
