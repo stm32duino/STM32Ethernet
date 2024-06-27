@@ -171,7 +171,7 @@ int EthernetClient::peek()
   if (!available()) {
     return -1;
   }
-  b = pbuf_get_at(_tcp_client->data.p, 0);
+  b = pbuf_get_at(_tcp_client->data.p, _tcp_client->data.p->tot_len - _tcp_client->data.available);
   return b;
 }
 
