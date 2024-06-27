@@ -247,7 +247,7 @@ int EthernetUDP::peek()
   if (!_remaining) {
     return -1;
   }
-  b = pbuf_get_at(_udp.data.p, 0);
+  b = pbuf_get_at(_udp.data.p, _udp.data.p->tot_len - _udp.data.available);
   return b;
 }
 
