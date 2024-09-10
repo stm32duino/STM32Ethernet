@@ -5,7 +5,7 @@ int EthernetClass::begin(unsigned long timeout, unsigned long responseTimeout)
 {
   static DhcpClass s_dhcp;
   _dhcp = &s_dhcp;
-  stm32_eth_init(MACAddressDefault(), NULL, NULL, NULL);
+  stm32_eth_init(NULL, NULL, NULL, NULL);
 
   // Now try to get our config info from a DHCP server
   int ret = _dhcp->beginWithDHCP(mac_address, timeout, responseTimeout);
@@ -39,7 +39,7 @@ void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gatewa
 
 void EthernetClass::begin(IPAddress local_ip, IPAddress subnet, IPAddress gateway, IPAddress dns_server)
 {
-  stm32_eth_init(MACAddressDefault(), local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
+  stm32_eth_init(NULL, local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
   /* If there is a local DHCP informs it of our manual IP configuration to
   prevent IP conflict */
   stm32_DHCP_manual_config();
@@ -131,20 +131,6 @@ int EthernetClass::maintain()
 void EthernetClass::schedule(void)
 {
   stm32_eth_scheduler();
-}
-
-uint8_t *EthernetClass::MACAddressDefault(void)
-{
-  if ((mac_address[0] + mac_address[1] + mac_address[2] + mac_address[3] + mac_address[4] + mac_address[5]) == 0) {
-    uint32_t baseUID = *(uint32_t *)UID_BASE;
-    mac_address[0] = 0x00;
-    mac_address[1] = 0x80;
-    mac_address[2] = 0xE1;
-    mac_address[3] = (baseUID & 0x00FF0000) >> 16;
-    mac_address[4] = (baseUID & 0x0000FF00) >> 8;
-    mac_address[5] = (baseUID & 0x000000FF);
-  }
-  return mac_address;
 }
 
 void EthernetClass::MACAddress(uint8_t *mac)

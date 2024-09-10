@@ -18,7 +18,6 @@ class EthernetClass {
     IPAddress _dnsServerAddress;
     DhcpClass *_dhcp;
     uint8_t mac_address[6];
-    uint8_t   *MACAddressDefault(void);
 
   public:
     // Initialise the Ethernet with the internal provided MAC address and gain the rest of the
