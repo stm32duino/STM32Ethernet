@@ -96,6 +96,25 @@ __ALIGN_BEGIN uint8_t Tx_Buff[ETH_TXBUFNB][ETH_TX_BUF_SIZE] __ALIGN_END; /* Ethe
 
 static ETH_HandleTypeDef EthHandle;
 
+/* If default MAC fields is not defined use default values based on UID */
+#if !defined(MAC_ADDR0)
+#define MAC_ADDR0   0x00
+#endif
+#if !defined(MAC_ADDR1)
+#define MAC_ADDR1   0x80
+#endif
+#if !defined(MAC_ADDR2)
+#define MAC_ADDR2   0xE1
+#endif
+#if !defined(MAC_ADDR3)
+#define MAC_ADDR3   ((uint8_t)(((*(uint32_t *)UID_BASE) & 0x00FF0000) >> 16))
+#endif
+#if !defined(MAC_ADDR4)
+#define MAC_ADDR4   ((uint8_t)(((*(uint32_t *)UID_BASE) & 0x0000FF00) >> 8))
+#endif
+#if !defined(MAC_ADDR5)
+#define MAC_ADDR5   ((uint8_t)((*(uint32_t *)UID_BASE) & 0x000000FF))
+#endif
 static uint8_t macaddress[6] = { MAC_ADDR0, MAC_ADDR1, MAC_ADDR2, MAC_ADDR3, MAC_ADDR4, MAC_ADDR5 };
 
 #if LWIP_IGMP
@@ -608,8 +627,20 @@ __weak void ethernetif_notify_conn_changed(struct netif *netif)
   */
 void ethernetif_set_mac_addr(const uint8_t *mac)
 {
-  if (mac != NULL) {
+  if ((mac != NULL) && !(ethernetif_is_init())) {
     memcpy(macaddress, mac, 6);
+  }
+}
+
+/**
+  * @brief  This function get the current MAC address.
+  * @param  mac: mac address
+  * @retval None
+  */
+void ethernetif_get_mac_addr(uint8_t *mac)
+{
+  if (mac != NULL) {
+    memcpy(mac, macaddress, 6);
   }
 }
 

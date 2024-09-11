@@ -117,7 +117,7 @@ static void TIM_scheduler_Config(void);
 #endif
 
 /**
-* @brief  Configurates the network interface
+* @brief  Configure the network interface
 * @param  None
 * @retval None
 */
@@ -266,6 +266,25 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
 uint8_t stm32_eth_is_init(void)
 {
   return ethernetif_is_init();
+}
+
+/**
+  * @brief Set Ethernet MAC address
+  * @param  mac: mac address
+  * @retval None
+  */
+void stm32_eth_set_macaddr(const uint8_t *mac)
+{
+  ethernetif_set_mac_addr(mac);
+}
+/**
+  * @brief Return Ethernet MAC address
+  * @param  mac: mac address
+  * @retval None
+  */
+void stm32_eth_get_macaddr(uint8_t *mac)
+{
+  return ethernetif_get_mac_addr(mac);
 }
 
 /**

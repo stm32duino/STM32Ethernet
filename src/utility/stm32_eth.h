@@ -119,6 +119,8 @@ struct tcp_struct {
 /* Exported functions ------------------------------------------------------- */
 void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, const uint8_t *netmask);
 uint8_t stm32_eth_is_init(void);
+void stm32_eth_get_macaddr(uint8_t *mac);
+void stm32_eth_set_macaddr(const uint8_t *mac);
 uint8_t stm32_eth_link_up(void);
 void stm32_eth_scheduler(void);
 

@@ -16,8 +16,12 @@ int DhcpClass::beginWithDHCP(uint8_t *mac, unsigned long timeout, unsigned long 
   // zero out _dhcpMacAddr
   memset(_dhcpMacAddr, 0, 6);
   reset_DHCP_lease();
-
-  memcpy((void *)_dhcpMacAddr, (void *)mac, 6);
+  if (mac == NULL) {
+    // use mac from Ethernet chip
+    stm32_eth_get_macaddr(_dhcpMacAddr);
+  } else {
+    memcpy((void *)_dhcpMacAddr, (void *)mac, 6);
+  }
   _dhcp_state = STATE_DHCP_START;
   stm32_set_DHCP_state(_dhcp_state);
   return request_DHCP_lease();
