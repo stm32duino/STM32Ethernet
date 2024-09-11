@@ -38,9 +38,11 @@ localPort	KEYWORD2
 maintain	KEYWORD2
 linkStatus	KEYWORD2
 MACAddress	KEYWORD2
+setMACAddress	KEYWORD2
 subnetMask	KEYWORD2
 gatewayIP	KEYWORD2
 dnsServerIP	KEYWORD2
+setDnsServerIP	KEYWORD2
 setConnectionTimeout	KEYWORD2
 
 #######################################

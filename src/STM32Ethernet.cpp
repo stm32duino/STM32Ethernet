@@ -8,7 +8,7 @@ int EthernetClass::begin(unsigned long timeout, unsigned long responseTimeout)
   stm32_eth_init(NULL, NULL, NULL, NULL);
 
   // Now try to get our config info from a DHCP server
-  int ret = _dhcp->beginWithDHCP(mac_address, timeout, responseTimeout);
+  int ret = _dhcp->beginWithDHCP(NULL, timeout, responseTimeout);
   if (ret == 1) {
     _dnsServerAddress = _dhcp->getDnsServerIp();
   }
@@ -58,7 +58,6 @@ int EthernetClass::begin(uint8_t *mac_address, unsigned long timeout, unsigned l
   if (ret == 1) {
     _dnsServerAddress = _dhcp->getDnsServerIp();
   }
-  MACAddress(mac_address);
   return ret;
 }
 
@@ -86,14 +85,13 @@ void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dn
   begin(mac_address, local_ip, dns_server, gateway, subnet);
 }
 
-void EthernetClass::begin(uint8_t *mac, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet)
+void EthernetClass::begin(uint8_t *mac_address, IPAddress local_ip, IPAddress dns_server, IPAddress gateway, IPAddress subnet)
 {
-  stm32_eth_init(mac, local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
+  stm32_eth_init(mac_address, local_ip.raw_address(), gateway.raw_address(), subnet.raw_address());
   /* If there is a local DHCP informs it of our manual IP configuration to
   prevent IP conflict */
   stm32_DHCP_manual_config();
   _dnsServerAddress = dns_server;
-  MACAddress(mac);
 }
 
 EthernetLinkStatus EthernetClass::linkStatus()
@@ -133,19 +131,14 @@ void EthernetClass::schedule(void)
   stm32_eth_scheduler();
 }
 
-void EthernetClass::MACAddress(uint8_t *mac)
+void EthernetClass::setMACAddress(const uint8_t *mac_address)
 {
-  mac_address[0] = mac[0];
-  mac_address[1] = mac[1];
-  mac_address[2] = mac[2];
-  mac_address[3] = mac[3];
-  mac_address[4] = mac[4];
-  mac_address[5] = mac[5];
+  stm32_eth_set_macaddr(mac_address);
 }
 
-uint8_t *EthernetClass::MACAddress(void)
+void EthernetClass::MACAddress(uint8_t *mac_address)
 {
-  return mac_address;
+  stm32_eth_get_macaddr(mac_address);
 }
 
 IPAddress EthernetClass::localIP()

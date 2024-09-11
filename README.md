@@ -29,7 +29,7 @@ extend the default one by adding some extra configuration in a file named `lwipo
 
 ## New alternative init procedure **!!!**
 
-There are alternative inits of the Ethernetinterface with following orders:
+There are alternative inits of the Ethernet interface with following orders:
 
 	Ethernet.begin();
 	Ethernet.begin(ip);
@@ -39,16 +39,16 @@ There are alternative inits of the Ethernetinterface with following orders:
 
 This is more logical. A MAC address is no more needed and will retrieved internally by the mbed MAC address!
 
-You can get the MAC address with following function, this must done after Ethernet.Begin()
+You can get the MAC address with following function, this must be done after Ethernet.Begin()
 	
 	uint8_t *mac;
 	Ethernet.begin();
-	mac = Ethernet.MACAddress();
+	Ethernet.MACAddress(mac);
 
-You can also set a new user based MAC address, this must done before Ethernet.begin()
+You can also set a new user based MAC address, this must be done before Ethernet.begin()
 
 	uint8_t newMAC[] = {0x00, 0x80, 0xE1, 0x01, 0x01, 0x01};
-	Ethernet.MACAddress(newMAC);
+	Ethernet.setMACAddress(newMAC);
 	Ethernet.begin();
 
 ## Note

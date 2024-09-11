@@ -627,8 +627,20 @@ __weak void ethernetif_notify_conn_changed(struct netif *netif)
   */
 void ethernetif_set_mac_addr(const uint8_t *mac)
 {
-  if (mac != NULL) {
+  if ((mac != NULL) && !(ethernetif_is_init())) {
     memcpy(macaddress, mac, 6);
+  }
+}
+
+/**
+  * @brief  This function get the current MAC address.
+  * @param  mac: mac address
+  * @retval None
+  */
+void ethernetif_get_mac_addr(uint8_t *mac)
+{
+  if (mac != NULL) {
+    memcpy(mac, macaddress, 6);
   }
 }
 

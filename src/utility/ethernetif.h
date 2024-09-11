@@ -61,6 +61,7 @@ void ethernetif_update_config(struct netif *netif);
 void ethernetif_notify_conn_changed(struct netif *netif);
 
 void ethernetif_set_mac_addr(const uint8_t *mac);
+void ethernetif_get_mac_addr(uint8_t *mac);
 
 #if LWIP_IGMP
 err_t igmp_mac_filter(struct netif *netif, const ip4_addr_t *ip4_addr, netif_mac_filter_action action);

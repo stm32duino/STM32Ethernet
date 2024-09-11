@@ -269,6 +269,25 @@ uint8_t stm32_eth_is_init(void)
 }
 
 /**
+  * @brief Set Ethernet MAC address
+  * @param  mac: mac address
+  * @retval None
+  */
+void stm32_eth_set_macaddr(const uint8_t *mac)
+{
+  ethernetif_set_mac_addr(mac);
+}
+/**
+  * @brief Return Ethernet MAC address
+  * @param  mac: mac address
+  * @retval None
+  */
+void stm32_eth_get_macaddr(uint8_t *mac)
+{
+  return ethernetif_get_mac_addr(mac);
+}
+
+/**
   * @brief Return Ethernet link status
   * @param  None
   * @retval 1 for link up, 0 for link down

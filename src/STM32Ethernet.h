@@ -17,7 +17,6 @@ class EthernetClass {
   private:
     IPAddress _dnsServerAddress;
     DhcpClass *_dhcp;
-    uint8_t mac_address[6];
 
   public:
     // Initialise the Ethernet with the internal provided MAC address and gain the rest of the
@@ -42,13 +41,13 @@ class EthernetClass {
     int maintain();
     void schedule(void);
 
-    void MACAddress(uint8_t *mac);
-    uint8_t *MACAddress(void);
+    void MACAddress(uint8_t *mac_address);
     IPAddress localIP();
     IPAddress subnetMask();
     IPAddress gatewayIP();
     IPAddress dnsServerIP();
 
+    void setMACAddress(const uint8_t *mac_address);
     void setDnsServerIP(const IPAddress dns_server);
 
     friend class EthernetClient;
