@@ -247,7 +247,7 @@ The STM32F4x7 allows computing and verifying the IP, UDP, TCP and ICMP checksums
 
 /** Set this to 1 to include "fsdata_custom.c" instead of "fsdata.c" for the
  * file system (to prevent changing the file included in CVS) */
-#define HTTPD_USE_CUSTOM_FSDATA   1
+#define HTTPD_USE_CUSTOM_FSDATA   0
 
 /*
    ------------------------------------
