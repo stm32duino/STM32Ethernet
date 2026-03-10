@@ -1079,7 +1079,9 @@ void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp)
   tcp_accept(tpcb, NULL);
 
   /* close tcp connection */
-  tcp_close(tpcb);
+  if (tcp_close(tpcb) != ERR_OK) {
+    tcp_abort(tpcb);
+  }
 
   tcp->pcb = NULL;
   tcp->state = TCP_CLOSING;

@@ -186,16 +186,18 @@ void EthernetClient::flush()
 
 void EthernetClient::stop()
 {
-  if (_tcp_client == NULL) {
-    return;
+  if (_tcp_client != NULL) {
+    // close tcp connection if not closed yet
+    if (status() != TCP_CLOSING) {
+      if (_tcp_client->pcb == NULL) {
+        _tcp_client->state = TCP_CLOSING;
+      } else {
+        tcp_connection_close(_tcp_client->pcb, _tcp_client);
+      }
+    }
+    mem_free(_tcp_client);
+    _tcp_client = NULL;
   }
-
-  // close tcp connection if not closed yet
-  if (status() != TCP_CLOSING) {
-    tcp_connection_close(_tcp_client->pcb, _tcp_client);
-  }
-  mem_free(_tcp_client);
-  _tcp_client = NULL;
 }
 
 uint8_t EthernetClient::connected()
