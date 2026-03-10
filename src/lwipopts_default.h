@@ -25,6 +25,35 @@
  */
 #define NO_SYS                  1
 
+/* LWIP Debug options */
+#if !defined(NDEBUG)
+  #define LWIP_DBG_DEFAULT  LWIP_DBG_ON
+#else
+  #define LWIP_DBG_DEFAULT  LWIP_DBG_OFF
+#endif /* NDEBUG */
+
+#if !defined(LWIP_DEBUG)
+  #define LWIP_DEBUG              LWIP_DBG_DEFAULT
+#endif /* LWIP_DEBUG */
+#if !defined(NETIF_DEBUG)
+  #define NETIF_DEBUG             LWIP_DBG_DEFAULT
+#endif /* NETIF_DEBUG */
+#if !defined(DHCP_DEBUG)
+  #define DHCP_DEBUG              LWIP_DBG_DEFAULT
+#endif /* DHCP_DEBUG */
+#if !defined(UDP_DEBUG)
+  #define UDP_DEBUG               LWIP_DBG_DEFAULT
+#endif /* UDP_DEBUG */
+#if !defined(MEMP_DEBUG)
+  #define MEMP_DEBUG              LWIP_DBG_DEFAULT
+#endif /* MEMP_DEBUG */
+#if !defined(MEM_DEBUG)
+  #define MEM_DEBUG               LWIP_DBG_DEFAULT
+#endif /* MEM_DEBUG */
+#if !defined(ICMP_DEBUG)
+  #define ICMP_DEBUG              LWIP_DBG_DEFAULT
+#endif /* ICMP_DEBUG */
+
 /**
  * SYS_LIGHTWEIGHT_PROT==1: if you want inter-task protection for certain
  * critical regions during buffer allocation, deallocation and memory
