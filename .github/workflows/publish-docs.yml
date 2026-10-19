@@ -1,0 +1,16 @@
+name: Publish versioned documentation
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "[0-9]*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    uses: stm32duino/actions/.github/workflows/publish-library-docs.yml@main

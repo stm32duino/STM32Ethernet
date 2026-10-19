@@ -1,0 +1,28 @@
+name: Documentation build
+
+on:
+  pull_request:
+    paths:
+      - Doxyfile
+      - docs/**
+      - README.md
+      - src/**
+      - mkdocs.yml
+      - .github/workflows/docs-check.yml
+  push:
+    branches:
+      - main
+    paths:
+      - Doxyfile
+      - docs/**
+      - README.md
+      - src/**
+      - mkdocs.yml
+      - .github/workflows/docs-check.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: stm32duino/actions/.github/workflows/check-library-docs.yml@main
