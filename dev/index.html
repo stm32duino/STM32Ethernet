@@ -87,7 +87,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a> STM32Ethernet allows an Ethernet-compatible STM32 board, such as a NUCLEO or DISCOVERY board, to connect to a local network or the Internet. It follows the Arduino Ethernet API and provides client, server, DHCP, and DNS functionality.</p>
-<p>The <a href="https://stm32duino.github.io/STM32Ethernet/">hosted API documentation</a> is available online. See the <a href="examples/">examples</a> for complete sketches.</p>
+<p>The <a href="https://stm32duino.github.io/STM32Ethernet/">hosted API documentation</a> is available online. See the <a href="https://github.com/stm32duino/STM32Ethernet/tree/main/examples">examples</a> for complete sketches.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Requirements</h1>
 <ul>
@@ -125,7 +125,7 @@ Quick start</h1>
 <div class="fragment"><div class="line"><a class="code hl_variable" href="STM32Ethernet_8cpp.html#afd7206f7707d7bd0f039e0ae8404c9db">Ethernet</a>.<a class="code hl_function" href="classEthernetClass.html#a5c7fc5bd5aeeff273e069ac03fb428eb">begin</a>(ip, subnet);</div>
 <div class="line"><a class="code hl_variable" href="STM32Ethernet_8cpp.html#afd7206f7707d7bd0f039e0ae8404c9db">Ethernet</a>.<a class="code hl_function" href="classEthernetClass.html#a5c7fc5bd5aeeff273e069ac03fb428eb">begin</a>(ip, subnet, gateway);</div>
 <div class="line"><a class="code hl_variable" href="STM32Ethernet_8cpp.html#afd7206f7707d7bd0f039e0ae8404c9db">Ethernet</a>.<a class="code hl_function" href="classEthernetClass.html#a5c7fc5bd5aeeff273e069ac03fb428eb">begin</a>(ip, subnet, gateway, dns);</div>
-</div><!-- fragment --><p>See the <a href="examples/WebClient/WebClient.ino">WebClient example</a> for a DHCP connection with a static-IP fallback.</p>
+</div><!-- fragment --><p>See the <a href="https://github.com/stm32duino/STM32Ethernet/blob/main/examples/WebClient/WebClient.ino">WebClient example</a> for a DHCP connection with a static-IP fallback.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 MAC address</h1>
 <p>When no MAC address is supplied, the library retrieves the board's internal MAC address. Read it after initializing Ethernet:</p>
@@ -146,7 +146,7 @@ LwIP configuration and scheduling</h1>
 <p>DHCP lease renewal is handled by LwIP in the background, so calling <code>Ethernet.maintain()</code> is not required for normal operation. The method remains available for sketches that need to check or handle DHCP lease renewals.</p>
 <h1><a class="anchor" id="autotoc_md5"></a>
 Examples</h1>
-<p>The repository includes sketches for DHCP address reporting, TCP clients and servers, UDP, DNS/NTP, and FreeRTOS. Open them from the Arduino IDE's examples menu or browse the <a href="examples/">examples directory</a>.</p>
+<p>The repository includes sketches for DHCP address reporting, TCP clients and servers, UDP, DNS/NTP, and FreeRTOS. Open them from the Arduino IDE's examples menu or browse the <a href="https://github.com/stm32duino/STM32Ethernet/tree/main/examples">examples directory</a>.</p>
 <h1><a class="anchor" id="autotoc_md6"></a>
 Documentation and source</h1>
 <ul>
