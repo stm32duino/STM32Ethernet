@@ -1,69 +1,115 @@
-# STM32 Ethernet Library for Arduino
+# STM32Ethernet
 
-With an STM32 board with Ethernet compatibility, this library allows a STM32
-board (NUCLEO, DISCOVERY, ...) to connect to the internet.  
+STM32Ethernet allows an Ethernet-compatible STM32 board, such as a NUCLEO or
+DISCOVERY board, to connect to a local network or the Internet. It follows the
+Arduino Ethernet API and provides client, server, DHCP, and DNS functionality.
 
-This library follows the Ethernet API from Arduino.<br>
-For more information about it please visit: http://www.arduino.cc/en/Reference/Ethernet
+The [hosted API documentation](https://stm32duino.github.io/STM32Ethernet/) is
+available online. See the [examples](examples/) for complete sketches.
 
-## Dependency
+## Requirements
 
-This library is based on LwIP, a Lightweight TCP/IP stack, available here:
+- An STM32 board with Ethernet hardware support, for example:
+  - NUCLEO-F429ZI
+  - STM32F746G-DISCOVERY
+- The [STM32duino LwIP library](https://github.com/stm32duino/LwIP).
 
-http://git.savannah.gnu.org/cgit/lwip.git
+Both libraries are available through the Arduino Library Manager. In the
+Arduino IDE, open **Sketch > Include Library > Manage Libraries...**, search for
+`LwIP`, then install **LwIP** and **STM32Ethernet**.
 
-The LwIP has been ported as Arduino library and is available thanks Arduino Library Manager.
+STM32Ethernet is based on [LwIP](https://savannah.nongnu.org/projects/lwip/),
+a lightweight TCP/IP stack, and is compatible with the
+[Arduino Ethernet API](https://www.arduino.cc/reference/en/libraries/ethernet/).
 
-Source: https://github.com/stm32duino/LwIP
+## Quick start
 
-## Configuration
+Include both libraries, then start the connection with DHCP:
 
-The LwIP has several user defined options, which is specified from within the `lwipopts.h` file.
+```cpp
+#include <LwIP.h>
+#include <STM32Ethernet.h>
 
-This library provides a default user defined options file named `lwipopts_default.h`.
+void setup() {
+  Serial.begin(9600);
+  if (Ethernet.begin() == 0) {
+    Serial.println("Failed to configure Ethernet using DHCP");
+  }
+}
 
-User can provide his own defined options at sketch level by adding his configuration in a file named `STM32lwipopts.h` or
-extend the default one by adding some extra configuration in a file named `lwipopts_extra.h`.
+void loop() {
+}
+```
 
+`Ethernet.begin()` returns `1` when DHCP configuration succeeds and `0` when
+it fails. When DHCP is unavailable, configure a static address instead:
 
+```cpp
+IPAddress ip(192, 168, 0, 177);
+Ethernet.begin(ip);
+```
 
-## New alternative init procedure **!!!**
+The static-address overloads also allow the subnet mask, gateway, and DNS
+server to be provided:
 
-There are alternative inits of the Ethernet interface with following orders:
+```cpp
+Ethernet.begin(ip, subnet);
+Ethernet.begin(ip, subnet, gateway);
+Ethernet.begin(ip, subnet, gateway, dns);
+```
 
-	Ethernet.begin();
-	Ethernet.begin(ip);
-	Ethernet.begin(ip, subnet);
-	Ethernet.begin(ip, subnet, gateway);
-	Ethernet.begin(ip, subnet, gateway, dns);
+See the [WebClient example](examples/WebClient/WebClient.ino) for a DHCP
+connection with a static-IP fallback.
 
-This is more logical. A MAC address is no more needed and will retrieved internally by the mbed MAC address!
+## MAC address
 
-You can get the MAC address with following function, this must be done after Ethernet.Begin()
-	
-	uint8_t *mac;
-	Ethernet.begin();
-	Ethernet.MACAddress(mac);
+When no MAC address is supplied, the library retrieves the board's internal
+MAC address. Read it after initializing Ethernet:
 
-You can also set a new user based MAC address, this must be done before Ethernet.begin()
+```cpp
+uint8_t mac[6];
+Ethernet.begin();
+Ethernet.MACAddress(mac);
+```
 
-	uint8_t newMAC[] = {0x00, 0x80, 0xE1, 0x01, 0x01, 0x01};
-	Ethernet.setMACAddress(newMAC);
-	Ethernet.begin();
+To use a custom MAC address, set it before initialization:
 
-## Note
+```cpp
+uint8_t mac[] = {0x00, 0x80, 0xE1, 0x01, 0x01, 0x01};
+Ethernet.setMACAddress(mac);
+Ethernet.begin();
+```
 
-`EthernetClass::maintain()` in no more required to renew IP address from DHCP.<br>
-It is done automatically by the LwIP stack in a background task.  
+The library also provides `begin()` overloads that accept a MAC address
+directly.
 
-An Idle task is required by the LwIP stack to handle timer and data reception.<br>
-This idle task is called inside a timer callback each 1 ms by the
-function `stm32_eth_scheduler()`.<br>
-A `DEFAULT_ETHERNET_TIMER` is set in the library to `TIM14`.<br>
-`DEFAULT_ETHERNET_TIMER` can be redefined in the core variant.<br>
-Be careful to not lock the system in a function which disabling IRQ.<br>
-Call `Ethernet::schedule()` performs an update of the LwIP stack.<br>
+## LwIP configuration and scheduling
 
-## Wiki
+LwIP options are configured in `lwipopts.h`. The library provides
+`lwipopts_default.h` as its default configuration. To customize options for a
+sketch, provide a `STM32lwipopts.h` file, or add options to the default
+configuration through `lwipopts_extra.h`.
 
-You can find information at https://github.com/stm32duino/Arduino_Core_STM32/wiki/STM32Ethernet
+The LwIP stack needs periodic processing for timers and packet reception. A
+timer callback runs `stm32_eth_scheduler()` every 1 ms by default, using
+`TIM14` (`DEFAULT_ETHERNET_TIMER`). A core variant can redefine
+`DEFAULT_ETHERNET_TIMER`. Avoid disabling interrupts for extended periods.
+Call `Ethernet.schedule()` to process the LwIP stack explicitly, for example
+after a long-running loop.
+
+DHCP lease renewal is handled by LwIP in the background, so calling
+`Ethernet.maintain()` is not required for normal operation. The method remains
+available for sketches that need to check or handle DHCP lease renewals.
+
+## Examples
+
+The repository includes sketches for DHCP address reporting, TCP clients and
+servers, UDP, DNS/NTP, and FreeRTOS. Open them from the Arduino IDE's examples
+menu or browse the [examples directory](examples/).
+
+## Documentation and source
+
+- [Latest released API documentation](https://stm32duino.github.io/STM32Ethernet/)
+- [Development API documentation](https://stm32duino.github.io/STM32Ethernet/dev/)
+- [STM32Ethernet source repository](https://github.com/stm32duino/STM32Ethernet)
+- [LwIP Arduino library](https://github.com/stm32duino/LwIP)

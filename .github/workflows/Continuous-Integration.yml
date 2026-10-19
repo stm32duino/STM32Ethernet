@@ -7,11 +7,21 @@ on:
       - '*'
       - '**.md'
       - '**.txt'
+      - Doxyfile
+      - docs/**
+      - mkdocs.yml
+      - .github/workflows/docs-check.yml
+      - .github/workflows/publish-docs.yml
   pull_request:
     paths-ignore:
       - '*'
       - '**.md'
       - '**.txt'
+      - Doxyfile
+      - docs/**
+      - mkdocs.yml
+      - .github/workflows/docs-check.yml
+      - .github/workflows/publish-docs.yml
 jobs:
   astyle_check:
     runs-on: ubuntu-latest

@@ -1,0 +1,13 @@
+site_name: STM32Ethernet
+site_description: STM32Ethernet Arduino library API reference
+site_url: https://stm32duino.github.io/STM32Ethernet/
+repo_name: stm32duino/STM32Ethernet
+repo_url: https://github.com/stm32duino/STM32Ethernet
+docs_dir: api-docs/html
+
+theme:
+  name: material
+
+extra:
+  version:
+    provider: mike
