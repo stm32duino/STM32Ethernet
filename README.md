@@ -5,7 +5,7 @@ DISCOVERY board, to connect to a local network or the Internet. It follows the
 Arduino Ethernet API and provides client, server, DHCP, and DNS functionality.
 
 The [hosted API documentation](https://stm32duino.github.io/STM32Ethernet/) is
-available online. See the [examples](examples/) for complete sketches.
+available online. See the [examples](https://github.com/stm32duino/STM32Ethernet/tree/main/examples) for complete sketches.
 
 ## Requirements
 
@@ -58,7 +58,7 @@ Ethernet.begin(ip, subnet, gateway);
 Ethernet.begin(ip, subnet, gateway, dns);
 ```
 
-See the [WebClient example](examples/WebClient/WebClient.ino) for a DHCP
+See the [WebClient example](https://github.com/stm32duino/STM32Ethernet/blob/main/examples/WebClient/WebClient.ino) for a DHCP
 connection with a static-IP fallback.
 
 ## MAC address
@@ -105,7 +105,7 @@ available for sketches that need to check or handle DHCP lease renewals.
 
 The repository includes sketches for DHCP address reporting, TCP clients and
 servers, UDP, DNS/NTP, and FreeRTOS. Open them from the Arduino IDE's examples
-menu or browse the [examples directory](examples/).
+menu or browse the [examples directory](https://github.com/stm32duino/STM32Ethernet/tree/main/examples).
 
 ## Documentation and source
 
