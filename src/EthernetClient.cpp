@@ -227,7 +227,11 @@ EthernetClient::operator bool()
 
 bool EthernetClient::operator==(const EthernetClient &rhs)
 {
-  return _tcp_client == rhs._tcp_client && _tcp_client->pcb == rhs._tcp_client->pcb;
+  bool equal = _tcp_client == rhs._tcp_client;
+  if (_tcp_client != NULL && rhs._tcp_client != NULL) {
+    equal = equal && (_tcp_client->pcb == rhs._tcp_client->pcb);
+  }
+  return equal;
 }
 
 uint8_t EthernetClient::getSocketNumber()

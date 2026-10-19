@@ -176,8 +176,8 @@ class EthernetClient : public Client {
     /**
      * @brief Tests whether two clients refer to the same connection.
      *
-     * Two clients with no connection structure compare equal, and the function
-     * then reads a NULL pointer. Only compare clients that have a connection.
+     * Two clients with no connection structure compare equal. A client with no
+     * connection never equals a client that has one.
      *
      * @param rhs Client to compare with.
      * @return true if both clients use the same connection structure and the
