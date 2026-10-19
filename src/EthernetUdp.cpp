@@ -40,7 +40,10 @@
 #include "lwip/igmp.h"
 #include "lwip/ip_addr.h"
 
-EthernetUDP::EthernetUDP() {}
+EthernetUDP::EthernetUDP()
+  : _port(0), _remotePort(0), _sendtoPort(0), _data(NULL), _udp(), _remaining(0)
+{
+}
 
 uint8_t EthernetUDP::begin(uint16_t port)
 {
