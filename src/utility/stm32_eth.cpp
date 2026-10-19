@@ -770,7 +770,7 @@ err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err)
 err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
 {
   err_t ret_err;
-  uint8_t accepted;
+  bool accepted = false;
   struct tcp_struct **tcpClient = (struct tcp_struct **)arg;
 
   /* set priority for the newly accepted tcp connection newpcb */
@@ -789,7 +789,7 @@ err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
       for (uint16_t i = 0; i < MAX_CLIENT; i++) {
         if (tcpClient[i] == NULL) {
           tcpClient[i] = client;
-          accepted = 1;
+          accepted = true;
           break;
         }
       }
