@@ -818,8 +818,7 @@ err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
       }
     } else {
       /*  close tcp connection */
-      tcp_connection_close(newpcb, client);
-      mem_free(client);
+      tcp_close(newpcb);
 
       /* return memory error */
       ret_err = ERR_MEM;
