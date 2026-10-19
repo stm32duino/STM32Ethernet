@@ -1,3 +1,10 @@
+/**
+ * @file    EthernetClient.cpp
+ * @brief   TCP client implementation of the Ethernet library.
+ *
+ * Connects by IP address or host name (resolved through DNSClient), reads and
+ * writes data, reports the connection status, and closes the connection.
+ */
 extern "C" {
 #include "string.h"
 }
@@ -14,8 +21,6 @@ EthernetClient::EthernetClient()
 {
 }
 
-/* Deprecated constructor. Keeps compatibility with W5100 architecture
-sketches but sock is ignored. */
 EthernetClient::EthernetClient(uint8_t sock)
   : _tcp_client(NULL)
 {
@@ -215,9 +220,6 @@ uint8_t EthernetClient::status()
   return _tcp_client->state;
 }
 
-// the next function allows us to use the client returned by
-// EthernetServer::available() as the condition in an if-statement.
-
 EthernetClient::operator bool()
 {
   return (_tcp_client && (_tcp_client->state != TCP_CLOSING));
@@ -228,9 +230,6 @@ bool EthernetClient::operator==(const EthernetClient &rhs)
   return _tcp_client == rhs._tcp_client && _tcp_client->pcb == rhs._tcp_client->pcb;
 }
 
-/* This function is not a function defined by Arduino. This is a function
-specific to the W5100 architecture. To keep the compatibility we leave it and
-returns always 0. */
 uint8_t EthernetClient::getSocketNumber()
 {
   return 0;

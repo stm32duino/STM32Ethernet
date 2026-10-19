@@ -2,6 +2,9 @@
  * @file    lwipopts.h
  * @author  Frederic Pillon <frederic.pillon@st.com> for STMicroelectronics.
  * @brief   Include header file to match Arduino library format
+ *
+ * @details Includes STM32lwipopts.h when it is present. Otherwise it includes
+ *          lwipopts_extra.h (when present) followed by lwipopts_default.h.
  */
 
 #ifndef _ARDUINO_LWIPOPTS_H

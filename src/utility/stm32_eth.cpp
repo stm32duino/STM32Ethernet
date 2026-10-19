@@ -117,10 +117,12 @@ static void TIM_scheduler_Config(void);
 #endif
 
 /**
-* @brief  Configure the network interface
-* @param  None
-* @retval None
-*/
+  * @brief  Configure the network interface.
+  *
+  * Removes and re-adds gnetif using the addresses in gconfig, makes it the
+  * default interface, sets it up or down according to the current link state
+  * and, when LWIP_NETIF_LINK_CALLBACK is enabled, registers the link callback.
+  */
 static void Netif_Config(void)
 {
   netif_remove(&gnetif);
@@ -145,10 +147,14 @@ static void Netif_Config(void)
 }
 
 /**
-* @brief  Scheduler callback. Call by a timer interrupt.
-* @param  htim: pointer to stimer_t or Hardware Timer
-* @retval None
-*/
+  * @brief  Scheduler callback, called by the timer interrupt every 1 ms.
+  *
+  * Forwards the call to _stm32_eth_scheduler(). The timer handle argument is
+  * present only for STM32 core versions up to 0x01080000 and is unused.
+  *
+  * @param htim Timer handle (stimer_t or HardwareTimer, depending on the
+  *             STM32 core version).
+  */
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
   static void scheduler_callback(stimer_t *htim)
 #elif (STM32_CORE_VERSION  <= 0x01080000)
@@ -165,11 +171,12 @@ static void Netif_Config(void)
 
 #if !defined(STM32_CORE_VERSION) || (STM32_CORE_VERSION  <= 0x01060100)
 /**
-* @brief  Enable the timer used to call ethernet scheduler function at regular
-*         interval.
-* @param  None
-* @retval None
-*/
+  * @brief  Enable the timer used to call ethernet scheduler function at regular
+  *         interval.
+  *
+  * Uses the stimer API: sets DEFAULT_ETHERNET_TIMER, configures a 1 ms period
+  * and attaches scheduler_callback() as its interrupt handler.
+  */
 static void TIM_scheduler_Config(void)
 {
   /* Set TIMx instance. */
@@ -180,11 +187,13 @@ static void TIM_scheduler_Config(void)
 }
 #else
 /**
-* @brief  Enable the timer used to call ethernet scheduler function at regular
-*         interval.
-* @param  None
-* @retval None
-*/
+  * @brief  Enable the timer used to call ethernet scheduler function at regular
+  *         interval.
+  *
+  * Creates a HardwareTimer on DEFAULT_ETHERNET_TIMER with the ETH_TIM_IRQ_PRIO
+  * and ETH_TIM_IRQ_SUBPRIO interrupt priorities, sets a 1 ms overflow, attaches
+  * scheduler_callback() and starts the timer.
+  */
 static void TIM_scheduler_Config(void)
 {
   /* Configure HardwareTimer */
@@ -258,51 +267,28 @@ void stm32_eth_init(const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, co
   stm32_eth_scheduler();
 }
 
-/**
-  * @brief Return Ethernet init status
-  * @param  None
-  * @retval 1 for initialized, 0 for not initialized
-  */
 uint8_t stm32_eth_is_init(void)
 {
   return ethernetif_is_init();
 }
 
-/**
-  * @brief Set Ethernet MAC address
-  * @param  mac: mac address
-  * @retval None
-  */
 void stm32_eth_set_macaddr(const uint8_t *mac)
 {
   ethernetif_set_mac_addr(mac);
 }
-/**
-  * @brief Return Ethernet MAC address
-  * @param  mac: mac address
-  * @retval None
-  */
 void stm32_eth_get_macaddr(uint8_t *mac)
 {
   return ethernetif_get_mac_addr(mac);
 }
 
-/**
-  * @brief Return Ethernet link status
-  * @param  None
-  * @retval 1 for link up, 0 for link down
-  */
 uint8_t stm32_eth_link_up(void)
 {
   return netif_is_link_up(&gnetif);
 }
 
 #if defined(STM32_CORE_VERSION) && (STM32_CORE_VERSION  > 0x01060100)
-/**
-  * @brief  This function generates Timer Update event to force call to _stm32_eth_scheduler().
-  * @param  None
-  * @retval None
-  */
+/* refresh() generates a timer update event, which runs _stm32_eth_scheduler()
+   from the timer interrupt. Does nothing until the timer has been created. */
 void stm32_eth_scheduler(void)
 {
   if (EthTim != NULL) {
@@ -311,17 +297,14 @@ void stm32_eth_scheduler(void)
 }
 
 /**
-  * @brief  This function is called solely by Timer callback to avoid race condition.
-  * @param  None
-  * @retval None
+  * @brief  Run one LwIP scheduler pass. Called only from the timer callback.
+  *
+  * Reads received packets (unless ETH_INPUT_USE_IT is defined), checks the
+  * link status every TIME_CHECK_ETH_LINK_STATE ms, handles LwIP timeouts and
+  * runs the periodic DHCP processing.
   */
 void _stm32_eth_scheduler(void)
 #else
-/**
-  * @brief  This function is called solely by Timer callback to avoid race condition.
-  * @param  None
-  * @retval None
-  */
 void stm32_eth_scheduler(void)
 #endif
 {
@@ -347,21 +330,19 @@ void stm32_eth_scheduler(void)
 
 #if LWIP_DHCP
 
-/**
-  * @brief  Returns DHCP activation state
-  * @param  None
-  * @retval true if DHCP enabled or false if not used
-  */
 uint8_t stm32_dhcp_started(void)
 {
   return DHCP_Started_by_user;
 }
 
-/**
-  * @brief  DHCP_Process_Handle
-  * @param  netif pointer to generic data structure used for all lwIP network interfaces
-  * @retval None
-  */
+/* With the link up, DHCP_state is advanced as follows:
+   DHCP_START starts DHCP and moves to DHCP_WAIT_ADDRESS.
+   DHCP_WAIT_ADDRESS moves to DHCP_ADDRESS_ASSIGNED once an address is supplied.
+   Otherwise, after more than MAX_DHCP_TRIES attempts it moves to DHCP_TIMEOUT
+   and stops DHCP.
+   DHCP_ASK_RELEASE releases the lease, stops DHCP and moves to DHCP_OFF.
+   DHCP_LINK_DOWN stops DHCP and moves to DHCP_OFF.
+   With the link down, DHCP_state is set to DHCP_OFF. */
 void stm32_DHCP_process(struct netif *netif)
 {
   struct dhcp *dhcp;
@@ -417,11 +398,6 @@ void stm32_DHCP_process(struct netif *netif)
   }
 }
 
-/**
-  * @brief  DHCP periodic check
-  * @param  netif pointer to generic data structure used for all lwIP network interfaces
-  * @retval None
-  */
 void stm32_DHCP_Periodic_Handle(struct netif *netif)
 {
   /* Fine DHCP periodic process every 500ms */
@@ -432,21 +408,13 @@ void stm32_DHCP_Periodic_Handle(struct netif *netif)
   }
 }
 
-/**
-  * @brief  Inform the local DHCP of our manual IP configuration
-  * @param  None
-  * @retval None
-  */
 void stm32_DHCP_manual_config(void)
 {
   dhcp_inform(&gnetif);
 }
 
-/**
-  * @brief  Return status of the DHCP when renew or rebind
-  * @param  None
-  * @retval Renew or rebind. Adapted from Arduino Ethernet library.
-  */
+/* Adapted from the Arduino Ethernet library. The DHCP client data of gnetif
+   is read without a NULL check. */
 uint8_t stm32_get_DHCP_lease_state(void)
 {
   uint8_t res = 0;
@@ -461,28 +429,11 @@ uint8_t stm32_get_DHCP_lease_state(void)
   return res;
 }
 
-/**
-  * @brief  Set DHCP state
-  * @param  state: DHCP_START, DHCP_ASK_RELEASE or DHCP_STOP. Others should not be used.
-  * @retval None
-  */
 void stm32_set_DHCP_state(uint8_t state)
 {
   DHCP_state = state;
 }
 
-/**
-  * @brief  Return DHCP state
-  * @param  None
-  * @retval One of the following state:
-              DHCP_OFF
-              DHCP_START
-              DHCP_WAIT_ADDRESS
-              DHCP_ADDRESS_ASSIGNED
-              DHCP_TIMEOUT
-              DHCP_LINK_DOWN
-              DHCP_ASK_RELEASE
-  */
 uint8_t stm32_get_DHCP_state(void)
 {
   return DHCP_state;
@@ -490,52 +441,28 @@ uint8_t stm32_get_DHCP_state(void)
 
 #endif /* LWIP_DHCP */
 
-/**
-  * @brief  Converts IP address in readable format for user.
-  * @param  None
-  * @retval address in uint32_t format
-  */
 uint32_t stm32_eth_get_ipaddr(void)
 {
   return ip4_addr_get_u32(&(gnetif.ip_addr));
 }
 
-/**
-  * @brief  Converts gateway address in readable format for user.
-  * @param  None
-  * @retval address in uint32_t format
-  */
 uint32_t stm32_eth_get_gwaddr(void)
 {
   return ip4_addr_get_u32(&(gnetif.gw));
 }
 
-/**
-  * @brief  Converts network mask address in readable format for user.
-  * @param  None
-  * @retval address in uint32_t format
-  */
 uint32_t stm32_eth_get_netmaskaddr(void)
 {
   return ip4_addr_get_u32(&(gnetif.netmask));
 }
 
-/**
-  * @brief  Converts DNS address in readable format for user.
-  * @param  None
-  * @retval address in uint32_t format
-  */
 uint32_t stm32_eth_get_dnsaddr(void)
 {
   const ip_addr_t *tmp = dns_getserver(0);
   return ip4_addr_get_u32(tmp);
 }
 
-/**
-  * @brief  Converts DHCP address in readable format for user.
-  * @param  None
-  * @retval address in uint32_t format
-  */
+/* The DHCP client data of gnetif is read without a NULL check. */
 uint32_t stm32_eth_get_dhcpaddr(void)
 {
   struct dhcp *dhcp = (struct dhcp *)netif_get_client_data(&gnetif, LWIP_NETIF_CLIENT_DATA_INDEX_DHCP);
@@ -544,11 +471,9 @@ uint32_t stm32_eth_get_dhcpaddr(void)
 
 #if LWIP_NETIF_LINK_CALLBACK
 
-/**
-  * @brief  This function notify user about link status changement.
-  * @param  netif: the network interface
-  * @retval None
-  */
+/* Overrides the weak default in ethernetif.cpp. When the link is up, restarts
+   DHCP if the user started it and sets the interface up. When the link is down,
+   sets DHCP_LINK_DOWN if the user started DHCP and sets the interface down. */
 void ethernetif_notify_conn_changed(struct netif *netif)
 {
   if (netif_is_link_up(netif)) {
@@ -572,11 +497,6 @@ void ethernetif_notify_conn_changed(struct netif *netif)
 
 #endif /* LWIP_NETIF_LINK_CALLBACK */
 
-/**
-  * @brief  Notify the User about the network interface config status
-  * @param  netif: the network interface
-  * @retval None
-  */
 void User_notification(struct netif *netif)
 {
   if (netif_is_up(netif)) {
@@ -591,11 +511,6 @@ void User_notification(struct netif *netif)
 
 #if LWIP_DNS
 
-/**
-  * @brief  Initializes DNS
-  * @param  dnsaddr: DNS address
-  * @retval None
-  */
 void stm32_dns_init(const uint8_t *dnsaddr)
 {
   ip_addr_t ip;
@@ -608,13 +523,16 @@ void stm32_dns_init(const uint8_t *dnsaddr)
   }
 }
 
-/** Callback which is invoked when a hostname is found.
- * A function of this type must be implemented by the application using the DNS resolver.
- * @param name pointer to the name that was looked up.
- * @param ipaddr pointer to an ip_addr_t containing the IP address of the hostname,
- *        or NULL if the name could not be found (or on any other error).
- * @param callback_arg a user-specified callback argument passed to dns_gethostbyname
-*/
+/**
+  * @brief  Callback invoked when a DNS lookup completes.
+  *
+  * Stores the resolved IPv4 address in the uint32_t pointed to by
+  * callback_arg, or 0 if the name could not be resolved.
+  *
+  * @param name Hostname that was looked up (unused).
+  * @param ipaddr Resolved address, or NULL if the lookup failed.
+  * @param callback_arg Pointer to a uint32_t that receives the address.
+  */
 void dns_callback(const char *name, const ip_addr_t *ipaddr, void *callback_arg)
 {
   UNUSED(name);
@@ -626,13 +544,6 @@ void dns_callback(const char *name, const ip_addr_t *ipaddr, void *callback_arg)
   }
 }
 
-/**
- * Resolve a hostname (string) into an IP address.
- *
- * @param hostname the hostname that is to be queried
- * @param addr pointer to a uint8_t where to store the address
- * @return an error code compatible with Arduino Ethernet library
- */
 int8_t stm32_dns_gethostbyname(const char *hostname, uint32_t *ipaddr)
 {
   ip_addr_t iphost;
@@ -682,35 +593,17 @@ int8_t stm32_dns_gethostbyname(const char *hostname, uint32_t *ipaddr)
 
 #endif /* LWIP_DNS */
 
-/**
-  * @brief  Converts a uint8_t IP address to a ip_addr_t address
-  * @param  ipu8: pointer to an address to convert
-  * @param  ipaddr: pointer where store the address converted
-  * @retval pointer to an address in ip_addr_t format
-  */
 ip_addr_t *u8_to_ip_addr(uint8_t *ipu8, ip_addr_t *ipaddr)
 {
   IP_ADDR4(ipaddr, ipu8[0], ipu8[1], ipu8[2], ipu8[3]);
   return ipaddr;
 }
 
-/**
-  * @brief  Converts a ip_addr_t IP address to a uint32_t address
-  * @param  ipaddr: pointer to an address to convert
-  * @retval pointer to the address converted
-  */
 uint32_t ip_addr_to_u32(ip_addr_t *ipaddr)
 {
   return ip4_addr_get_u32(ipaddr);
 }
 
-/**
-  * @brief  Allocate a pbuf with data pass in parameter
-  * @param  p: pointer to pbuf
-  * @param  buffer: pointer to data to store
-  * @param  size: number of data to store
-  * @retval pointer to the pbuf allocated
-  */
 struct pbuf *stm32_new_data(struct pbuf *p, const uint8_t *buffer, size_t size)
 {
   // Allocate memory if pbuf doesn't exit yet.
@@ -747,11 +640,8 @@ struct pbuf *stm32_new_data(struct pbuf *p, const uint8_t *buffer, size_t size)
   return 0;
 }
 
-/**
-  * @brief  Free pbuf
-  * @param  p: pointer to pbuf
-  * @retval return always NULL
-  */
+/* pbuf_free() returns 0 while the pbuf is still referenced, so it is called
+   until the pbuf is released. */
 struct pbuf *stm32_free_data(struct pbuf *p)
 {
   uint16_t n;
@@ -765,14 +655,9 @@ struct pbuf *stm32_free_data(struct pbuf *p)
   return NULL;
 }
 
-/**
-  * @brief This function passes pbuf data to uin8_t buffer. It takes account if
-  * pbuf is chained.
-  * @param data pointer to data structure
-  * @param buffer the buffer where write the data read
-  * @param size the number of data to read
-  * @retval number of data read
-  */
+/* Each copied byte decrements data->available. A pbuf that is fully read is
+   freed and data->p advances to the next one. The chain is released once
+   data->available reaches 0. */
 uint16_t stm32_get_data(struct pbuf_data *data, uint8_t *buffer, size_t size)
 {
   uint16_t i;
@@ -821,16 +706,6 @@ uint16_t stm32_get_data(struct pbuf_data *data, uint8_t *buffer, size_t size)
 
 #if LWIP_UDP
 
-/**
-  * @brief This function is called when an UDP datagram has been received on
-  * the port UDP_PORT.
-  * @param arg user supplied argument
-  * @param pcb the udp_pcb which received data
-  * @param p the packet buffer that was received
-  * @param addr the remote IP address from which the packet was received
-  * @param port the remote port from which the packet was received
-  * @retval None
-  */
 void udp_receive_callback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
                           const ip_addr_t *addr, u16_t port)
 {
@@ -861,13 +736,6 @@ void udp_receive_callback(void *arg, struct udp_pcb *pcb, struct pbuf *p,
 
 #if LWIP_TCP
 
-/**
-  * @brief Function called when TCP connection established
-  * @param arg: user supplied argument
-  * @param tpcb: pointer on the connection control block
-  * @param err: when connection correctly established err should be ERR_OK
-  * @retval err_t: returned error
-  */
 err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err)
 {
   struct tcp_struct *tcp_arg = (struct tcp_struct *)arg;
@@ -899,13 +767,6 @@ err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err)
   return err;
 }
 
-/**
-  * @brief  This function is the implementation of tcp_accept LwIP callback
-  * @param arg user supplied argument
-  * @param  newpcb: pointer on tcp_pcb struct for the newly created tcp connection
-  * @param err: when connection correctly established err should be ERR_OK
-  * @retval err_t: error status
-  */
 err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
 {
   err_t ret_err;
@@ -971,11 +832,19 @@ err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err)
 }
 
 /**
-  * @brief tcp_receiv callback
-  * @param arg: argument to be passed to receive callback
-  * @param tpcb: tcp connection control block
-  * @param err: receive error code
-  * @retval err_t: returned error
+  * @brief  Callback invoked when data is received on a TCP connection.
+  *
+  * An empty packet (p == NULL) closes the connection. A packet received with
+  * an error is freed and the error is returned. For a connected or accepted
+  * connection, acknowledges the data and appends it to the unread data
+  * chain. For a closed connection, acknowledges and frees the data.
+  *
+  * @param arg User argument, a struct tcp_struct pointer.
+  * @param tpcb Connection control block.
+  * @param p Received packet buffer, or NULL when the peer closed the
+  *          connection.
+  * @param err Receive error code.
+  * @return ERR_OK, or the receive error code.
   */
 static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err)
 {
@@ -1021,12 +890,12 @@ static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, 
 }
 
 /**
-  * @brief  This function implements the tcp_sent LwIP callback (called when ACK
-  *         is received from remote host for sent data)
-  * @param  arg: pointer on argument passed to callback
-  * @param  tcp_pcb: tcp connection control block
-  * @param  len: length of data sent
-  * @retval err_t: returned error code
+  * @brief  Callback invoked when an ACK is received for sent TCP data.
+  *
+  * @param arg User argument, a struct tcp_struct pointer.
+  * @param tpcb Connection control block.
+  * @param len Length of the acknowledged data (unused).
+  * @return ERR_OK if arg refers to tpcb, ERR_ARG otherwise.
   */
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len)
 {
@@ -1041,16 +910,20 @@ static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len)
   return ERR_ARG;
 }
 
-/** Function prototype for tcp error callback functions. Called when the pcb
- * receives a RST or is unexpectedly closed for any other reason.
- *
- * @note The corresponding pcb is already freed when this callback is called!
- *
- * @param arg Additional argument to pass to the callback function (@see tcp_arg())
- * @param err Error code to indicate why the pcb has been closed
- *            ERR_ABRT: aborted through tcp_abort or by a TCP timer
- *            ERR_RST: the connection was reset by the remote host
- */
+/**
+  * @brief  Callback invoked when a TCP connection is reset or closed
+  *         unexpectedly.
+  *
+  * On an error other than ERR_OK, clears the connection's pcb and sets its
+  * state to TCP_CLOSING.
+  *
+  * @note The corresponding pcb is already freed when this callback is called.
+  *
+  * @param arg User argument, a struct tcp_struct pointer.
+  * @param err Error code indicating why the pcb was closed:
+  *            ERR_ABRT if aborted through tcp_abort or by a TCP timer,
+  *            ERR_RST if the connection was reset by the remote host.
+  */
 static void tcp_err_callback(void *arg, err_t err)
 {
   struct tcp_struct *tcp_arg = (struct tcp_struct *)arg;
@@ -1063,12 +936,6 @@ static void tcp_err_callback(void *arg, err_t err)
   }
 }
 
-/**
-  * @brief This function is used to close the tcp connection with server
-  * @param tpcb: tcp connection control block
-  * @param es: pointer on echoclient structure
-  * @retval None
-  */
 void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp)
 {
   /* remove callbacks */

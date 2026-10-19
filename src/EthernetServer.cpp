@@ -1,3 +1,11 @@
+/**
+ * @file    EthernetServer.cpp
+ * @brief   TCP server implementation of the Ethernet library.
+ *
+ * begin() creates, binds and listens on the TCP port, accept() handles new
+ * clients, available() returns a client with pending data, and end() stops
+ * the server.
+ */
 extern "C" {
 #include "string.h"
 }

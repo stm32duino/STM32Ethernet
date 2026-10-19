@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    ethernetif.c
+  * @file    ethernetif.cpp
   * @author  MCD Application Team & Wi6Labs
   * @version V1.5.0
   * @date    20-june-2017
@@ -128,9 +128,13 @@ uint32_t ETH_HashTableLow = 0x0;
                        Ethernet MSP Routines
 *******************************************************************************/
 /**
-  * @brief  Initializes the ETH MSP.
-  * @param  heth: ETH handle
-  * @retval None
+  * @brief  Initialize the ETH MSP.
+  *
+  * Configures the GPIO pins listed in PinMap_Ethernet as alternate functions,
+  * enables the ETH interrupt when ETH_INPUT_USE_IT is defined, and enables the
+  * ETH peripheral clock.
+  *
+  * @param heth ETH handle. Not used.
   */
 void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
 {
@@ -174,11 +178,14 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
                        LL Driver Interface ( LwIP stack --> ETH)
 *******************************************************************************/
 /**
-  * @brief In this function, the hardware should be initialized.
-  * Called from ethernetif_init().
+  * @brief  Initialize the Ethernet hardware. Called from ethernetif_init().
   *
-  * @param netif the already initialized lwip network interface structure
-  *        for this ethernetif
+  * Configures the ETH peripheral and the Tx/Rx DMA descriptor lists, sets the
+  * MAC address in the netif, starts the MAC and DMA, and enables the PHY
+  * link-change interrupt. With LWIP_IGMP, also installs igmp_mac_filter() and
+  * saves the MAC hash table registers.
+  *
+  * @param netif The already initialized LwIP network interface.
   */
 static void low_level_init(struct netif *netif)
 {
@@ -252,19 +259,16 @@ static void low_level_init(struct netif *netif)
 }
 
 /**
-  * @brief This function should do the actual transmission of the packet. The packet is
-  * contained in the pbuf that is passed to the function. This pbuf
-  * might be chained.
+  * @brief  Transmit a packet.
   *
-  * @param netif the lwip network interface structure for this ethernetif
-  * @param p the MAC packet to send (e.g. IP packet including MAC addresses and type)
-  * @return ERR_OK if the packet could be sent
-  *         an err_t value if the packet couldn't be sent
+  * Copies the packet, which may be a pbuf chain, into the Tx DMA buffers and
+  * hands the frame to the DMA. If a Tx descriptor is still owned by the DMA,
+  * the function returns ERR_USE. When the Transmit Underflow flag is set, it is
+  * cleared and transmission is resumed.
   *
-  * @note Returning ERR_MEM here if a DMA queue of your MAC is full can lead to
-  *       strange results. You might consider waiting for space in the DMA queue
-  *       to become available since the stack doesn't retry to send a packet
-  *       dropped because of memory failure (except for the TCP timers).
+  * @param netif The LwIP network interface. Not used.
+  * @param p The packet to send, including the MAC header.
+  * @return ERR_OK if the packet was sent, otherwise an err_t error code.
   */
 static err_t low_level_output(struct netif *netif, struct pbuf *p)
 {
@@ -341,12 +345,16 @@ error:
 }
 
 /**
-  * @brief Should allocate a pbuf and transfer the bytes of the incoming
-  * packet from the interface into the pbuf.
+  * @brief  Receive one frame from the Rx DMA buffers.
   *
-  * @param netif the lwip network interface structure for this ethernetif
-  * @return a pbuf filled with the received packet (including MAC header)
-  *         NULL on memory error
+  * Allocates a pbuf chain from the LwIP pool and copies the received frame,
+  * including the MAC header, into it. The Rx descriptors are always given back
+  * to the DMA, and reception is resumed if the Rx Buffer Unavailable flag is
+  * set.
+  *
+  * @param netif The LwIP network interface. Not used.
+  * @return A pbuf filled with the received frame, or NULL if no frame is
+  *         available, the frame is empty, or the pbuf allocation fails.
   */
 static struct pbuf *low_level_input(struct netif *netif)
 {
@@ -425,15 +433,6 @@ static struct pbuf *low_level_input(struct netif *netif)
   return p;
 }
 
-/**
-  * @brief This function should be called when a packet is ready to be read
-  * from the interface. It uses the function low_level_input() that
-  * should handle the actual reception of bytes from the network
-  * interface. Then the type of the received packet is determined and
-  * the appropriate input function is called.
-  *
-  * @param netif the lwip network interface structure for this ethernetif
-  */
 void ethernetif_input(struct netif *netif)
 {
   err_t err;
@@ -457,29 +456,11 @@ void ethernetif_input(struct netif *netif)
   }
 }
 
-/**
-  * @brief Returns the current state
-  *
-  * @param None
-  * @return 0 not initialized else 1
-  */
 uint8_t ethernetif_is_init(void)
 {
   return (EthHandle.State != HAL_ETH_STATE_RESET);
 }
 
-/**
-  * @brief Should be called at the beginning of the program to set up the
-  * network interface. It calls the function low_level_init() to do the
-  * actual setup of the hardware.
-  *
-  * This function should be passed as a parameter to netif_add().
-  *
-  * @param netif the lwip network interface structure for this ethernetif
-  * @return ERR_OK if the loopif is initialized
-  *         ERR_MEM if private data couldn't be allocated
-  *         any other err_t on error
-  */
 err_t ethernetif_init(struct netif *netif)
 {
   LWIP_ASSERT("netif != NULL", (netif != NULL));
@@ -505,21 +486,17 @@ err_t ethernetif_init(struct netif *netif)
 }
 
 /**
-  * @brief  Returns the current time in milliseconds
-  *         when LWIP_TIMERS == 1 and NO_SYS == 1
-  * @param  None
-  * @retval Current Time value
+  * @brief  Return the current time in milliseconds.
+  *
+  * Used by LwIP when LWIP_TIMERS is 1 and NO_SYS is 1.
+  *
+  * @return Current time in milliseconds, from HAL_GetTick().
   */
 u32_t sys_now(void)
 {
   return HAL_GetTick();
 }
 
-/**
-  * @brief  This function sets the netif link status.
-  * @param  netif: the network interface
-  * @retval None
-  */
 void ethernetif_set_link(struct netif *netif)
 {
   uint32_t regvalue = 0;
@@ -546,12 +523,6 @@ void ethernetif_set_link(struct netif *netif)
   }
 }
 
-/**
-  * @brief  Link callback function, this function is called on change of link status
-  *         to update low level driver configuration.
-  * @param  netif: The network interface
-  * @retval None
-  */
 void ethernetif_update_config(struct netif *netif)
 {
   uint32_t regvalue = 0;
@@ -606,11 +577,6 @@ error :
   ethernetif_notify_conn_changed(netif);
 }
 
-/**
-  * @brief  This function notify user about link status changement.
-  * @param  netif: the network interface
-  * @retval None
-  */
 __weak void ethernetif_notify_conn_changed(struct netif *netif)
 {
   /* NOTE : This is function clould be implemented in user file
@@ -619,12 +585,6 @@ __weak void ethernetif_notify_conn_changed(struct netif *netif)
   UNUSED(netif);
 }
 
-/**
-  * @brief  This function set a custom MAC address. This function must be called
-  *         before ethernetif_init().
-  * @param  mac: mac address
-  * @retval None
-  */
 void ethernetif_set_mac_addr(const uint8_t *mac)
 {
   if ((mac != NULL) && !(ethernetif_is_init())) {
@@ -632,11 +592,6 @@ void ethernetif_set_mac_addr(const uint8_t *mac)
   }
 }
 
-/**
-  * @brief  This function get the current MAC address.
-  * @param  mac: mac address
-  * @retval None
-  */
 void ethernetif_get_mac_addr(uint8_t *mac)
 {
   if (mac != NULL) {
@@ -650,6 +605,7 @@ err_t igmp_mac_filter(struct netif *netif, const ip4_addr_t *ip4_addr, netif_mac
   uint8_t mac[6];
   const uint8_t *p = (const uint8_t *)ip4_addr;
 
+  /* Ethernet IPv4 multicast MAC: 01:00:5E followed by the low 23 bits of the group address */
   mac[0] = 0x01;
   mac[1] = 0x00;
   mac[2] = 0x5E;
@@ -666,6 +622,16 @@ err_t igmp_mac_filter(struct netif *netif, const ip4_addr_t *ip4_addr, netif_mac
 #define HASH_BITS 6 /* #bits in hash */
 #endif
 
+/**
+  * @brief  Compute the CRC-32 of a buffer, used by the MAC hash filter.
+  *
+  * Bitwise CRC-32 with polynomial 0x04C11DB7 and initial value 0xFFFFFFFF.
+  * The result is inverted before it is returned.
+  *
+  * @param data Buffer to compute the CRC over.
+  * @param length Number of bytes in data.
+  * @return CRC-32 value.
+  */
 uint32_t ethcrc(const uint8_t *data, size_t length)
 {
   uint32_t crc = 0xffffffff;
@@ -712,9 +678,12 @@ void register_multicast_address(const uint8_t *mac)
 
 #ifdef ETH_INPUT_USE_IT
 /**
-  * @brief  Ethernet Rx Transfer completed callback
-  * @param  heth: ETH handle
-  * @retval None
+  * @brief  Ethernet Rx transfer completed callback.
+  *
+  * Passes the received frame to the LwIP stack by calling ethernetif_input()
+  * on gnetif. Only compiled when ETH_INPUT_USE_IT is defined.
+  *
+  * @param heth ETH handle. Not used.
   */
 void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
 {
@@ -722,9 +691,10 @@ void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
 }
 
 /**
-  * @brief  This function handles Ethernet interrupt request.
-  * @param  None
-  * @retval None
+  * @brief  Ethernet interrupt request handler.
+  *
+  * Forwards the interrupt to HAL_ETH_IRQHandler() for EthHandle. Only compiled
+  * when ETH_INPUT_USE_IT is defined.
   */
 void ETH_IRQHandler(void)
 {

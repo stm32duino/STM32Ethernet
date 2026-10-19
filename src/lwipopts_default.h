@@ -3,6 +3,9 @@
   * @file    lwipopts_default.h
   * @author  MCD Application Team
   * @brief   lwIP Options Configuration.
+  *
+  * @details Default LwIP options used by the library. NO_SYS is set to 1 (no
+  *          operating system). LwIP debug output is enabled unless NDEBUG is defined.
   ******************************************************************************
   * @attention
   *

@@ -1,3 +1,7 @@
+/**
+ * @file    STM32Ethernet.cpp
+ * @brief   Implementation of the global Ethernet object.
+ */
 #include "STM32Ethernet.h"
 #include "Dhcp.h"
 
@@ -122,10 +126,6 @@ int EthernetClass::maintain()
   return rc;
 }
 
-/*
- * This function updates the LwIP stack and can be called to be sure to update
- * the stack (e.g. in case of a long loop).
- */
 void EthernetClass::schedule(void)
 {
   stm32_eth_scheduler();

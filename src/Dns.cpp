@@ -1,3 +1,11 @@
+/**
+ * @file    Dns.cpp
+ * @brief   DNS client implementation for the Ethernet library.
+ *
+ * begin() passes the DNS server to LwIP, inet_aton() parses dotted-decimal
+ * addresses, and getHostByName() returns numeric addresses directly or
+ * resolves host names through stm32_dns_gethostbyname().
+ */
 // Arduino DNS client for WizNet5100-based Ethernet shield
 // (c) Copyright 2009-2010 MCQN Ltd.
 // Released under Apache License, version 2.0
@@ -83,14 +91,12 @@ int DNSClient::getHostByName(const char *aHostname, IPAddress &aResult)
   return ret;
 }
 
-/* Deprecated function. Do not use anymore. */
 uint16_t DNSClient::BuildRequest(const char *aName)
 {
   UNUSED(aName);
   return 0;
 }
 
-/* Deprecated function. Do not use anymore. */
 uint16_t DNSClient::ProcessResponse(uint16_t aTimeout, IPAddress &aAddress)
 {
   UNUSED(aTimeout);

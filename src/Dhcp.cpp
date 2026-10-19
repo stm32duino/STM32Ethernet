@@ -1,3 +1,7 @@
+/**
+ * @file    Dhcp.cpp
+ * @brief   DHCP client implementation for the Ethernet library.
+ */
 // DHCP Library v0.3 - April 25, 2009
 // Author: Jordan Terrell - blog.jordanterrell.com
 
@@ -35,7 +39,6 @@ void DhcpClass::reset_DHCP_lease()
   _dhcp_state = stm32_get_DHCP_state();
 }
 
-//return:0 on error, 1 if request is sent and response is received
 int DhcpClass::request_DHCP_lease()
 {
 
@@ -59,14 +62,6 @@ int DhcpClass::request_DHCP_lease()
   return result;
 }
 
-/*
-    returns:
-    0/DHCP_CHECK_NONE: nothing happened
-    1/DHCP_CHECK_RENEW_FAIL: renew failed
-    2/DHCP_CHECK_RENEW_OK: renew success
-    3/DHCP_CHECK_REBIND_FAIL: rebind fail
-    4/DHCP_CHECK_REBIND_OK: rebind success
-*/
 int DhcpClass::checkLease()
 {
   int rc = DHCP_CHECK_NONE;

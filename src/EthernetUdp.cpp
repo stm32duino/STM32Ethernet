@@ -1,3 +1,11 @@
+/**
+ * @file    EthernetUdp.cpp
+ * @brief   UDP implementation of the Ethernet library.
+ *
+ * begin() opens a unicast or multicast socket, beginPacket(), write() and
+ * endPacket() send a datagram, parsePacket(), read() and peek() receive one,
+ * and onDataArrival() registers a callback for incoming data.
+ */
 /*
  *  Udp.cpp: Library to send/receive UDP packets with the Arduino ethernet shield.
  *  This version only offers minimal wrapping of socket.c/socket.h
@@ -32,16 +40,13 @@
 #include "lwip/igmp.h"
 #include "lwip/ip_addr.h"
 
-/* Constructor */
 EthernetUDP::EthernetUDP() {}
 
-/* Start EthernetUDP socket, listening at local port PORT */
 uint8_t EthernetUDP::begin(uint16_t port)
 {
   return begin(Ethernet.localIP(), port);
 }
 
-/* Start EthernetUDP socket, listening at local IP ip and port PORT */
 uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast)
 {
   // Can create a single udp connection per socket
@@ -84,14 +89,11 @@ uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast)
   return 1;
 }
 
-/* return number of bytes available in the current packet,
-   will return zero if parsePacket hasn't been called yet */
 int EthernetUDP::available()
 {
   return _remaining;
 }
 
-/* Release any resources being used by this EthernetUDP instance */
 void EthernetUDP::stop()
 {
   if (_udp.pcb != NULL) {
@@ -256,7 +258,6 @@ void EthernetUDP::flush()
   // TODO: we should wait for TX buffer to be emptied
 }
 
-/* Start EthernetUDP socket, listening at local port PORT */
 uint8_t EthernetUDP::beginMulticast(IPAddress ip, uint16_t port)
 {
   return begin(ip, port, true);
