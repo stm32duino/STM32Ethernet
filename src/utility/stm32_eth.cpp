@@ -112,9 +112,7 @@ static err_t tcp_recv_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, 
 static err_t tcp_sent_callback(void *arg, struct tcp_pcb *tpcb, u16_t len);
 static void tcp_err_callback(void *arg, err_t err);
 static void TIM_scheduler_Config(void);
-#if defined(STM32_CORE_VERSION) && (STM32_CORE_VERSION  > 0x01060100)
-  void _stm32_eth_scheduler(void);
-#endif
+void _stm32_eth_scheduler(void);
 
 /**
   * @brief  Configure the network interface.
@@ -286,27 +284,28 @@ uint8_t stm32_eth_link_up(void)
   return netif_is_link_up(&gnetif);
 }
 
-#if defined(STM32_CORE_VERSION) && (STM32_CORE_VERSION  > 0x01060100)
-/* refresh() generates a timer update event, which runs _stm32_eth_scheduler()
-   from the timer interrupt. Does nothing until the timer has been created. */
 void stm32_eth_scheduler(void)
 {
+#if defined(STM32_CORE_VERSION) && (STM32_CORE_VERSION  > 0x01060100)
+  /* refresh() generates a timer update event, which runs _stm32_eth_scheduler()
+   from the timer interrupt. Does nothing until the timer has been created. */
   if (EthTim != NULL) {
     EthTim->refresh();
   }
+#else
+  _stm32_eth_scheduler();
+#endif
 }
 
 /**
-  * @brief  Run one LwIP scheduler pass. Called only from the timer callback.
+  * @brief  Run one LwIP scheduler pass.
   *
   * Reads received packets (unless ETH_INPUT_USE_IT is defined), checks the
   * link status every TIME_CHECK_ETH_LINK_STATE ms, handles LwIP timeouts and
-  * runs the periodic DHCP processing.
+  * runs the periodic DHCP processing. Called by the timer callback and, on
+  * older cores, by stm32_eth_scheduler().
   */
 void _stm32_eth_scheduler(void)
-#else
-void stm32_eth_scheduler(void)
-#endif
 {
   /* Read a received packet from the Ethernet buffers and send it
   to the lwIP for handling */
