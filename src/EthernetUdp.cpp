@@ -76,6 +76,7 @@ uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast)
 
 #if LWIP_IGMP
   if ((multicast) && (ERR_OK != igmp_joingroup(IP_ADDR_ANY, &ipaddr))) {
+    stop();
     return 0;
   }
 #endif
