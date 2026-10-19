@@ -131,7 +131,9 @@ class EthernetClient : public Client {
      * @brief Closes the connection and releases the client structure.
      *
      * The connection is closed unless it is already in TCP_CLOSING state. The
-     * structure is freed and the client is left with no connection.
+     * structure is freed only if this client allocated it in connect(). A
+     * structure shared with EthernetServer is left for the server to free, and
+     * the client is left with no connection.
      */
     virtual void stop();
     /**
@@ -253,6 +255,7 @@ class EthernetClient : public Client {
 
   private:
     struct tcp_struct *_tcp_client;
+    bool _owns_tcp_client = false; // true if connect() allocated _tcp_client
     uint16_t _connectionTimeout = 10000;
 };
 

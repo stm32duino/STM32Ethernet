@@ -57,6 +57,7 @@ int EthernetClient::connect(IPAddress ip, uint16_t port)
     if (_tcp_client == NULL) {
       return 0;
     }
+    _owns_tcp_client = true;
   }
 
   /* Creates a new TCP protocol control block */
@@ -200,7 +201,10 @@ void EthernetClient::stop()
         tcp_connection_close(_tcp_client->pcb, _tcp_client);
       }
     }
-    mem_free(_tcp_client);
+    if (_owns_tcp_client) {
+      mem_free(_tcp_client);
+      _owns_tcp_client = false;
+    }
     _tcp_client = NULL;
   }
 }
