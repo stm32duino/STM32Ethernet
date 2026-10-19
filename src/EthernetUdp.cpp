@@ -162,10 +162,11 @@ size_t EthernetUDP::write(uint8_t byte)
 
 size_t EthernetUDP::write(const uint8_t *buffer, size_t size)
 {
-  _data = stm32_new_data(_data, buffer, size);
-  if (_data == NULL) {
+  struct pbuf *data = stm32_new_data(_data, buffer, size);
+  if (data == NULL) {
     return 0;
   }
+  _data = data;
 
   return size;
 }

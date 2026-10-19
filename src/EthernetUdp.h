@@ -161,7 +161,7 @@ class EthernetUDP : public UDP {
      * @brief Appends a block of bytes to the outgoing packet.
      *
      * Data accumulates until endPacket() sends it. On failure, the data
-     * already buffered for the packet is discarded.
+     * already buffered for the packet is kept and the new bytes are not added.
      *
      * @param buffer Bytes to append.
      * @param size Number of bytes in buffer.
