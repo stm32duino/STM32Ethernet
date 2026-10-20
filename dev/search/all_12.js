@@ -17,5 +17,6 @@ var searchData=
   ['time_5fcheck_5feth_5flink_5fstate_14',['TIME_CHECK_ETH_LINK_STATE',['../stm32__eth_8cpp.html#ab5866489cd414573a90609a0217a38f4',1,'stm32_eth.cpp']]],
   ['timed_5fout_15',['TIMED_OUT',['../Dns_8cpp.html#a643edcb536f268f003f2f276ddfa6e48',1,'Dns.cpp']]],
   ['timeout_5fdns_5frequest_16',['TIMEOUT_DNS_REQUEST',['../stm32__eth_8cpp.html#adf695337c4cae81cc12a167a5bc7b308',1,'stm32_eth.cpp']]],
-  ['truncated_17',['TRUNCATED',['../Dns_8cpp.html#aec58b005886b6618714462498c54686f',1,'Dns.cpp']]]
+  ['truncated_17',['TRUNCATED',['../Dns_8cpp.html#aec58b005886b6618714462498c54686f',1,'Dns.cpp']]],
+  ['tx_5fbuff_18',['Tx_Buff',['../ethernetif_8cpp.html#aacd0f13a3a614163f67b9c91cc7ff666',1,'ethernetif.cpp']]]
 ];

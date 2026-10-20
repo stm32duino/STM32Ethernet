@@ -90,6 +90,9 @@ $(function() {
   <div class="headertitle"><div class="title">EthernetClient.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>TCP client implementation of the Ethernet library.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;string.h&quot;</code><br />
 <code>#include &quot;Arduino.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="STM32Ethernet_8h_source.html">STM32Ethernet.h</a>&quot;</code><br />
@@ -101,18 +104,18 @@ Include dependency graph for EthernetClient.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="EthernetClient_8cpp__incl.png" border="0" usemap="#asrc_2EthernetClient_8cpp" alt=""/></div>
 <map name="asrc_2EthernetClient_8cpp" id="asrc_2EthernetClient_8cpp">
-<area shape="rect" title=" " alt="" coords="401,5,566,31"/>
+<area shape="rect" title="TCP client implementation of the Ethernet library." alt="" coords="401,5,566,31"/>
 <area shape="rect" title=" " alt="" coords="183,79,253,104"/>
 <area shape="poly" title=" " alt="" coords="441,33,268,80,266,74,440,28"/>
 <area shape="rect" title=" " alt="" coords="175,225,259,251"/>
 <area shape="poly" title=" " alt="" coords="470,33,318,154,242,218,239,214,315,150,467,29"/>
-<area shape="rect" href="STM32Ethernet_8h.html" title=" " alt="" coords="489,79,622,104"/>
+<area shape="rect" href="STM32Ethernet_8h.html" title="Main header of the STM32Ethernet library." alt="" coords="489,79,622,104"/>
 <area shape="poly" title=" " alt="" coords="497,29,536,67,532,71,493,33"/>
-<area shape="rect" href="EthernetClient_8h.html" title=" " alt="" coords="329,152,456,177"/>
+<area shape="rect" href="EthernetClient_8h.html" title="TCP client class of the Ethernet library." alt="" coords="329,152,456,177"/>
 <area shape="poly" title=" " alt="" coords="478,33,409,142,405,139,474,30"/>
-<area shape="rect" href="EthernetServer_8h.html" title=" " alt="" coords="785,152,915,177"/>
+<area shape="rect" href="EthernetServer_8h.html" title="TCP server class of the Ethernet library." alt="" coords="785,152,915,177"/>
 <area shape="poly" title=" " alt="" coords="567,22,663,40,715,55,763,76,804,106,835,139,831,143,800,110,761,81,713,60,662,45,566,28"/>
-<area shape="rect" href="Dns_8h.html" title=" " alt="" coords="691,79,750,104"/>
+<area shape="rect" href="Dns_8h.html" title="DNS client declarations for the Ethernet library." alt="" coords="691,79,750,104"/>
 <area shape="poly" title=" " alt="" coords="522,28,679,75,678,80,521,33"/>
 <area shape="rect" title=" " alt="" coords="532,152,619,177"/>
 <area shape="poly" title=" " alt="" coords="561,104,571,138,566,140,556,105"/>
@@ -120,7 +123,7 @@ Include dependency graph for EthernetClient.cpp:</div>
 <area shape="poly" title=" " alt="" coords="546,106,526,138,520,157,522,177,532,196,546,213,542,217,528,199,517,178,515,157,521,136,542,103"/>
 <area shape="poly" title=" " alt="" coords="530,106,433,149,431,144,528,102"/>
 <area shape="poly" title=" " alt="" coords="603,101,790,146,789,151,602,107"/>
-<area shape="rect" href="Dhcp_8h.html" title=" " alt="" coords="643,152,710,177"/>
+<area shape="rect" href="Dhcp_8h.html" title="DHCP client declarations for the Ethernet library." alt="" coords="643,152,710,177"/>
 <area shape="poly" title=" " alt="" coords="576,102,647,143,644,147,573,106"/>
 <area shape="poly" title=" " alt="" coords="365,180,259,222,257,218,363,175"/>
 <area shape="poly" title=" " alt="" coords="422,175,527,218,525,222,420,180"/>
@@ -146,7 +149,7 @@ Include dependency graph for EthernetClient.cpp:</div>
 <area shape="poly" title=" " alt="" coords="456,321,711,369,710,374,455,327"/>
 <area shape="rect" title=" " alt="" coords="813,225,887,251"/>
 <area shape="poly" title=" " alt="" coords="853,178,853,212,847,212,847,178"/>
-<area shape="rect" href="EthernetUdp_8h.html" title=" " alt="" coords="642,225,757,251"/>
+<area shape="rect" href="EthernetUdp_8h.html" title="UDP class of the Ethernet library." alt="" coords="642,225,757,251"/>
 <area shape="poly" title=" " alt="" coords="683,177,694,211,689,213,678,178"/>
 <area shape="poly" title=" " alt="" coords="651,253,456,298,455,293,649,248"/>
 <area shape="poly" title=" " alt="" coords="712,249,728,271,744,297,757,328,765,358,760,359,752,330,740,300,724,274,707,252"/>
@@ -155,6 +158,9 @@ Include dependency graph for EthernetClient.cpp:</div>
 <area shape="poly" title=" " alt="" coords="725,104,727,137,725,178,713,214,708,212,719,177,722,137,720,104"/>
 </map>
 </div>
+</div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>TCP client implementation of the Ethernet library. </p>
+<p>Connects by IP address or host name (resolved through <a class="el" href="classDNSClient.html">DNSClient</a>), reads and writes data, reports the connection status, and closes the connection. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

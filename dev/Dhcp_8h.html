@@ -93,14 +93,17 @@ $(function() {
   <div class="headertitle"><div class="title">Dhcp.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>DHCP client declarations for the Ethernet library.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="EthernetUdp_8h_source.html">EthernetUdp.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Dhcp.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="Dhcp_8h__incl.png" border="0" usemap="#asrc_2Dhcp_8h" alt=""/></div>
 <map name="asrc_2Dhcp_8h" id="asrc_2Dhcp_8h">
-<area shape="rect" title=" " alt="" coords="73,5,163,31"/>
-<area shape="rect" href="EthernetUdp_8h.html" title=" " alt="" coords="61,79,175,104"/>
+<area shape="rect" title="DHCP client declarations for the Ethernet library." alt="" coords="73,5,163,31"/>
+<area shape="rect" href="EthernetUdp_8h.html" title="UDP class of the Ethernet library." alt="" coords="61,79,175,104"/>
 <area shape="poly" title=" " alt="" coords="121,31,121,65,115,65,115,31"/>
 <area shape="rect" title=" " alt="" coords="20,152,80,177"/>
 <area shape="poly" title=" " alt="" coords="109,106,73,144,69,140,105,102"/>
@@ -128,19 +131,19 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="Dhcp_8h__dep__incl.png" border="0" usemap="#asrc_2Dhcp_8hdep" alt=""/></div>
 <map name="asrc_2Dhcp_8hdep" id="asrc_2Dhcp_8hdep">
-<area shape="rect" title=" " alt="" coords="103,5,194,31"/>
-<area shape="rect" href="Dhcp_8cpp.html" title=" " alt="" coords="5,79,111,104"/>
+<area shape="rect" title="DHCP client declarations for the Ethernet library." alt="" coords="103,5,194,31"/>
+<area shape="rect" href="Dhcp_8cpp.html" title="DHCP client implementation for the Ethernet library." alt="" coords="5,79,111,104"/>
 <area shape="poly" title=" " alt="" coords="125,41,74,81,71,76,122,37"/>
-<area shape="rect" href="STM32Ethernet_8cpp.html" title=" " alt="" coords="26,152,197,177"/>
+<area shape="rect" href="STM32Ethernet_8cpp.html" title="Implementation of the global Ethernet object." alt="" coords="26,152,197,177"/>
 <area shape="poly" title=" " alt="" coords="145,45,117,152,112,151,140,44"/>
-<area shape="rect" href="STM32Ethernet_8h.html" title=" " alt="" coords="225,79,381,104"/>
+<area shape="rect" href="STM32Ethernet_8h.html" title="Main header of the STM32Ethernet library." alt="" coords="225,79,381,104"/>
 <area shape="poly" title=" " alt="" coords="187,34,279,76,277,81,185,39"/>
 <area shape="poly" title=" " alt="" coords="260,111,144,154,142,149,259,106"/>
-<area shape="rect" href="EthernetClient_8cpp.html" title=" " alt="" coords="221,152,386,177"/>
+<area shape="rect" href="EthernetClient_8cpp.html" title="TCP client implementation of the Ethernet library." alt="" coords="221,152,386,177"/>
 <area shape="poly" title=" " alt="" coords="306,118,306,152,301,152,301,118"/>
-<area shape="rect" href="EthernetServer_8cpp.html" title=" " alt="" coords="410,152,578,177"/>
+<area shape="rect" href="EthernetServer_8cpp.html" title="TCP server implementation of the Ethernet library." alt="" coords="410,152,578,177"/>
 <area shape="poly" title=" " alt="" coords="348,106,464,149,462,154,346,111"/>
-<area shape="rect" href="EthernetUdp_8cpp.html" title=" " alt="" coords="603,152,756,177"/>
+<area shape="rect" href="EthernetUdp_8cpp.html" title="UDP implementation of the Ethernet library." alt="" coords="603,152,756,177"/>
 <area shape="poly" title=" " alt="" coords="377,104,619,149,618,155,376,109"/>
 </map>
 </div>
@@ -179,7 +182,10 @@ Macros</h2></td></tr>
 <tr class="memitem:ac74b6a0f2c0761938fece1a75f74bda8" id="r_ac74b6a0f2c0761938fece1a75f74bda8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Dhcp_8h.html#ac74b6a0f2c0761938fece1a75f74bda8">DHCP_CHECK_REBIND_OK</a>&#160;&#160;&#160;(4)</td></tr>
 <tr class="separator:ac74b6a0f2c0761938fece1a75f74bda8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>DHCP client declarations for the Ethernet library. </p>
+<p>Declares <a class="el" href="classDhcpClass.html">DhcpClass</a>, which runs the DHCP state machine on top of LwIP, checks lease renewal and rebinding, and returns the addresses assigned by the server. </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a51a5a76632c09507696b62683916f087" name="a51a5a76632c09507696b62683916f087"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a51a5a76632c09507696b62683916f087">&#9670;&#160;</a></span>DHCP_CHECK_NONE</h2>
 

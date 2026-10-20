@@ -1,5 +1,5 @@
 <map id="src/EthernetClient.h" name="src/EthernetClient.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="163,5,313,31"/>
+<area shape="rect" id="Node000001" title="TCP client class of the Ethernet library." alt="" coords="163,5,313,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,89,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,33,92,76,90,71,206,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="114,79,178,104"/>

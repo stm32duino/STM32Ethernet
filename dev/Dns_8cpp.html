@@ -92,6 +92,9 @@ $(function() {
   <div class="headertitle"><div class="title">Dns.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>DNS client implementation for the Ethernet library.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="EthernetUdp_8h_source.html">EthernetUdp.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="stm32__eth_8h_source.html">utility/stm32_eth.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Dns_8h_source.html">Dns.h</a>&quot;</code><br />
@@ -102,12 +105,12 @@ Include dependency graph for Dns.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="Dns_8cpp__incl.png" border="0" usemap="#asrc_2Dns_8cpp" alt=""/></div>
 <map name="asrc_2Dns_8cpp" id="asrc_2Dns_8cpp">
-<area shape="rect" title=" " alt="" coords="315,5,412,31"/>
-<area shape="rect" href="EthernetUdp_8h.html" title=" " alt="" coords="185,152,299,177"/>
+<area shape="rect" title="DNS client implementation for the Ethernet library." alt="" coords="315,5,412,31"/>
+<area shape="rect" href="EthernetUdp_8h.html" title="UDP class of the Ethernet library." alt="" coords="185,152,299,177"/>
 <area shape="poly" title=" " alt="" coords="326,33,289,52,272,64,258,80,246,109,243,139,238,138,241,108,253,77,268,61,286,47,324,28"/>
 <area shape="rect" href="stm32__eth_8h.html" title="Include stm32_eth source files." alt="" coords="291,225,436,251"/>
 <area shape="poly" title=" " alt="" coords="366,31,366,211,361,211,361,31"/>
-<area shape="rect" href="Dns_8h.html" title=" " alt="" coords="267,79,326,104"/>
+<area shape="rect" href="Dns_8h.html" title="DNS client declarations for the Ethernet library." alt="" coords="267,79,326,104"/>
 <area shape="poly" title=" " alt="" coords="354,33,319,70,315,67,350,29"/>
 <area shape="rect" title=" " alt="" coords="401,79,472,104"/>
 <area shape="poly" title=" " alt="" coords="377,29,417,67,413,71,374,33"/>
@@ -148,7 +151,10 @@ Macros</h2></td></tr>
 <tr class="memitem:ab8e31bccf4310da2e37168f244aef566" id="r_ab8e31bccf4310da2e37168f244aef566"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Dns_8cpp.html#ab8e31bccf4310da2e37168f244aef566">INVALID_RESPONSE</a>&#160;&#160;&#160;-4</td></tr>
 <tr class="separator:ab8e31bccf4310da2e37168f244aef566"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>DNS client implementation for the Ethernet library. </p>
+<p>begin() passes the DNS server to LwIP, inet_aton() parses dotted-decimal addresses, and getHostByName() returns numeric addresses directly or resolves host names through stm32_dns_gethostbyname(). </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="ab8e31bccf4310da2e37168f244aef566" name="ab8e31bccf4310da2e37168f244aef566"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab8e31bccf4310da2e37168f244aef566">&#9670;&#160;</a></span>INVALID_RESPONSE</h2>
 

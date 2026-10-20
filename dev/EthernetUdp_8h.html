@@ -93,6 +93,9 @@ $(function() {
   <div class="headertitle"><div class="title">EthernetUdp.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>UDP class of the Ethernet library.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;Udp.h&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &quot;<a class="el" href="stm32__eth_8h_source.html">utility/stm32_eth.h</a>&quot;</code><br />
@@ -101,7 +104,7 @@ Include dependency graph for EthernetUdp.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="EthernetUdp_8h__incl.png" border="0" usemap="#asrc_2EthernetUdp_8h" alt=""/></div>
 <map name="asrc_2EthernetUdp_8h" id="asrc_2EthernetUdp_8h">
-<area shape="rect" title=" " alt="" coords="49,5,187,31"/>
+<area shape="rect" title="UDP class of the Ethernet library." alt="" coords="49,5,187,31"/>
 <area shape="rect" title=" " alt="" coords="20,79,80,104"/>
 <area shape="poly" title=" " alt="" coords="109,33,73,70,69,67,105,29"/>
 <area shape="rect" title=" " alt="" coords="5,152,92,177"/>
@@ -128,25 +131,25 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="EthernetUdp_8h__dep__incl.png" border="0" usemap="#asrc_2EthernetUdp_8hdep" alt=""/></div>
 <map name="asrc_2EthernetUdp_8hdep" id="asrc_2EthernetUdp_8hdep">
-<area shape="rect" title=" " alt="" coords="456,5,595,31"/>
-<area shape="rect" href="Dhcp_8h.html" title=" " alt="" coords="219,79,309,104"/>
+<area shape="rect" title="UDP class of the Ethernet library." alt="" coords="456,5,595,31"/>
+<area shape="rect" href="Dhcp_8h.html" title="DHCP client declarations for the Ethernet library." alt="" coords="219,79,309,104"/>
 <area shape="poly" title=" " alt="" coords="471,37,307,81,306,76,469,32"/>
-<area shape="rect" href="Dns_8cpp.html" title=" " alt="" coords="563,152,661,177"/>
+<area shape="rect" href="Dns_8cpp.html" title="DNS client implementation for the Ethernet library." alt="" coords="563,152,661,177"/>
 <area shape="poly" title=" " alt="" coords="550,39,581,77,600,117,611,151,606,153,595,119,576,80,546,42"/>
-<area shape="rect" href="Dns_8h.html" title=" " alt="" coords="484,79,567,104"/>
+<area shape="rect" href="Dns_8h.html" title="DNS client declarations for the Ethernet library." alt="" coords="484,79,567,104"/>
 <area shape="poly" title=" " alt="" coords="528,44,528,79,523,79,523,44"/>
-<area shape="rect" href="Dhcp_8cpp.html" title=" " alt="" coords="62,152,167,177"/>
+<area shape="rect" href="Dhcp_8cpp.html" title="DHCP client implementation for the Ethernet library." alt="" coords="62,152,167,177"/>
 <area shape="poly" title=" " alt="" coords="229,112,140,154,138,149,227,107"/>
-<area shape="rect" href="STM32Ethernet_8cpp.html" title=" " alt="" coords="5,225,176,251"/>
+<area shape="rect" href="STM32Ethernet_8cpp.html" title="Implementation of the global Ethernet object." alt="" coords="5,225,176,251"/>
 <area shape="poly" title=" " alt="" coords="246,116,180,179,111,227,108,223,177,175,243,112"/>
-<area shape="rect" href="STM32Ethernet_8h.html" title=" " alt="" coords="243,152,399,177"/>
+<area shape="rect" href="STM32Ethernet_8h.html" title="Main header of the STM32Ethernet library." alt="" coords="243,152,399,177"/>
 <area shape="poly" title=" " alt="" coords="284,113,314,150,310,154,280,116"/>
 <area shape="poly" title=" " alt="" coords="272,184,129,228,127,223,270,179"/>
-<area shape="rect" href="EthernetClient_8cpp.html" title=" " alt="" coords="392,225,557,251"/>
+<area shape="rect" href="EthernetClient_8cpp.html" title="TCP client implementation of the Ethernet library." alt="" coords="392,225,557,251"/>
 <area shape="poly" title=" " alt="" coords="359,181,451,223,448,228,357,185"/>
-<area shape="rect" href="EthernetServer_8cpp.html" title=" " alt="" coords="200,225,368,251"/>
+<area shape="rect" href="EthernetServer_8cpp.html" title="TCP server implementation of the Ethernet library." alt="" coords="200,225,368,251"/>
 <area shape="poly" title=" " alt="" coords="311,191,292,226,288,224,307,188"/>
-<area shape="rect" href="EthernetUdp_8cpp.html" title=" " alt="" coords="582,225,735,251"/>
+<area shape="rect" href="EthernetUdp_8cpp.html" title="UDP implementation of the Ethernet library." alt="" coords="582,225,735,251"/>
 <area shape="poly" title=" " alt="" coords="389,178,605,223,603,228,388,183"/>
 <area shape="poly" title=" " alt="" coords="519,118,481,226,476,224,514,116"/>
 <area shape="poly" title=" " alt="" coords="530,117,538,147,553,176,568,191,586,204,624,223,622,228,584,209,565,195,549,179,533,149,525,119"/>
@@ -166,7 +169,10 @@ Macros</h2></td></tr>
 <tr class="memitem:a0fdcd947d94b667b5ae13b9dc6966979" id="r_a0fdcd947d94b667b5ae13b9dc6966979"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EthernetUdp_8h.html#a0fdcd947d94b667b5ae13b9dc6966979">UDP_TX_PACKET_MAX_SIZE</a>&#160;&#160;&#160;24</td></tr>
 <tr class="separator:a0fdcd947d94b667b5ae13b9dc6966979"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>UDP class of the Ethernet library. </p>
+<p>Declares <a class="el" href="classEthernetUDP.html">EthernetUDP</a>, which implements the Arduino UDP interface (send and receive datagrams, optional multicast) on top of LwIP. </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a0fdcd947d94b667b5ae13b9dc6966979" name="a0fdcd947d94b667b5ae13b9dc6966979"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0fdcd947d94b667b5ae13b9dc6966979">&#9670;&#160;</a></span>UDP_TX_PACKET_MAX_SIZE</h2>
 

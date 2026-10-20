@@ -4,12 +4,12 @@ var indexSectionsWithContent =
   1: "depstu",
   2: "delrs",
   3: "abcdefghilmoprsuw",
-  4: "_adeginops",
+  4: "_adeginoprst",
   5: "et",
   6: "ltu",
   7: "e",
   8: "cdeghilmnpstu",
-  9: "s"
+  9: "dls"
 };
 
 var indexSectionNames =

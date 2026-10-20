@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['stm32ethernet_0',['STM32Ethernet',['../index.html',1,'']]]
+  ['deprecated_20list_0',['Deprecated List',['../deprecated.html',1,'']]]
 ];
