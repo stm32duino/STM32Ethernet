@@ -181,50 +181,50 @@ void User_notification(struct netif *netif);
 
 #if LWIP_DHCP
   /**
-    * @brief  Run the DHCP state machine for the network interface.
-    *
-    * @param netif Network interface to process.
-    */
+  * @brief  Run the DHCP state machine for the network interface.
+  *
+  * @param netif Network interface to process.
+  */
   void stm32_DHCP_process(struct netif *netif);
   /**
-    * @brief  Run the DHCP state machine at the DHCP fine timer period.
-    *
-    * Calls stm32_DHCP_process() when at least DHCP_FINE_TIMER_MSECS ms have
-    * elapsed since the last run.
-    *
-    * @param netif Network interface to configure with DHCP.
-    */
+  * @brief  Run the DHCP state machine at the DHCP fine timer period.
+  *
+  * Calls stm32_DHCP_process() when at least DHCP_FINE_TIMER_MSECS ms have
+  * elapsed since the last run.
+  *
+  * @param netif Network interface to configure with DHCP.
+  */
   void stm32_DHCP_Periodic_Handle(struct netif *netif);
   /**
-    * @brief  Send a DHCP INFORM message for the network interface.
-    *
-    * Used when the interface address is configured manually.
-    */
+  * @brief  Send a DHCP INFORM message for the network interface.
+  *
+  * Used when the interface address is configured manually.
+  */
   void stm32_DHCP_manual_config(void);
   /**
-    * @brief  Return the DHCP lease state.
-    *
-    * @return 2 when the lease is renewing, 4 when it is rebinding, 0 otherwise.
-    */
+  * @brief  Return the DHCP lease state.
+  *
+  * @return 2 when the lease is renewing, 4 when it is rebinding, 0 otherwise.
+  */
   uint8_t stm32_get_DHCP_lease_state(void);
   /**
-    * @brief  Set the DHCP state machine state.
-    *
-    * @param state New DHCP state (for example DHCP_START, DHCP_ASK_RELEASE
-    *              or DHCP_OFF).
-    */
+  * @brief  Set the DHCP state machine state.
+  *
+  * @param state New DHCP state (for example DHCP_START, DHCP_ASK_RELEASE
+  *              or DHCP_OFF).
+  */
   void stm32_set_DHCP_state(uint8_t state);
   /**
-    * @brief  Return the current DHCP state machine state.
-    *
-    * @return Current DHCP state (DHCP_OFF, DHCP_START, ...).
-    */
+  * @brief  Return the current DHCP state machine state.
+  *
+  * @return Current DHCP state (DHCP_OFF, DHCP_START, ...).
+  */
   uint8_t stm32_get_DHCP_state(void);
   /**
-    * @brief  Return whether DHCP was started by the user.
-    *
-    * @return 1 if DHCP was started by the user, 0 otherwise.
-    */
+  * @brief  Return whether DHCP was started by the user.
+  *
+  * @return 1 if DHCP was started by the user, 0 otherwise.
+  */
   uint8_t stm32_dhcp_started(void);
 #else
   #error "LWIP_DHCP must be enabled in lwipopts.h"
@@ -232,26 +232,26 @@ void User_notification(struct netif *netif);
 
 #if LWIP_DNS
   /**
-    * @brief  Initialize DNS and set the DNS server address.
-    *
-    * Does nothing when DHCP was started by the user, because DNS is then
-    * initialized by DHCP.
-    *
-    * @param dnsaddr DNS server address (4 bytes).
-    */
+  * @brief  Initialize DNS and set the DNS server address.
+  *
+  * Does nothing when DHCP was started by the user, because DNS is then
+  * initialized by DHCP.
+  *
+  * @param dnsaddr DNS server address (4 bytes).
+  */
   void stm32_dns_init(const uint8_t *dnsaddr);
   /**
-    * @brief  Resolve a hostname into an IPv4 address.
-    *
-    * Runs the scheduler while waiting for the lookup, up to
-    * TIMEOUT_DNS_REQUEST ms.
-    *
-    * @param hostname Hostname to resolve.
-    * @param ipaddr Receives the resolved address (raw network byte order);
-    *               set to 0 on failure or timeout.
-    * @return 1 on success, -1 on timeout, -2 if the result is 0, -4 on an
-    *         argument or other error.
-    */
+  * @brief  Resolve a hostname into an IPv4 address.
+  *
+  * Runs the scheduler while waiting for the lookup, up to
+  * TIMEOUT_DNS_REQUEST ms.
+  *
+  * @param hostname Hostname to resolve.
+  * @param ipaddr Receives the resolved address (raw network byte order);
+  *               set to 0 on failure or timeout.
+  * @return 1 on success, -1 on timeout, -2 if the result is 0, -4 on an
+  *         argument or other error.
+  */
   int8_t stm32_dns_gethostbyname(const char *hostname, uint32_t *ipaddr);
 #else
   #error "LWIP_DNS must be enabled in lwipopts.h"
@@ -359,45 +359,45 @@ uint32_t ip_addr_to_u32(ip_addr_t *ipaddr);
 
 #if LWIP_TCP
   /**
-    * @brief  Callback invoked when a TCP connection is established.
-    *
-    * On success for the matching connection, sets the state to TCP_CONNECTED
-    * and installs the recv, sent and err callbacks. On mismatch, closes the
-    * connection and returns ERR_ARG. On a non-ERR_OK error, closes the
-    * connection and returns that error.
-    *
-    * @param arg User argument, a struct tcp_struct pointer.
-    * @param tpcb Connection control block.
-    * @param err ERR_OK when the connection was established correctly.
-    * @return ERR_OK on success, ERR_ARG on mismatch, or err otherwise.
-    */
+  * @brief  Callback invoked when a TCP connection is established.
+  *
+  * On success for the matching connection, sets the state to TCP_CONNECTED
+  * and installs the recv, sent and err callbacks. On mismatch, closes the
+  * connection and returns ERR_ARG. On a non-ERR_OK error, closes the
+  * connection and returns that error.
+  *
+  * @param arg User argument, a struct tcp_struct pointer.
+  * @param tpcb Connection control block.
+  * @param err ERR_OK when the connection was established correctly.
+  * @return ERR_OK on success, ERR_ARG on mismatch, or err otherwise.
+  */
   err_t tcp_connected_callback(void *arg, struct tcp_pcb *tpcb, err_t err);
   /**
-    * @brief  Callback invoked when a TCP connection is accepted on a listening
-    *         port.
-    *
-    * Allocates a tcp_struct for the new connection and stores it in the first
-    * free slot of the client array passed as arg (up to MAX_CLIENT entries).
-    * On failure, closes the connection and returns ERR_MEM. If err is not
-    * ERR_OK, closes newpcb and returns ERR_ARG.
-    *
-    * @param arg User argument, a pointer to an array of struct tcp_struct
-    *            pointers.
-    * @param newpcb Control block of the newly created connection.
-    * @param err ERR_OK when the connection was accepted correctly.
-    * @return ERR_OK on success, ERR_MEM on allocation or slot failure, or
-    *         ERR_ARG on error.
-    */
+  * @brief  Callback invoked when a TCP connection is accepted on a listening
+  *         port.
+  *
+  * Allocates a tcp_struct for the new connection and stores it in the first
+  * free slot of the client array passed as arg (up to MAX_CLIENT entries).
+  * On failure, closes the connection and returns ERR_MEM. If err is not
+  * ERR_OK, closes newpcb and returns ERR_ARG.
+  *
+  * @param arg User argument, a pointer to an array of struct tcp_struct
+  *            pointers.
+  * @param newpcb Control block of the newly created connection.
+  * @param err ERR_OK when the connection was accepted correctly.
+  * @return ERR_OK on success, ERR_MEM on allocation or slot failure, or
+  *         ERR_ARG on error.
+  */
   err_t tcp_accept_callback(void *arg, struct tcp_pcb *newpcb, err_t err);
   /**
-    * @brief  Close a TCP connection and detach its callbacks.
-    *
-    * Removes the callbacks from tpcb, closes it (aborts it if the close
-    * fails), clears tcp->pcb and sets the state to TCP_CLOSING.
-    *
-    * @param tpcb Connection control block to close.
-    * @param tcp Connection structure to update.
-    */
+  * @brief  Close a TCP connection and detach its callbacks.
+  *
+  * Removes the callbacks from tpcb, closes it (aborts it if the close
+  * fails), clears tcp->pcb and sets the state to TCP_CLOSING.
+  *
+  * @param tpcb Connection control block to close.
+  * @param tcp Connection structure to update.
+  */
   void tcp_connection_close(struct tcp_pcb *tpcb, struct tcp_struct *tcp);
 #else
   #error "LWIP_TCP must be enabled in lwipopts.h"
