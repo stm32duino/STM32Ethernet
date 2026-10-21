@@ -2,13 +2,6 @@ name: Documentation build
 
 on:
   pull_request:
-    paths:
-      - Doxyfile
-      - docs/**
-      - README.md
-      - src/**
-      - mkdocs.yml
-      - .github/workflows/docs-check.yml
   push:
     branches:
       - main
