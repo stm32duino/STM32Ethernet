@@ -57,6 +57,7 @@ int EthernetClient::connect(IPAddress ip, uint16_t port)
     if (_tcp_client == NULL) {
       return 0;
     }
+    _owns_tcp_client = true;
   }
 
   /* Creates a new TCP protocol control block */
@@ -200,7 +201,10 @@ void EthernetClient::stop()
         tcp_connection_close(_tcp_client->pcb, _tcp_client);
       }
     }
-    mem_free(_tcp_client);
+    if (_owns_tcp_client) {
+      mem_free(_tcp_client);
+      _owns_tcp_client = false;
+    }
     _tcp_client = NULL;
   }
 }
@@ -227,7 +231,11 @@ EthernetClient::operator bool()
 
 bool EthernetClient::operator==(const EthernetClient &rhs)
 {
-  return _tcp_client == rhs._tcp_client && _tcp_client->pcb == rhs._tcp_client->pcb;
+  bool equal = _tcp_client == rhs._tcp_client;
+  if (_tcp_client != NULL && rhs._tcp_client != NULL) {
+    equal = equal && (_tcp_client->pcb == rhs._tcp_client->pcb);
+  }
+  return equal;
 }
 
 uint8_t EthernetClient::getSocketNumber()

@@ -131,7 +131,9 @@ class EthernetClient : public Client {
      * @brief Closes the connection and releases the client structure.
      *
      * The connection is closed unless it is already in TCP_CLOSING state. The
-     * structure is freed and the client is left with no connection.
+     * structure is freed only if this client allocated it in connect(). A
+     * structure shared with EthernetServer is left for the server to free, and
+     * the client is left with no connection.
      */
     virtual void stop();
     /**
@@ -176,8 +178,8 @@ class EthernetClient : public Client {
     /**
      * @brief Tests whether two clients refer to the same connection.
      *
-     * Two clients with no connection structure compare equal, and the function
-     * then reads a NULL pointer. Only compare clients that have a connection.
+     * Two clients with no connection structure compare equal. A client with no
+     * connection never equals a client that has one.
      *
      * @param rhs Client to compare with.
      * @return true if both clients use the same connection structure and the
@@ -253,6 +255,7 @@ class EthernetClient : public Client {
 
   private:
     struct tcp_struct *_tcp_client;
+    bool _owns_tcp_client = false; // true if connect() allocated _tcp_client
     uint16_t _connectionTimeout = 10000;
 };
 

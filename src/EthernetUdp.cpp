@@ -40,7 +40,10 @@
 #include "lwip/igmp.h"
 #include "lwip/ip_addr.h"
 
-EthernetUDP::EthernetUDP() {}
+EthernetUDP::EthernetUDP()
+  : _port(0), _remotePort(0), _sendtoPort(0), _data(NULL), _udp(), _remaining(0)
+{
+}
 
 uint8_t EthernetUDP::begin(uint16_t port)
 {
@@ -76,6 +79,7 @@ uint8_t EthernetUDP::begin(IPAddress ip, uint16_t port, bool multicast)
 
 #if LWIP_IGMP
   if ((multicast) && (ERR_OK != igmp_joingroup(IP_ADDR_ANY, &ipaddr))) {
+    stop();
     return 0;
   }
 #endif
@@ -161,10 +165,11 @@ size_t EthernetUDP::write(uint8_t byte)
 
 size_t EthernetUDP::write(const uint8_t *buffer, size_t size)
 {
-  _data = stm32_new_data(_data, buffer, size);
-  if (_data == NULL) {
+  struct pbuf *data = stm32_new_data(_data, buffer, size);
+  if (data == NULL) {
     return 0;
   }
+  _data = data;
 
   return size;
 }
