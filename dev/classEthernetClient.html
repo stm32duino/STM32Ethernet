@@ -660,7 +660,7 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Tests whether two clients refer to the same connection. </p>
-<p>Two clients with no connection structure compare equal, and the function then reads a NULL pointer. Only compare clients that have a connection.</p>
+<p>Two clients with no connection structure compare equal. A client with no connection never equals a client that has one.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">rhs</td><td>Client to compare with. </td></tr>
@@ -910,7 +910,7 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Closes the connection and releases the client structure. </p>
-<p>The connection is closed unless it is already in TCP_CLOSING state. The structure is freed and the client is left with no connection. </p>
+<p>The connection is closed unless it is already in TCP_CLOSING state. The structure is freed only if this client allocated it in <a class="el" href="classEthernetClient.html#a4e7a998e5c431082470c87feaf06ef8a" title="Connects to a remote host by IP address.">connect()</a>. A structure shared with <a class="el" href="classEthernetServer.html">EthernetServer</a> is left for the server to free, and the client is left with no connection. </p>
 
 </div>
 </div>

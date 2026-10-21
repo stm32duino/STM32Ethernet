@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['write_0',['write',['../classEthernetClient.html#a82612f121d0905484a821563e58a1cae',1,'EthernetClient::write(uint8_t b)'],['../classEthernetClient.html#a93a34e9065f6371b8625640f4642c7c6',1,'EthernetClient::write(const uint8_t *buf, size_t size)'],['../classEthernetServer.html#ab29ae81867e314699c2bef2c2656d484',1,'EthernetServer::write(uint8_t b)'],['../classEthernetServer.html#a4cddc17598799c2c032ba01870124b2a',1,'EthernetServer::write(const uint8_t *buffer, size_t size)'],['../classEthernetUDP.html#afed509d7337e5b19f08b9b935621ff40',1,'EthernetUDP::write(uint8_t)'],['../classEthernetUDP.html#aaaef011a1a890a62f45ce0fed7056b12',1,'EthernetUDP::write(const uint8_t *buffer, size_t size)']]]
+  ['u8_5fto_5fip_5faddr_0',['u8_to_ip_addr',['../stm32__eth_8cpp.html#a52d76d6b80a2e259968d6dddae5ae894',1,'u8_to_ip_addr(uint8_t *ipu8, ip_addr_t *ipaddr):&#160;stm32_eth.cpp'],['../stm32__eth_8h.html#a52d76d6b80a2e259968d6dddae5ae894',1,'u8_to_ip_addr(uint8_t *ipu8, ip_addr_t *ipaddr):&#160;stm32_eth.cpp']]],
+  ['user_5fnotification_1',['user_notification',['../stm32__eth_8cpp.html#aa8bcd8c394610c98c32814478f6d8cb8',1,'User_notification(struct netif *netif):&#160;stm32_eth.cpp'],['../stm32__eth_8h.html#aa8bcd8c394610c98c32814478f6d8cb8',1,'User_notification(struct netif *netif):&#160;stm32_eth.cpp']]]
 ];

@@ -175,6 +175,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a9b5e71bba5e10cea6a28f5b4302d374f" id="r_a9b5e71bba5e10cea6a28f5b4302d374f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stm32__eth_8cpp.html#a9b5e71bba5e10cea6a28f5b4302d374f">_stm32_eth_scheduler</a> (void)</td></tr>
+<tr class="memdesc:a9b5e71bba5e10cea6a28f5b4302d374f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run one LwIP scheduler pass.  <br /></td></tr>
+<tr class="separator:a9b5e71bba5e10cea6a28f5b4302d374f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae33053b245a2c55159e2ec8a9cf550c0" id="r_ae33053b245a2c55159e2ec8a9cf550c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stm32__eth_8cpp.html#ae33053b245a2c55159e2ec8a9cf550c0">stm32_eth_init</a> (const uint8_t *mac, const uint8_t *ip, const uint8_t *gw, const uint8_t *netmask)</td></tr>
 <tr class="memdesc:ae33053b245a2c55159e2ec8a9cf550c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the Ethernet interface and the LwIP stack.  <br /></td></tr>
 <tr class="separator:ae33053b245a2c55159e2ec8a9cf550c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -333,6 +336,27 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a9b5e71bba5e10cea6a28f5b4302d374f" name="a9b5e71bba5e10cea6a28f5b4302d374f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b5e71bba5e10cea6a28f5b4302d374f">&#9670;&#160;</a></span>_stm32_eth_scheduler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void _stm32_eth_scheduler </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Run one LwIP scheduler pass. </p>
+<p>Reads received packets (unless ETH_INPUT_USE_IT is defined), checks the link status every TIME_CHECK_ETH_LINK_STATE ms, handles LwIP timeouts and runs the periodic DHCP processing. Called by the timer callback and, on older cores, by <a class="el" href="stm32__eth_8cpp.html#a2d3c60d96ba7c51217083ca0a5f81df2" title="Run one LwIP scheduler pass.">stm32_eth_scheduler()</a>. </p>
+
+</div>
+</div>
 <a id="ab13efbb2f55da2a275dee13a940cefbb" name="ab13efbb2f55da2a275dee13a940cefbb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab13efbb2f55da2a275dee13a940cefbb">&#9670;&#160;</a></span>ip_addr_to_u32()</h2>
 

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['linkstatus_0',['linkStatus',['../classEthernetClass.html#a61344951a1415990181acadf8a6a6ab5',1,'EthernetClass']]],
-  ['localip_1',['localIP',['../classEthernetClass.html#a7c4cc37a928541998d6418fdb0e09efa',1,'EthernetClass']]],
-  ['localport_2',['localPort',['../classEthernetClient.html#a8903a8969a60521a2e4ec18f3d4f40a2',1,'EthernetClient']]]
+  ['inet_5faton_0',['inet_aton',['../classDNSClient.html#a970a1133b520bbe17ea833de3daf0cc1',1,'DNSClient']]],
+  ['ip_5faddr_5fto_5fu32_1',['ip_addr_to_u32',['../stm32__eth_8cpp.html#ab13efbb2f55da2a275dee13a940cefbb',1,'ip_addr_to_u32(ip_addr_t *ipaddr):&#160;stm32_eth.cpp'],['../stm32__eth_8h.html#ab13efbb2f55da2a275dee13a940cefbb',1,'ip_addr_to_u32(ip_addr_t *ipaddr):&#160;stm32_eth.cpp']]]
 ];

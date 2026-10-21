@@ -855,7 +855,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Appends a block of bytes to the outgoing packet. </p>
-<p>Data accumulates until <a class="el" href="classEthernetUDP.html#a7f4bcb1760fba5e065d0b97fa8833194" title="Sends the data written since beginPacket() as one datagram.">endPacket()</a> sends it. On failure, the data already buffered for the packet is discarded.</p>
+<p>Data accumulates until <a class="el" href="classEthernetUDP.html#a7f4bcb1760fba5e065d0b97fa8833194" title="Sends the data written since beginPacket() as one datagram.">endPacket()</a> sends it. On failure, the data already buffered for the packet is kept and the new bytes are not added.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">buffer</td><td>Bytes to append. </td></tr>
