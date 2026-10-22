@@ -1,0 +1,15 @@
+<map id="src/EthernetServer.h" name="src/EthernetServer.h">
+<area shape="rect" id="Node000001" title="TCP server class of the Ethernet library." alt="" coords="143,5,297,31"/>
+<area shape="rect" id="Node000002" href="$EthernetClient_8cpp.html" title="TCP client implementation of the Ethernet library." alt="" coords="5,152,171,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,43,101,154,97,150,198,40"/>
+<area shape="rect" id="Node000003" href="$EthernetServer_8cpp.html" title="TCP server implementation of the Ethernet library." alt="" coords="195,152,363,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,44,248,103,274,151,269,153,243,105,223,45"/>
+<area shape="rect" id="Node000004" href="$STM32Ethernet_8h.html" title="Main header of the STM32Ethernet library." alt="" coords="258,79,414,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="252,35,318,76,316,81,249,40"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="284,110,129,154,127,149,282,105"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="320,116,290,154,286,150,316,113"/>
+<area shape="rect" id="Node000005" href="$EthernetUdp_8cpp.html" title="UDP implementation of the Ethernet library." alt="" coords="387,152,541,177"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="370,108,444,149,442,154,367,113"/>
+<area shape="rect" id="Node000006" href="$STM32Ethernet_8cpp.html" title="Implementation of the global Ethernet object." alt="" coords="565,152,736,177"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="400,104,600,149,599,154,399,110"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="src/STM32Ethernet.h" name="src/STM32Ethernet.h">
+<area shape="rect" id="Node000001" title="Main header of the STM32Ethernet library." alt="" coords="293,5,449,31"/>
+<area shape="rect" id="Node000002" href="$EthernetClient_8cpp.html" title="TCP client implementation of the Ethernet library." alt="" coords="5,79,171,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="313,37,134,81,133,76,311,31"/>
+<area shape="rect" id="Node000003" href="$EthernetServer_8cpp.html" title="TCP server implementation of the Ethernet library." alt="" coords="195,79,363,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="347,41,295,81,292,76,344,37"/>
+<area shape="rect" id="Node000004" href="$EthernetUdp_8cpp.html" title="UDP implementation of the Ethernet library." alt="" coords="387,79,541,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="398,37,450,76,447,81,395,41"/>
+<area shape="rect" id="Node000005" href="$STM32Ethernet_8cpp.html" title="Implementation of the global Ethernet object." alt="" coords="565,79,736,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="429,31,606,76,605,81,428,37"/>
+</map>

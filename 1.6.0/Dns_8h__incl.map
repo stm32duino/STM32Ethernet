@@ -1,0 +1,24 @@
+<map id="src/Dns.h" name="src/Dns.h">
+<area shape="rect" id="Node000001" title="DNS client declarations for the Ethernet library." alt="" coords="77,5,159,31"/>
+<area shape="rect" id="Node000002" href="$EthernetUdp_8h.html" title="UDP class of the Ethernet library." alt="" coords="61,79,175,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,31,121,65,115,65,115,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="20,152,80,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="109,106,73,144,69,140,105,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,92,251"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="118,105,109,138,94,179,69,216,65,213,89,176,104,137,113,103"/>
+<area shape="rect" id="Node000005" href="$stm32__eth_8h.html" title="Include stm32_eth source files." alt="" coords="291,152,436,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="158,101,311,146,310,151,157,107"/>
+<area shape="poly" id="edge11_Node000005_Node000004" title=" " alt="" coords="313,180,106,227,105,221,312,175"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="116,225,219,251"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="333,180,213,223,211,218,331,175"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="243,225,355,251"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="355,179,321,217,317,213,351,176"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="379,225,475,251"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="376,176,410,213,406,217,372,179"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="500,225,589,251"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="393,175,503,218,501,223,391,180"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="614,225,699,251"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="411,175,602,221,600,226,410,180"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="724,225,811,251"/>
+<area shape="poly" id="edge10_Node000005_Node000011" title=" " alt="" coords="435,175,711,223,710,228,434,180"/>
+</map>

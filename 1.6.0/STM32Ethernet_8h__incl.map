@@ -1,0 +1,44 @@
+<map id="src/STM32Ethernet.h" name="src/STM32Ethernet.h">
+<area shape="rect" id="Node000001" title="Main header of the STM32Ethernet library." alt="" coords="257,5,413,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="109,79,196,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="307,33,196,76,194,71,305,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="63,152,160,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="320,33,209,106,143,147,140,143,206,102,317,29"/>
+<area shape="rect" id="Node000004" href="$EthernetClient_8h.html" title="TCP client class of the Ethernet library." alt="" coords="272,79,399,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="338,31,338,65,333,65,333,31"/>
+<area shape="rect" id="Node000016" href="$EthernetServer_8h.html" title="TCP server class of the Ethernet library." alt="" coords="465,79,595,104"/>
+<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="368,28,486,71,485,76,366,33"/>
+<area shape="rect" id="Node000018" href="$Dhcp_8h.html" title="DHCP client declarations for the Ethernet library." alt="" coords="639,79,706,104"/>
+<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="390,28,626,78,625,83,389,33"/>
+<area shape="poly" id="edge7_Node000004_Node000003" title=" " alt="" coords="300,107,161,150,160,145,299,101"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="184,152,268,177"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="319,106,257,147,254,142,316,102"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="293,152,357,177"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="336,105,331,139,326,138,331,104"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="381,152,453,177"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="350,102,395,141,391,145,347,106"/>
+<area shape="rect" id="Node000008" href="$stm32__eth_8h.html" title="Include stm32_eth source files." alt="" coords="417,225,563,251"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="384,102,428,120,449,133,467,150,483,180,491,210,485,212,478,182,463,154,445,138,425,125,382,106"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="5,299,108,324"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="417,253,122,301,121,296,417,248"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="133,299,245,324"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="442,253,251,298,250,293,441,248"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="269,299,365,324"/>
+<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="463,253,359,296,357,291,461,248"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="389,299,479,324"/>
+<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="483,253,454,289,449,286,479,249"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="503,299,589,324"/>
+<area shape="poly" id="edge13_Node000008_Node000013" title=" " alt="" coords="501,249,531,286,526,289,497,253"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="613,299,700,324"/>
+<area shape="poly" id="edge14_Node000008_Node000014" title=" " alt="" coords="518,248,618,291,616,296,516,253"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="724,299,811,324"/>
+<area shape="poly" id="edge15_Node000008_Node000015" title=" " alt="" coords="535,248,711,293,710,298,534,253"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="527,152,602,177"/>
+<area shape="poly" id="edge17_Node000016_Node000017" title=" " alt="" coords="538,103,555,138,551,141,533,106"/>
+<area shape="rect" id="Node000019" href="$EthernetUdp_8h.html" title="UDP class of the Ethernet library." alt="" coords="626,152,741,177"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="677,104,682,138,677,139,672,105"/>
+<area shape="poly" id="edge22_Node000019_Node000008" title=" " alt="" coords="653,180,535,223,533,218,651,175"/>
+<area shape="poly" id="edge21_Node000019_Node000015" title=" " alt="" coords="688,177,696,211,712,249,727,270,744,287,741,291,723,273,708,252,691,212,683,178"/>
+<area shape="rect" id="Node000020" title=" " alt="" coords="721,225,781,251"/>
+<area shape="poly" id="edge20_Node000019_Node000020" title=" " alt="" coords="696,176,733,213,729,217,693,180"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="src/Dns.h" name="src/Dns.h">
+<area shape="rect" id="Node000001" title="DNS client declarations for the Ethernet library." alt="" coords="169,5,251,31"/>
+<area shape="rect" id="Node000002" href="$Dns_8cpp.html" title="DNS client implementation for the Ethernet library." alt="" coords="5,79,103,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,39,81,81,78,76,171,34"/>
+<area shape="rect" id="Node000003" href="$EthernetClient_8cpp.html" title="TCP client implementation of the Ethernet library." alt="" coords="127,79,293,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,44,213,79,207,79,207,44"/>
+<area shape="rect" id="Node000004" href="$EthernetUdp_8cpp.html" title="UDP implementation of the Ethernet library." alt="" coords="317,79,471,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="253,33,365,76,363,81,251,38"/>
+</map>
